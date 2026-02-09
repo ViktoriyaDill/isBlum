@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct isBlumApp: App {
+    // Keep your SwiftData container
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,7 +26,9 @@ struct isBlumApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            // Replace ContentView with RootCoordinatorView
+            // This is the starting point of your Navigation Logic
+            RootCoordinatorView()
         }
         .modelContainer(sharedModelContainer)
     }
