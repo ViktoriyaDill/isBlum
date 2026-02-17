@@ -36,6 +36,13 @@ class AddressViewModel: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
+    func clearSearch() {
+        withAnimation(.none) {
+            searchText = ""
+            results = []
+        }
+    }
+    
     func requestLocation() {
         let status = locationManager.authorizationStatus
         if status == .notDetermined {

@@ -25,6 +25,8 @@ struct RootCoordinatorView: View {
                 
             case .main:
                 MainTabView()
+            case .mapSelection:
+                MapSelectionView()
             }
         }
         .environmentObject(coordinator)

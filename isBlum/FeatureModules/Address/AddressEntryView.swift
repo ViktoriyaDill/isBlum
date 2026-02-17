@@ -1,8 +1,4 @@
-
-
 import SwiftUI
-
-
 
 struct AddressEntryView: View {
     @StateObject private var viewModel = AddressViewModel()
@@ -10,20 +6,17 @@ struct AddressEntryView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Вимикаємо кнопку Back для найпершого екрана
             CustomNavigationBar(title: "Адреса доставки", showBackButton: false) {
                 coordinator.goBack()
             }
             
             ZStack(alignment: .top) {
-                // Біла підкладка з заокругленням
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
                 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
-                        
                         Text("Введіть адресу\nдоставки")
                             .font(.onest(.bold, size: 32))
                             .foregroundColor(.black)
@@ -32,19 +25,17 @@ struct AddressEntryView: View {
                             .padding(.top, 40)
                         
                         VStack(alignment: .leading, spacing: 24) {
-                            // Поле вводу з підтримкою Enter
                             AddressInputField(text: $viewModel.searchText, placeholder: "Адреса доставки") {
                                 viewModel.searchText = ""
                             }
                             .submitLabel(.done)
                             .onSubmit {
-                                // Підтвердження вибору через Enter
                                 if let first = viewModel.results.first {
                                     viewModel.selectAddress(first)
                                 }
                             }
                             
-                            // Кнопка локації зникає, якщо поле не порожнє
+                            // Current location button shows only when search is empty
                             if viewModel.searchText.isEmpty {
                                 Button(action: {
                                     withAnimation(.easeInOut) {
@@ -62,7 +53,7 @@ struct AddressEntryView: View {
                                 .transition(.opacity.combined(with: .move(edge: .top)))
                             }
                             
-                            // Список результатів
+                            // Results list
                             if !viewModel.searchText.isEmpty {
                                 if viewModel.results.isEmpty {
                                     HStack {
@@ -74,7 +65,6 @@ struct AddressEntryView: View {
                                 } else {
                                     AddressResultsList(results: viewModel.results) { selected in
                                         viewModel.selectAddress(selected)
-                                        // Тут можна додати перехід: coordinator.push(.addressDetails)
                                     }
                                 }
                             }
@@ -82,27 +72,34 @@ struct AddressEntryView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(.horizontal, 16)
-                    // Відступ знизу, щоб контент не перекривався кнопкою "Вказати на карті"
                     .padding(.bottom, 120)
                 }
             }
         }
+        // Logic to clear field on entry and return
+        .task {
+            viewModel.clearSearch()
+        }
         .background(Color(.onboardBack).ignoresSafeArea())
         .navigationBarHidden(true)
-        // Фіксована кнопка внизу екрана
-        .overlay(alignment: .bottom) {
-            MapSelectionButton {
-                /* Перехід на карту */
+        
+        .safeAreaInset(edge: .bottom) {
+            if !viewModel.results.isEmpty {
+                MapSelectionButton {
+                    coordinator.showMapSelection()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+                .background(Color.white)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .bottom).combined(with: .opacity),
+                    removal: .opacity
+                ))
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 24)
-            .ignoresSafeArea(.keyboard, edges: .bottom)
         }
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: viewModel.results.isEmpty)
+        // Ensure animation triggers when text is cleared
         .animation(.easeInOut, value: viewModel.searchText.isEmpty)
     }
-}
-
-#Preview {
-    AddressEntryView()
-        .environmentObject(AppCoordinator())
 }

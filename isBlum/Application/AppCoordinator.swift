@@ -20,7 +20,8 @@ class AppCoordinator: ObservableObject {
         case splash
         case onboarding
         case locationEntry
-        case filters       
+        case mapSelection
+        case filters
         case main
     }
     
@@ -59,7 +60,7 @@ class AppCoordinator: ObservableObject {
         }
     }
     
-    // Викликається після збереження адреси на 4-му скріні
+    
     func finishLocationSelection(address: String) {
         UserDefaults.standard.set(address, forKey: "userAddress")
         withAnimation(.easeInOut(duration: 0.6)) {
@@ -67,11 +68,16 @@ class AppCoordinator: ObservableObject {
         }
     }
     
-    // Викликається після вибору фільтрів
     func finishFilters() {
         UserDefaults.standard.set(true, forKey: "hasSelectedFilters")
         withAnimation(.easeInOut(duration: 0.6)) {
             self.appState = .main
+        }
+    }
+    
+    func showMapSelection() {
+        withAnimation(.easeInOut(duration: 0.4)) {
+            self.appState = .mapSelection
         }
     }
     
@@ -80,6 +86,8 @@ class AppCoordinator: ObservableObject {
             switch appState {
             case .locationEntry:
                 self.appState = .onboarding
+            case .mapSelection:
+                self.appState = .locationEntry
             case .filters:
                 self.appState = .locationEntry
             case .main:

@@ -7,33 +7,6 @@
 
 import Foundation
 import SwiftUI
-import Lottie
-
-// MARK: - Lottie View Wrapper
-struct LottieView: UIViewRepresentable {
-    let name: String
-    let loopMode: LottieLoopMode = .loop
-
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView(frame: .zero)
-        let animationView = LottieAnimationView(name: name)
-        animationView.contentMode = .scaleAspectFill
-        animationView.loopMode = loopMode
-        animationView.play()
-        
-        animationView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(animationView)
-        
-        NSLayoutConstraint.activate([
-            animationView.heightAnchor.constraint(equalTo: view.heightAnchor),
-            animationView.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
-        
-        return view
-    }
-
-    func updateUIView(_ uiView: UIView, context: Context) {}
-}
 
 // MARK: -  ThirdStepMapView
 
@@ -61,7 +34,7 @@ struct ThirdStepMapView: View {
 struct MapMarkerHome: View {
     var body: some View {
         ZStack {
-            LottieView(name: "pulseAnimation")
+            LottieView(name: "pulseAnimation", play: .constant(true))
                 .frame(width: 100, height: 100)
             
             Image(.radiusIconHome)
@@ -74,7 +47,7 @@ struct MapMarkerHome: View {
 struct MapMarkerLogo: View {
     var body: some View {
         ZStack {
-            LottieView(name: "pulseAnimation")
+            LottieView(name: "pulseAnimation", play: .constant(true))
                 .frame(width: 120, height: 120)
             
             Image(.radiusIconShop)
