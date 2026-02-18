@@ -54,13 +54,3 @@ struct AddressResultRow: View {
     }
 }
 
-
-struct AddressModel: Identifiable, Equatable {
-    let id = UUID()
-    let street: String
-    let city: String
-    
-    static func == (lhs: AddressModel, rhs: AddressModel) -> Bool {
-        lhs.id == rhs.id
-    }
-}

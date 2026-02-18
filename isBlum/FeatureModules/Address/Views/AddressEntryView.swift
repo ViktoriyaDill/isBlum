@@ -32,6 +32,7 @@ struct AddressEntryView: View {
                             .onSubmit {
                                 if let first = viewModel.results.first {
                                     viewModel.selectAddress(first)
+                                    coordinator.showAddressDetails(address: first.title)
                                 }
                             }
                             
@@ -64,8 +65,9 @@ struct AddressEntryView: View {
                                     }
                                 } else {
                                     AddressResultsList(results: viewModel.results) { selected in
-                                        viewModel.selectAddress(selected)
-                                    }
+                                                viewModel.selectAddress(selected)
+                                                coordinator.showAddressDetails(address: selected.title)
+                                            }
                                 }
                             }
                         }

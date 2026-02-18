@@ -18,6 +18,7 @@ struct MapSelectionView: View {
             Map(position: $viewModel.cameraPosition, interactionModes: .all) {
                 UserAnnotation()
             }
+            .mapStyle(.standard(elevation: .flat, pointsOfInterest: .excludingAll, showsTraffic: false))
             .ignoresSafeArea()
             .onMapCameraChange(frequency: .continuous) { context in
                 viewModel.setMapMoving(true)
@@ -125,7 +126,7 @@ struct MapSelectionView: View {
                     
                     // Confirm Button
                     Button(action: {
-                        coordinator.finishLocationSelection(address: viewModel.selectedAddress)
+                        coordinator.showAddressDetails(address: viewModel.selectedAddress)
                     }) {
                         Text("Доставити сюди")
                             .font(.onest(.medium, size: 16))

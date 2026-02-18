@@ -7,11 +7,17 @@ import CoreLocation
 class AddressViewModel: NSObject, ObservableObject {
     @Published var searchText = ""
     @Published var results: [AddressModel] = []
+    @Published var isAddressSelected = false
     
     private var cancellables = Set<AnyCancellable>()
     private let completer = MKLocalSearchCompleter()
     private let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
+    
+    private var isManualLocationRequest = false
+    private var isProgrammaticChange = false
+    
+
     
     override init() {
         super.init()
@@ -27,6 +33,14 @@ class AddressViewModel: NSObject, ObservableObject {
             .removeDuplicates()
             .sink { [weak self] text in
                 guard let self = self else { return }
+                
+                if self.isProgrammaticChange {
+                    self.isProgrammaticChange = false
+                    return
+                }
+                
+                self.isAddressSelected = false  // ← додати
+                
                 if text.isEmpty {
                     self.results = []
                 } else {
@@ -44,6 +58,8 @@ class AddressViewModel: NSObject, ObservableObject {
     }
     
     func requestLocation() {
+        isManualLocationRequest = true
+        results = []
         let status = locationManager.authorizationStatus
         if status == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
@@ -53,21 +69,30 @@ class AddressViewModel: NSObject, ObservableObject {
     }
     
     func selectAddress(_ address: AddressModel) {
-        searchText = address.street
-        results = []
-        print("Selected: \(address.street), \(address.city)")
+        isProgrammaticChange = true
+        searchText = address.title
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            self.isProgrammaticChange = false
+        }
     }
+    
+    private func updateSearchText(_ text: String) {
+        isProgrammaticChange = true
+        searchText = text
+    }
+
+
 }
 
 // MARK: - MKLocalSearchCompleterDelegate
 extension AddressViewModel: MKLocalSearchCompleterDelegate {
+    
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        guard !isAddressSelected else { return } 
         DispatchQueue.main.async {
             self.results = completer.results.map { suggestion in
-                AddressModel(
-                    street: suggestion.title,
-                    city: suggestion.subtitle
-                )
+                AddressModel(street: suggestion.title, city: suggestion.subtitle)
             }
         }
     }
@@ -80,7 +105,9 @@ extension AddressViewModel: MKLocalSearchCompleterDelegate {
 // MARK: - CLLocationManagerDelegate
 extension AddressViewModel: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard isManualLocationRequest else { return }
         guard let location = locations.first else { return }
+        isManualLocationRequest = false
         locationManager.stopUpdatingLocation()
         
         geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
@@ -92,20 +119,21 @@ extension AddressViewModel: CLLocationManagerDelegate {
                 let fullAddress = "\(street) \(number)".trimmingCharacters(in: .whitespaces)
                 
                 DispatchQueue.main.async {
-                    self?.searchText = fullAddress
+                    self?.updateSearchText(fullAddress)
                 }
             }
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        guard isManualLocationRequest else { return }
         if status == .authorizedWhenInUse || status == .authorizedAlways {
             locationManager.startUpdatingLocation()
         }
     }
     
 
-    func confirmSelection() {
+    func confirmSelection(coordinator: AppCoordinator) {
         if let firstResult = results.first {
             selectAddress(firstResult)
         }

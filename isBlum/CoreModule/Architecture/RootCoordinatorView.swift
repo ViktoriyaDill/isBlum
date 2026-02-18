@@ -19,7 +19,6 @@ struct RootCoordinatorView: View {
                 AddressEntryView()
                 
             case .filters:
-                // Екран фільтрів з кнопкою "Назад" до вибору локації
                 Text("Filters Selection View")
                     .onTapGesture { coordinator.finishFilters() }
                 
@@ -27,6 +26,8 @@ struct RootCoordinatorView: View {
                 MainTabView()
             case .mapSelection:
                 MapSelectionView()
+            case .addressDetails(address: let address):
+                AddressDetailsView(selectedAddress: address)
             }
         }
         .environmentObject(coordinator)
