@@ -2,15 +2,14 @@ import SwiftUI
 
 struct RootCoordinatorView: View {
     @StateObject private var coordinator = AppCoordinator()
+    @StateObject private var filterVM = FilterViewModel()  
     
     var body: some View {
         ZStack {
             switch coordinator.appState {
             case .splash:
                 SplashScreenView()
-                    .onAppear {
-                        startSplashTimer()
-                    }
+                    .onAppear { startSplashTimer() }
                 
             case .onboarding:
                 OnboardingView()
@@ -18,20 +17,37 @@ struct RootCoordinatorView: View {
             case .locationEntry:
                 AddressEntryView()
                 
-            case .filters:
-                Text("Filters Selection View")
-                    .onTapGesture { coordinator.finishFilters() }
+            case .mapSelection:
+                MapSelectionView()
+                
+            case .addressDetails(let address):
+                AddressDetailsView(selectedAddress: address)
+                
+            case .filterOccasion:
+                FiltersView()
+                    .environmentObject(filterVM)
+                
+            case .filterBouquetType:
+                EmptyView()
+//                FilterBouquetTypeView()
+//                    .environmentObject(filterVM)
+                
+            case .filterFlowers:
+                EmptyView()
+//                FilterFlowersView()
+//                    .environmentObject(filterVM)
+                
+            case .filterPrice:
+                EmptyView()
+//                FilterPriceView()
+//                    .environmentObject(filterVM)
                 
             case .main:
                 MainTabView()
-            case .mapSelection:
-                MapSelectionView()
-            case .addressDetails(address: let address):
-                AddressDetailsView(selectedAddress: address)
             }
         }
         .environmentObject(coordinator)
-        .transition(.opacity)
+        .animation(.easeInOut(duration: 0.4), value: coordinator.appState)
     }
     
     private func startSplashTimer() {

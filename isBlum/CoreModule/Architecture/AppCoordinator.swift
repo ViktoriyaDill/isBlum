@@ -17,13 +17,16 @@ enum TabItem {
 
 class AppCoordinator: ObservableObject {
     
-    enum AppState {
+    enum AppState: Equatable {
         case splash
         case onboarding
         case locationEntry
         case mapSelection
         case addressDetails(address: String)
-        case filters
+        case filterOccasion
+        case filterBouquetType
+        case filterFlowers
+        case filterPrice
         case main
     }
     
@@ -40,63 +43,79 @@ class AppCoordinator: ObservableObject {
     // MARK: - Navigation Logic
     
     private func navigate(to state: AppState) {
-           stateHistory.append(appState)
-           withAnimation(.easeInOut(duration: 0.5)) {
-               self.appState = state
-           }
-       }
+        stateHistory.append(appState)
+        withAnimation(.easeInOut(duration: 0.5)) {
+            self.appState = state
+        }
+    }
     
     func finishSplash() {
-            let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
-            let hasSavedLocation = UserDefaults.standard.string(forKey: "userAddress") != nil
-            let hasSelectedFilters = UserDefaults.standard.bool(forKey: "hasSelectedFilters")
-            
-            withAnimation(.easeInOut(duration: 0.6)) {
-                if !hasSeenOnboarding {
-                    self.appState = .onboarding
-                } else if !hasSavedLocation {
-                    self.appState = .locationEntry
-                } else if !hasSelectedFilters {
-                    self.appState = .filters
-                } else {
-                    self.appState = .main
-                }
-            }
-        }
+        let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+        let hasSavedLocation = UserDefaults.standard.string(forKey: "userAddress") != nil
+        let hasSelectedFilters = UserDefaults.standard.bool(forKey: "hasSelectedFilters")
         
-        func finishOnboarding() {
-            UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
-            navigate(to: .locationEntry)
-        }
-        
-        func showMapSelection() {
-            navigate(to: .mapSelection)
-        }
-        
-        func showAddressDetails(address: String) {
-            navigate(to: .addressDetails(address: address))
-        }
-        
-        func completeAddressSetup(details: AddressDetails) {
-            LocationService.shared.saveFullAddress(details: details)
-            stateHistory.removeAll()
-            withAnimation(.easeInOut(duration: 0.6)) {
-                self.appState = .filters
-            }
-        }
-        
-        func finishFilters() {
-            UserDefaults.standard.set(true, forKey: "hasSelectedFilters")
-            stateHistory.removeAll()
-            withAnimation(.easeInOut(duration: 0.6)) {
+        withAnimation(.easeInOut(duration: 0.6)) {
+            if !hasSeenOnboarding {
+                self.appState = .onboarding
+            } else if !hasSavedLocation {
+                self.appState = .locationEntry
+            } else if !hasSelectedFilters {
+                self.appState = .filterOccasion
+            } else {
                 self.appState = .main
             }
         }
-        
-        func goBack() {
-            guard let previous = stateHistory.popLast() else { return }
-            withAnimation(.easeInOut(duration: 0.4)) {
-                self.appState = previous
-            }
+    }
+    
+    func finishOnboarding() {
+        UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+        navigate(to: .locationEntry)
+    }
+    
+    func showMapSelection() {
+        navigate(to: .mapSelection)
+    }
+    
+    func showAddressDetails(address: String) {
+        navigate(to: .addressDetails(address: address))
+    }
+    
+    func showNextFilter(from current: AppState) {
+        switch current {
+        case .addressDetails:   navigate(to: .filterOccasion)
+        case .filterOccasion:   navigate(to: .filterBouquetType)
+        case .filterBouquetType: navigate(to: .filterFlowers)
+        case .filterFlowers:    navigate(to: .filterPrice)
+        case .filterPrice:      finishFilters()
+        default: break
         }
     }
+    
+    func skipFilters() {
+        stateHistory.removeAll()
+        withAnimation(.easeInOut(duration: 0.6)) {
+            self.appState = .main
+        }
+    }
+    
+    func finishFilters() {
+        UserDefaults.standard.set(true, forKey: "hasSelectedFilters")
+        stateHistory.removeAll()
+        withAnimation(.easeInOut(duration: 0.6)) {
+            self.appState = .main
+        }
+    }
+    
+    func completeAddressSetup(details: AddressDetails) {
+        LocationService.shared.saveFullAddress(details: details)
+        stateHistory.removeAll()
+        navigate(to: .filterOccasion)
+    }
+    
+    func goBack() {
+        guard let previous = stateHistory.popLast() else { return }
+        withAnimation(.easeInOut(duration: 0.4)) {
+            self.appState = previous
+        }
+    }
+}
