@@ -33,7 +33,7 @@ struct FiltersView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Фільтри", showBackButton: true) {
+            CustomNavigationBar(title: "Фільтри", showBackButton: false) {
                 coordinator.goBack()
             }
             .background(Color(hex: "E2F5C6"))

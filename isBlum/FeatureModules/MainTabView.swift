@@ -55,37 +55,63 @@ struct MainTabView: View {
     
     private var customTabBar: some View {
         HStack(spacing: 0) {
-            tabButton(for: .feed, title: "Стрічка", icon: "leaf.fill")
-            tabButton(for: .orders, title: "Замовлення", icon: "doc.text")
-            tabButton(for: .chats, title: "Чати", icon: "bubble.left")
-            tabButton(for: .profile, title: "Профіль", icon: "person")
+            tabButton(for: .feed, title: "Стрічка", icon: .bouqetsLine)
+            tabButton(for: .orders, title: "Замовлення", icon: .orders)
+            tabButton(for: .chats, title: "Чати", icon: .chat)
+            tabButton(for: .profile, title: "Профіль", icon: .profile)
         }
         .frame(height: 70)
         .background(Color.white.shadow(color: .black.opacity(0.05), radius: 10, y: -5))
     }
     
     @ViewBuilder
-    private func tabButton(for item: TabItem, title: String, icon: String) -> some View {
+    private func tabButton(for item: TabItem, title: String, icon: ImageResource) -> some View {
         Button {
-            coordinator.selectedTab = item
+            // Додаємо анімацію при зміні таба
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                coordinator.selectedTab = item
+            }
         } label: {
-            VStack(spacing: 4) {
-                // Top Indicator from your screenshot
-                Rectangle()
-                    .fill(coordinator.selectedTab == item ? Color(hex: "9AF19A") : Color.clear)
-                    .frame(width: 44, height: 3)
-                    .cornerRadius(1.5)
-                    .padding(.bottom, 8)
+            VStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    if coordinator.selectedTab == item {
+                        RoundedRectangle(cornerRadius: 1.5)
+                            .fill(Color(hex: "9AF19A"))
+                            .frame(width: 80, height: 4)
+                            .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .top)))
+                        
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(hex: "9AF19A").opacity(0.4),
+                                Color(hex: "9AF19A").opacity(0.0)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .frame(width: 80, height: 20)
+                        .transition(.opacity)
+                    } else {
+                        Color.clear
+                            .frame(width: 80, height: 20)
+                    }
+                }
+                .frame(height: 24)
+                .padding(.bottom, 4)
                 
-                Image(systemName: icon)
-                    .font(.system(size: 22))
+                Image(icon)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .padding(.bottom, 4)
                 
                 Text(title)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.onest(.medium, size: 12))
             }
             .frame(maxWidth: .infinity)
-            .foregroundColor(coordinator.selectedTab == item ? .black : .gray)
+            .foregroundColor(coordinator.selectedTab == item ? .black : Color.gray.opacity(0.6))
         }
+        .buttonStyle(PlainButtonStyle())
     }
     
     @ViewBuilder

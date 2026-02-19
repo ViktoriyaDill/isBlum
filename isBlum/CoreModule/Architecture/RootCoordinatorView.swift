@@ -28,19 +28,16 @@ struct RootCoordinatorView: View {
                     .environmentObject(filterVM)
                 
             case .filterBouquetType:
-                EmptyView()
-//                FilterBouquetTypeView()
-//                    .environmentObject(filterVM)
+                FilterBouquetTypeView()
+                    .environmentObject(filterVM)
                 
             case .filterFlowers:
-                EmptyView()
-//                FilterFlowersView()
-//                    .environmentObject(filterVM)
+                FilterFlowersView()
+                    .environmentObject(filterVM)
                 
             case .filterPrice:
-                EmptyView()
-//                FilterPriceView()
-//                    .environmentObject(filterVM)
+                FilterPriceView()
+                    .environmentObject(filterVM)
                 
             case .main:
                 MainTabView()
