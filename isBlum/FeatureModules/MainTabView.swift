@@ -40,7 +40,7 @@ struct MainTabView: View {
                 
                 // Profile Tab
                 NavigationStack(path: $coordinator.profilePath) {
-                    Text("Profile View") // Replace with ProfileView()
+                    ProfileView()
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }

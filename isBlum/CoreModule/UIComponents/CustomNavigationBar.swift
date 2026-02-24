@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CustomNavigationBar: View {
     let title: String
-    var showBackButton: Bool = true // Параметр для керування видимістю
+    var showBackButton: Bool = true
     var backAction: (() -> Void)? = nil
     
     var body: some View {
@@ -19,11 +19,10 @@ struct CustomNavigationBar: View {
                 .resizable()
                 .scaledToFill()
                 .frame(maxWidth: .infinity)
-                .frame(height: 168)
+                .frame(height: 180)
                 .ignoresSafeArea(edges: .top)
             
             HStack {
-                // Відображаємо кнопку лише якщо showBackButton == true
                 if showBackButton {
                     Button(action: { backAction?() }) {
                         Image(systemName: "chevron.left")

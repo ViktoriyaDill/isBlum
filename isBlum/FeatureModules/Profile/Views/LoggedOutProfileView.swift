@@ -1,0 +1,37 @@
+//
+//  LoggedOutProfileView.swift
+//  isBlum
+//
+//  Created by Пользователь on 19/02/2026.
+//
+
+import SwiftUI
+
+struct LoggedOutProfileView: View {
+    var body: some View {
+        ProfileCard {
+            VStack(spacing: 24) {
+                VStack(spacing: 16) {
+                    Text("Увійдіть в обліковий запис, щоб керувати замовленнями та відстежувати доставку")
+                        .font(.onest(.regular, size: 14))
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                    
+                    Button(action: { /* Login logic */ }) {
+                        Text("Увійти в обліковий запис")
+                            .font(.onest(.bold, size: 16))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 54)
+                            .background(Color(hex: "B5F1A0"))
+                            .cornerRadius(27)
+                    }
+                }
+                .padding(20)
+                .background(Color.white)
+                .cornerRadius(16)
+                .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 5)
+            }
+        }
+    }
+}
