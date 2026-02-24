@@ -125,6 +125,8 @@ struct MainTabView: View {
         case .editProfile: Text("Edit Profile")
         case .addressDetails(let address):
             AddressDetailsView(selectedAddress: address)
+        case .auth:
+            AuthView()
         }
     }
 }

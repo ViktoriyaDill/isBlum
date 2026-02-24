@@ -35,7 +35,9 @@ struct ProfileView: View {
                         if isLoggedIn {
                             LoggedInProfileView(hasUnverifiedContact: hasUnverifiedContact)
                         } else {
-                            LoggedOutProfileView()
+                            LoggedOutProfileView {
+                                coordinator.showAuth()
+                            }
                         }
                         
                         SettingsGroupView(isLoggedIn: isLoggedIn)

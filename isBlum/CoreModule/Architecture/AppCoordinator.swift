@@ -9,6 +9,7 @@ enum AppRoute: Hashable {
     case settings
     case editProfile
     case addressDetails(address: String)
+    case auth
 }
 
 enum TabItem {
@@ -41,6 +42,10 @@ class AppCoordinator: ObservableObject {
     private var stateHistory: [AppState] = []
     
     // MARK: - Navigation Logic
+    
+    func showAuth() {
+        profilePath.append(AppRoute.auth)
+    }
     
     private func navigate(to state: AppState) {
         stateHistory.append(appState)

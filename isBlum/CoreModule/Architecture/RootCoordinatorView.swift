@@ -52,4 +52,18 @@ struct RootCoordinatorView: View {
             coordinator.finishSplash()
         }
     }
+    
+//    func listenToAuthState() {
+//        _ = SupabaseService.shared.client.auth.onAuthStateChange { [weak self] _, session in
+//            DispatchQueue.main.async {
+//                if session != nil {
+//                    // User is logged in
+//                    self?.appState = .main
+//                } else {
+//                    // User is logged out
+//                    self?.appState = .filters(step: .occasion) // Or wherever they should be
+//                }
+//            }
+//        }
+//    }
 }

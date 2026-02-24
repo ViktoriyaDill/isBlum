@@ -8,22 +8,27 @@
 import SwiftUI
 
 struct LoggedOutProfileView: View {
+    
+    let authAction: () -> Void
+    
     var body: some View {
         ProfileCard {
             VStack(spacing: 24) {
                 VStack(spacing: 16) {
-                    Text("Увійдіть в обліковий запис, щоб керувати замовленнями та відстежувати доставку")
-                        .font(.onest(.regular, size: 14))
+                    Text("Увійдіть в обліковий запис, щоб керувати\nзамовленнями та відстежувати доставку")
+                        .font(.onest(.regular, size: 16))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                     
-                    Button(action: { /* Login logic */ }) {
+                    Button(action: {
+                        authAction()
+                    }) {
                         Text("Увійти в обліковий запис")
-                            .font(.onest(.bold, size: 16))
+                            .font(.onest(.medium, size: 16))
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity)
                             .frame(height: 54)
-                            .background(Color(hex: "B5F1A0"))
+                            .background(Color(hex: "9AF19A"))
                             .cornerRadius(27)
                     }
                 }
