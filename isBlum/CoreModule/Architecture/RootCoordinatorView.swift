@@ -1,15 +1,18 @@
 import SwiftUI
+import Supabase
 
 struct RootCoordinatorView: View {
-    @StateObject private var coordinator = AppCoordinator()
-    @StateObject private var filterVM = FilterViewModel()  
-    
+    @EnvironmentObject var coordinator: AppCoordinator
+    @EnvironmentObject var filterVM: FilterViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     var body: some View {
         ZStack {
             switch coordinator.appState {
             case .splash:
                 SplashScreenView()
                     .onAppear { startSplashTimer() }
+                    .task { await listenToAuthState() }
                 
             case .onboarding:
                 OnboardingView()
@@ -43,27 +46,29 @@ struct RootCoordinatorView: View {
                 MainTabView()
             }
         }
-        .environmentObject(coordinator)
         .animation(.easeInOut(duration: 0.4), value: coordinator.appState)
     }
     
     private func startSplashTimer() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            coordinator.finishSplash()
+            if coordinator.appState == .splash {
+                coordinator.finishSplash()
+            }
         }
     }
     
-//    func listenToAuthState() {
-//        _ = SupabaseService.shared.client.auth.onAuthStateChange { [weak self] _, session in
-//            DispatchQueue.main.async {
-//                if session != nil {
-//                    // User is logged in
-//                    self?.appState = .main
-//                } else {
-//                    // User is logged out
-//                    self?.appState = .filters(step: .occasion) // Or wherever they should be
-//                }
-//            }
-//        }
-//    }
+    func listenToAuthState() async {
+        _ = await SupabaseService.shared.client.auth.onAuthStateChange { event, session in
+            DispatchQueue.main.async {
+                if let session = session, !session.isExpired {
+                    authViewModel.isAuthenticated = true
+                    if coordinator.appState != .main {
+                        coordinator.appState = .main
+                    }
+                } else {
+                    authViewModel.isAuthenticated = false
+                }
+            }
+        }
+    }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct AuthView: View {
     @EnvironmentObject var coordinator: AppCoordinator
+    @EnvironmentObject var auth: AuthViewModel
     
     var body: some View {
         VStack(spacing: 0) {
@@ -24,7 +25,6 @@ struct AuthView: View {
                     .ignoresSafeArea(edges: .bottom)
                 
                 VStack(spacing: 24) {
-                    // Butterflies image from your assets
                     Image(.butterfliesIllustration)
                         .resizable()
                         .scaledToFit()
@@ -43,8 +43,13 @@ struct AuthView: View {
                     
                     // Auth Buttons
                     VStack(spacing: 12) {
-                        authButton(title: "Номеру телефона", icon: "phone", color: Color(hex: "B5F1A0"))
-                        authButton(title: "Електронної пошти", icon: "envelope", color: Color(hex: "F2F2F2"))
+                        authButton(title: "Номеру телефона", icon: "phone", color: Color(hex: "B5F1A0")) {
+                            coordinator.profilePath.append(AppRoute.phoneAuth)
+                        }
+                        
+                        authButton(title: "Електронної пошти", icon: "envelope", color: Color(hex: "F2F2F2")) {
+                            // TODO: Add email auth logic
+                        }
                         
                         HStack {
                             Rectangle().fill(Color.gray.opacity(0.2)).frame(height: 1)
@@ -53,12 +58,19 @@ struct AuthView: View {
                         }
                         .padding(.vertical, 8)
                         
-                        authButton(title: "Google", icon: "google_logo", isSystemIcon: false, color: Color(hex: "F2F2F2"))
-                        authButton(title: "Apple", icon: "apple.logo", color: Color(hex: "F2F2F2"))
+                        // Google Login Implementation
+                        authButton(title: "Google", icon: "google_logo", isSystemIcon: false, color: Color(hex: "F2F2F2")) {
+                            Task {
+                                await auth.signInWithGoogle()
+                            }
+                        }
+                        
+                        authButton(title: "Apple", icon: "apple.logo", color: Color(hex: "F2F2F2")) {
+                            // TODO: Add apple auth logic
+                        }
                     }
                     .padding(.horizontal, 16)
                     
-                    // Privacy Policy Text
                     Text("Продовжуючи реєстрацію, ви даєте згоду\nна обробку персональних даних")
                         .font(.onest(.regular, size: 12))
                         .foregroundColor(.gray)
@@ -72,13 +84,22 @@ struct AuthView: View {
     }
     
     @ViewBuilder
-    private func authButton(title: String, icon: String, isSystemIcon: Bool = true, color: Color) -> some View {
-        Button(action: { /* Auth Logic */ }) {
+    private func authButton(
+        title: String,
+        icon: String,
+        isSystemIcon: Bool = true,
+        color: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
             HStack(spacing: 12) {
                 if isSystemIcon {
                     Image(systemName: icon)
                 } else {
-                    Image(icon).resizable().frame(width: 20, height: 20)
+                    Image(icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
                 }
                 Text(title)
                     .font(.onest(.medium, size: 16))
@@ -93,5 +114,7 @@ struct AuthView: View {
 }
 
 #Preview {
-    AuthView().environmentObject(AppCoordinator())
+    AuthView()
+        .environmentObject(AppCoordinator())
+        .environmentObject(AuthViewModel())
 }

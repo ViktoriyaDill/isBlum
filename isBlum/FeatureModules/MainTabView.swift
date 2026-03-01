@@ -2,43 +2,39 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var coordinator: AppCoordinator
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     init() {
-        // Hide the native tab bar to use the custom one
         UITabBar.appearance().isHidden = true
     }
     
     var body: some View {
         VStack(spacing: 0) {
             TabView(selection: $coordinator.selectedTab) {
-                // Feed Tab
                 NavigationStack(path: $coordinator.feedPath) {
-                    Text("Feed View") // Replace with FeedView()
+                    Text("Feed View")
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }
                 }
                 .tag(TabItem.feed)
                 
-                // Orders Tab
                 NavigationStack(path: $coordinator.ordersPath) {
-                    Text("Orders View") // Replace with OrdersView()
+                    Text("Orders View")
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }
                 }
                 .tag(TabItem.orders)
                 
-                // Chats Tab
                 NavigationStack(path: $coordinator.chatsPath) {
-                    Text("Chats View") // Replace with ChatsView()
+                    Text("Chats View")
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }
                 }
                 .tag(TabItem.chats)
                 
-                // Profile Tab
                 NavigationStack(path: $coordinator.profilePath) {
                     ProfileView()
                         .navigationDestination(for: AppRoute.self) { route in
@@ -48,9 +44,19 @@ struct MainTabView: View {
                 .tag(TabItem.profile)
             }
             
-            // Custom Tab Bar based on your screenshot
             customTabBar
+                .opacity(isRootScreen ? 1 : 0)
+                .allowsHitTesting(isRootScreen)
+            
         }
+        .animation(.easeInOut(duration: 0.2), value: isRootScreen)
+    }
+    
+    private var isRootScreen: Bool {
+        coordinator.feedPath.isEmpty &&
+        coordinator.ordersPath.isEmpty &&
+        coordinator.chatsPath.isEmpty &&
+        coordinator.profilePath.isEmpty
     }
     
     private var customTabBar: some View {
@@ -67,7 +73,6 @@ struct MainTabView: View {
     @ViewBuilder
     private func tabButton(for item: TabItem, title: String, icon: ImageResource) -> some View {
         Button {
-            // Додаємо анімацію при зміні таба
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 coordinator.selectedTab = item
             }
@@ -117,16 +122,31 @@ struct MainTabView: View {
     @ViewBuilder
     func destinationFactory(for route: AppRoute) -> some View {
         switch route {
-        case .productDetails(let id): Text("Product \(id)")
-        case .sellerProfile(let id): Text("Seller \(id)")
-        case .orderDetails(let id): Text("Order \(id)")
-        case .chatRoom(let partnerId): Text("Chat with \(partnerId)")
-        case .settings: Text("Settings")
-        case .editProfile: Text("Edit Profile")
+        case .productDetails(let id):
+            Text("Product \(id)")
+        case .sellerProfile(let id):
+            Text("Seller \(id)")
+        case .orderDetails(let id):
+            Text("Order \(id)")
+        case .chatRoom(let partnerId):
+            Text("Chat with \(partnerId)")
+        case .settings:
+            Text("Settings")
+        case .editProfile:
+            Text("Edit Profile")
         case .addressDetails(let address):
             AddressDetailsView(selectedAddress: address)
         case .auth:
             AuthView()
+                .environmentObject(authViewModel)
+        case .phoneAuth:
+            PhoneAuthView()
+                .environmentObject(authViewModel)
+        case .otpVerification(let number):
+            VerifyCodeView(phoneNumber: number)
+                .environmentObject(authViewModel)
+        case .successAuth:
+            SuccessAuthView()
         }
     }
 }

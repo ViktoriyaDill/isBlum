@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		525FC9F52F51C65A007FA4CF /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 525FC9F42F51C65A007FA4CF /* Auth */; };
+		525FC9F72F51C65A007FA4CF /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 525FC9F62F51C65A007FA4CF /* Functions */; };
+		525FC9F92F51C65A007FA4CF /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 525FC9F82F51C65A007FA4CF /* PostgREST */; };
+		525FC9FB2F51C65A007FA4CF /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 525FC9FA2F51C65A007FA4CF /* Realtime */; };
+		525FC9FD2F51C65A007FA4CF /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 525FC9FC2F51C65A007FA4CF /* Storage */; };
+		525FCA022F51CBFF007FA4CF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 525FCA012F51CBFF007FA4CF /* Supabase */; };
+		525FCA072F533AB9007FA4CF /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 525FCA062F533AB9007FA4CF /* GoogleSignIn */; };
+		525FCA092F533AEA007FA4CF /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 525FCA082F533AEA007FA4CF /* GoogleSignInSwift */; };
 		52838B0A2F3DEC27000DEEE7 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 52838B092F3DEC27000DEEE7 /* Lottie */; };
-		529218C02F4DE0B800148D95 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 529218BF2F4DE0B800148D95 /* Auth */; };
-		529218C22F4DE0B800148D95 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 529218C12F4DE0B800148D95 /* Functions */; };
-		529218C42F4DE0B800148D95 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 529218C32F4DE0B800148D95 /* PostgREST */; };
-		529218C62F4DE0B800148D95 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 529218C52F4DE0B800148D95 /* Realtime */; };
-		529218C82F4DE0B800148D95 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 529218C72F4DE0B800148D95 /* Storage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,11 +48,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				529218C82F4DE0B800148D95 /* Storage in Frameworks */,
-				529218C42F4DE0B800148D95 /* PostgREST in Frameworks */,
-				529218C22F4DE0B800148D95 /* Functions in Frameworks */,
-				529218C02F4DE0B800148D95 /* Auth in Frameworks */,
-				529218C62F4DE0B800148D95 /* Realtime in Frameworks */,
+				525FCA092F533AEA007FA4CF /* GoogleSignInSwift in Frameworks */,
+				525FCA022F51CBFF007FA4CF /* Supabase in Frameworks */,
+				525FCA072F533AB9007FA4CF /* GoogleSignIn in Frameworks */,
+				525FC9FD2F51C65A007FA4CF /* Storage in Frameworks */,
+				525FC9F92F51C65A007FA4CF /* PostgREST in Frameworks */,
+				525FC9F72F51C65A007FA4CF /* Functions in Frameworks */,
+				525FC9F52F51C65A007FA4CF /* Auth in Frameworks */,
+				525FC9FB2F51C65A007FA4CF /* Realtime in Frameworks */,
 				52838B0A2F3DEC27000DEEE7 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				5246E5D22F392F200072BFF0 /* isBlum */,
+				525FCA002F51CBFF007FA4CF /* Frameworks */,
 				5246E5D12F392F200072BFF0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +78,13 @@
 				5246E5D02F392F200072BFF0 /* isBlum.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		525FCA002F51CBFF007FA4CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -94,11 +108,14 @@
 			name = isBlum;
 			packageProductDependencies = (
 				52838B092F3DEC27000DEEE7 /* Lottie */,
-				529218BF2F4DE0B800148D95 /* Auth */,
-				529218C12F4DE0B800148D95 /* Functions */,
-				529218C32F4DE0B800148D95 /* PostgREST */,
-				529218C52F4DE0B800148D95 /* Realtime */,
-				529218C72F4DE0B800148D95 /* Storage */,
+				525FC9F42F51C65A007FA4CF /* Auth */,
+				525FC9F62F51C65A007FA4CF /* Functions */,
+				525FC9F82F51C65A007FA4CF /* PostgREST */,
+				525FC9FA2F51C65A007FA4CF /* Realtime */,
+				525FC9FC2F51C65A007FA4CF /* Storage */,
+				525FCA012F51CBFF007FA4CF /* Supabase */,
+				525FCA062F533AB9007FA4CF /* GoogleSignIn */,
+				525FCA082F533AEA007FA4CF /* GoogleSignInSwift */,
 			);
 			productName = isBlum;
 			productReference = 5246E5D02F392F200072BFF0 /* isBlum.app */;
@@ -130,7 +147,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				52838B082F3DEC27000DEEE7 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				525FCA052F533AB8007FA4CF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5246E5D12F392F200072BFF0 /* Products */;
@@ -382,6 +400,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		525FCA052F533AB8007FA4CF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
 		52838B082F3DEC27000DEEE7 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
@@ -390,46 +424,53 @@
 				minimumVersion = 4.6.0;
 			};
 		};
-		529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		525FC9F42F51C65A007FA4CF /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		525FC9F62F51C65A007FA4CF /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		525FC9F82F51C65A007FA4CF /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		525FC9FA2F51C65A007FA4CF /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		525FC9FC2F51C65A007FA4CF /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		525FCA012F51CBFF007FA4CF /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FC9F32F51C65A007FA4CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		525FCA062F533AB9007FA4CF /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FCA052F533AB8007FA4CF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		525FCA082F533AEA007FA4CF /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 525FCA052F533AB8007FA4CF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		52838B092F3DEC27000DEEE7 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 52838B082F3DEC27000DEEE7 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
-		};
-		529218BF2F4DE0B800148D95 /* Auth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
-		};
-		529218C12F4DE0B800148D95 /* Functions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Functions;
-		};
-		529218C32F4DE0B800148D95 /* PostgREST */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = PostgREST;
-		};
-		529218C52F4DE0B800148D95 /* Realtime */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Realtime;
-		};
-		529218C72F4DE0B800148D95 /* Storage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 529218BE2F4DE0B800148D95 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Storage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

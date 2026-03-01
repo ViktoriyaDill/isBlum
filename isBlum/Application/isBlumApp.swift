@@ -7,29 +7,26 @@
 
 import SwiftUI
 import SwiftData
+import Supabase
 
 @main
 struct isBlumApp: App {
-    // Keep your SwiftData container
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var coordinator = AppCoordinator()
+    @StateObject private var filterVM = FilterViewModel()
 
     var body: some Scene {
         WindowGroup {
-            // Replace ContentView with RootCoordinatorView
-            // This is the starting point of your Navigation Logic
             RootCoordinatorView()
+                .environmentObject(authViewModel)
+                .environmentObject(coordinator)
+                .environmentObject(filterVM)
+                .onOpenURL { url in
+                    guard url.scheme == "isblum" else { return }
+                    Task {
+                        await authViewModel.handleAuthCallback(url: url)
+                    }
+                }
         }
-        .modelContainer(sharedModelContainer)
     }
 }

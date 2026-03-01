@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var coordinator: AppCoordinator
+    @EnvironmentObject var auth: AuthViewModel
     
     // Replace with real logic from your AuthManager
     @State private var isLoggedIn: Bool = false

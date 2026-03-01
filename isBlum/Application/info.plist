@@ -14,5 +14,26 @@
 		<string>Onest-SemiBold.ttf</string>
 		<string>Onest-Thin.ttf</string>
 	</array>
+	<key>GIDClientID</key>
+	<string>509640098588-alatbdc41l3a49inl9q1dl21jfarv8bd.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>google</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.509640098588-vi78ss497g9gals6qq3irojk9udjklt5</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>supabase</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>isblum</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
