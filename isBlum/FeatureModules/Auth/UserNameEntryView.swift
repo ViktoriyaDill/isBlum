@@ -13,24 +13,23 @@ struct UserNameEntryView: View {
     @EnvironmentObject var auth: AuthViewModel
     
     @State private var name: String = ""
+    @State private var isLoading: Bool = false
     @FocusState private var isFocused: Bool
     
     var body: some View {
         VStack(spacing: 0) {
-            // Кастомний Navigation Bar (як на попередніх екранах)
             CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: false) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
             
             ZStack {
-                // Біла підкладка з закругленими кутами
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
                 
                 VStack(spacing: 32) {
-                    // Заголовок та підзаголовок
+                    // Header Section
                     VStack(spacing: 12) {
                         Text("Як вас звати?")
                             .font(.onest(.bold, size: 32))
@@ -45,7 +44,7 @@ struct UserNameEntryView: View {
                     }
                     .padding(.top, 40)
                     
-                    // Поле введення імені
+                    // MARK: - Name Input Field
                     HStack(spacing: 12) {
                         Image(systemName: "person")
                             .foregroundColor(.black.opacity(0.7))
@@ -55,29 +54,40 @@ struct UserNameEntryView: View {
                             .font(.onest(.regular, size: 17))
                             .focused($isFocused)
                             .submitLabel(.done)
+                            .disabled(isLoading)
+                            .onSubmit {
+                                if isFormValid { handleNameSubmission() }
+                            }
                     }
                     .padding(.horizontal, 16)
                     .frame(height: 60)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            .stroke(isFocused ? Color(hex: "B5F1A0") : Color.gray.opacity(0.3), lineWidth: 1.5)
                     )
                     
                     Spacer()
                     
-                    // Кнопка "Продовжити"
+                    // MARK: - Submit Button
                     Button(action: handleNameSubmission) {
-                        Text("Продовжити")
-                            .font(.onest(.medium, size: 18))
-                            .foregroundColor(.black)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 60)
-                            .background(
-                                RoundedRectangle(cornerRadius: 30)
-                                    .fill(name.trimmingCharacters(in: .whitespaces).count >= 2 ? Color(hex: "B5F1A0") : Color(hex: "B5F1A0").opacity(0.5))
-                            )
+                        HStack {
+                            if isLoading {
+                                ProgressView()
+                                    .tint(.black)
+                                    .padding(.trailing, 8)
+                            }
+                            Text(isLoading ? "Зберігаємо..." : "Продовжити")
+                        }
+                        .font(.onest(.medium, size: 18))
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 60)
+                        .background(
+                            RoundedRectangle(cornerRadius: 30)
+                                .fill(isFormValid ? Color(hex: "B5F1A0") : Color(hex: "B5F1A0").opacity(0.5))
+                        )
                     }
-                    .disabled(name.trimmingCharacters(in: .whitespaces).count < 2)
+                    .disabled(!isFormValid || isLoading)
                     .padding(.bottom, 20)
                 }
                 .padding(.horizontal, 24)
@@ -90,10 +100,37 @@ struct UserNameEntryView: View {
         }
     }
     
+    // MARK: - Computed Properties
+    
+    private var isFormValid: Bool {
+        name.trimmingCharacters(in: .whitespaces).count >= 2
+    }
+    
+    // MARK: - Logic & DB Interaction
+    
     private func handleNameSubmission() {
+        guard isFormValid else { return }
+        
+        isLoading = true
+        let cleanedName = name.trimmingCharacters(in: .whitespaces)
+        
         Task {
-            await auth.updateProfile(name: name, phone: nil)
-            coordinator.profilePath.append(AppRoute.successAuth)
+            // Updating profile in DB via AuthViewModel
+            await auth.updateProfile(name: cleanedName, phone: nil)
+            
+            await MainActor.run {
+                isLoading = false
+                if auth.authError == nil {
+                    // Success: Navigate to the main app area
+                    withAnimation(.easeInOut) {
+                        coordinator.profilePath = NavigationPath()
+                        coordinator.appState = .main
+                    }
+                } else {
+                    // Optional: Handle error (e.g., show an alert)
+                    print("Error saving name: \(String(describing: auth.authError))")
+                }
+            }
         }
     }
 }

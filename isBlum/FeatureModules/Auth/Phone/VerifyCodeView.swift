@@ -7,11 +7,17 @@
 
 import SwiftUI
 
+enum VerificationMode {
+    case auth
+    case updateProfile
+}
+
 struct VerifyCodeView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var auth: AuthViewModel
     
     let phoneNumber: String
+    let mode: VerificationMode
     
     @State private var otpCode: [String] = Array(repeating: "", count: 6)
     @FocusState private var focusedField: Int?
@@ -224,19 +230,27 @@ struct VerifyCodeView: View {
     }
     
     private func verifyCode(_ code: String) async {
-        verificationState = .loading
-        await auth.verifyOTP(phone: phoneNumber, token: code)
-        
-        if auth.authError == nil {
-            verificationState = .success
-            try? await Task.sleep(nanoseconds: 800_000_000)
-            coordinator.profilePath.append(AppRoute.successAuth)
-        } else {
-            withAnimation(.spring()) {
-                verificationState = .error
+            verificationState = .loading
+            await auth.verifyOTP(phone: phoneNumber, token: code)
+            
+            if auth.authError == nil {
+                verificationState = .success
+                try? await Task.sleep(nanoseconds: 800_000_000)
+                
+                switch mode {
+                case .auth:
+                    coordinator.profilePath.append(AppRoute.successAuth)
+                case .updateProfile:
+                    await auth.updateProfile(name: nil, phone: phoneNumber)
+                    coordinator.popProfile()
+                    coordinator.popProfile()
+                }
+            } else {
+                withAnimation(.spring()) {
+                    verificationState = .error
+                }
             }
         }
-    }
     
     private func resendCode() {
         timeRemaining = 30
@@ -249,7 +263,7 @@ struct VerifyCodeView: View {
     }
 }
 
-#Preview{
-    VerifyCodeView(phoneNumber: "viktoriyadill@gmail.com").environmentObject(AppCoordinator())
-        .environmentObject(AuthViewModel())
-}
+//#Preview{
+//    VerifyCodeView(phoneNumber: "viktoriyadill@gmail.com", mode: <#VerificationMode#>).environmentObject(AppCoordinator())
+//        .environmentObject(AuthViewModel())
+//}

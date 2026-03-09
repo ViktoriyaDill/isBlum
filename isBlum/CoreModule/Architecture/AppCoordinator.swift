@@ -16,6 +16,11 @@ enum AppRoute: Hashable {
     case emailAuth
     case emailOtpVerification(email: String)
     case userName
+    case accountSettings
+    case editProfileField(ProfileFieldType)
+    case deleteAccount
+    case otpVerification(phone: String, mode: VerificationMode)
+    case emailOtpVerification(email: String, mode: VerificationMode)
 }
 
 enum TabItem {
@@ -146,6 +151,26 @@ class AppCoordinator: ObservableObject {
         LocationService.shared.saveFullAddress(details: details)
         stateHistory.removeAll()
         navigate(to: .filterOccasion)
+    }
+    
+    func showAccountSettings() {
+        profilePath.append(AppRoute.accountSettings)
+    }
+    
+    func showEditProfileField(_ fieldType: ProfileFieldType) {
+        profilePath.append(AppRoute.editProfileField(fieldType))
+    }
+
+    func showDeleteAccount() {
+        profilePath.append(AppRoute.deleteAccount)
+    }
+    
+    func showOTPVerification(phone: String, mode: VerificationMode = .auth) {
+        profilePath.append(AppRoute.otpVerification(phone: phone, mode: mode))
+    }
+
+    func showEmailOTPVerification(email: String, mode: VerificationMode = .auth) {
+        profilePath.append(AppRoute.emailOtpVerification(email: email, mode: mode))
     }
     
     func goBack() {

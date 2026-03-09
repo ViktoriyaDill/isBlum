@@ -13,6 +13,7 @@ struct VerifyEmailView: View {
     @EnvironmentObject var auth: AuthViewModel
     
     let email: String
+    let mode: VerificationMode
     
     @State private var otpCode: [String] = Array(repeating: "", count: 6)
     @FocusState private var focusedField: Int?
@@ -219,28 +220,29 @@ struct VerifyEmailView: View {
     }
     
     private func verify(_ code: String) {
-        Task {
-            await auth.verifyEmailOTP(email: email, token: code)
-            
-            await MainActor.run {
-                withAnimation {
-                    if auth.authError == nil {
-                        verificationState = .success
-                        // Show success view briefly before auto-transitioning
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                            // Navigate to SuccessAuthView first
-                            coordinator.profilePath.append(AppRoute.successAuth)
-                        }
-                    } else {
-                        verificationState = .error
-                        // Option to clear code on error
-                        // otpCode = Array(repeating: "", count: 6)
-                        // focusedField = 0
-                    }
-                }
-            }
-        }
-    }
+           Task {
+               await auth.verifyEmailOTP(email: email, token: code)
+               
+               await MainActor.run {
+                   withAnimation {
+                       if auth.authError == nil {
+                           verificationState = .success
+                           DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                               switch mode {
+                               case .auth:
+                                   coordinator.profilePath.append(AppRoute.successAuth)
+                               case .updateProfile:
+                                   coordinator.popProfile()
+                                   coordinator.popProfile()
+                               }
+                           }
+                       } else {
+                           verificationState = .error
+                       }
+                   }
+               }
+           }
+       }
     
     private func resendCode() {
         withAnimation {
@@ -253,8 +255,8 @@ struct VerifyEmailView: View {
     }
 }
 
-#Preview {
-    VerifyEmailView(email: "viktoriyadill@gmail.com")
-        .environmentObject(AppCoordinator())
-        .environmentObject(AuthViewModel())
-}
+//#Preview {
+//    VerifyEmailView(email: "viktoriyadill@gmail.com")
+//        .environmentObject(AppCoordinator())
+//        .environmentObject(AuthViewModel())
+//}

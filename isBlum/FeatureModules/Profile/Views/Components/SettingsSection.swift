@@ -20,19 +20,35 @@ struct SettingsGroupView: View {
                     .padding(.top, 24)
                 
                 VStack(spacing: 16) {
-                    ProfileMenuRow(icon: .globe, title: "Мова", subtitle: "Українська")
-                    Divider().padding(.leading, 50)
-                    ProfileMenuRow(icon: .banknote, title: "Валюта", subtitle: "UAH")
-                    Divider().padding(.leading, 50)
-                    if isLoggedIn {
-                        ProfileMenuRow(icon: .bell, title: "Налаштування сповіщень")
-                        Divider().padding(.leading, 50)
+                    ProfileMenuRow(icon: .globe, title: "Мова", subtitle: "Українська") {
+                        //add logic to navigate
                     }
-                    ProfileMenuRow(icon: .help, title: "Підтримка")
-                    Divider().padding(.leading, 50)
-                    ProfileMenuRow(icon: .shop, title: "Розмістити свій магазин")
-                    Divider().padding(.leading, 50)
-                    ProfileMenuRow(icon: .info, title: "Про додаток")
+                    Divider()
+                    
+                    ProfileMenuRow(icon: .banknote, title: "Валюта", subtitle: "UAH") {
+                        //add logic to navigate
+                    }
+                    Divider()
+                    
+                    if isLoggedIn {
+                        ProfileMenuRow(icon: .bell, title: "Налаштування сповіщень") {
+                            //add logic to navigate
+                        }
+                        Divider()
+                    }
+                    ProfileMenuRow(icon: .help, title: "Підтримка") {
+                        //add logic to navigate
+                    }
+                    Divider()
+                    
+                    ProfileMenuRow(icon: .shop, title: "Розмістити свій магазин"){
+                        //add logic to navigate
+                    }
+                    Divider()
+                    
+                    ProfileMenuRow(icon: .info, title: "Про додаток") {
+                        //add logic to navigate
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
@@ -47,18 +63,19 @@ struct ProfileMenuRow: View {
     var subtitle: String? = nil
     var showArrow: Bool = true
     
+    let action: () -> Void
+    
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 8) {
             Image(uiImage: icon)
-                .frame(width: 24)
-                .foregroundColor(.black)
+                .frame(width: 20, height: 20)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.onest(.regular, size: 14))
+                    .font(.onest(.medium, size: 16))
                 if let subtitle = subtitle {
                     Text(subtitle)
-                        .font(.onest(.regular, size: 12))
+                        .font(.onest(.regular, size: 14))
                         .foregroundColor(.gray)
                 }
             }
@@ -72,8 +89,11 @@ struct ProfileMenuRow: View {
             }
         }
         .padding(.vertical, 14)
-        .padding(.horizontal, 16)
         .contentShape(Rectangle())
         .frame(height: 40)
+        .onTapGesture {
+            action()
+        }
     }
+    
 }

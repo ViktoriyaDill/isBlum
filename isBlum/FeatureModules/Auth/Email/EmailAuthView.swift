@@ -91,13 +91,12 @@ struct EmailAuthView: View {
         Task {
             await auth.sendEmailOTP(email: email)
             if auth.authError == nil {
-                coordinator.showEmailOTPVerification(email: email) 
+                coordinator.showEmailOTPVerification(email: email, mode: .auth)
             }
         }
     }
 }
 
-// Допоміжне розширення для валідації пошти
 extension String {
     var isValidEmail: Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"

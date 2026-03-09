@@ -150,22 +150,30 @@ struct MainTabView: View {
         case .phoneAuth:
             PhoneAuthView()
                 .environmentObject(authViewModel)
-        case .otpVerification(let number):
-            VerifyCodeView(phoneNumber: number)
-                .environmentObject(authViewModel)
         case .successAuth:
             SuccessAuthView()
         case .emailAuth:
             EmailAuthView()
                 .environmentObject(authViewModel)
-
-        case .emailOtpVerification(let email):
-            VerifyEmailView(email: email)
-                .environmentObject(authViewModel)
-
         case .userName:
             UserNameEntryView()
                 .environmentObject(authViewModel)
+        case .accountSettings:
+            AccountSettingsView()
+                .environmentObject(authViewModel)
+        case .editProfileField(let fieldType):
+            EditProfileFieldView(fieldType: fieldType)
+                .environmentObject(authViewModel)
+        case .otpVerification(let phone, let mode):
+            VerifyCodeView(phoneNumber: phone, mode: mode)
+                .environmentObject(authViewModel)
+        case .emailOtpVerification(let email, let mode):
+            VerifyEmailView(email: email, mode: mode)
+                .environmentObject(authViewModel)
+        case .deleteAccount:
+            EmptyView()
+//            DeleteAccountView()
+//                .environmentObject(authViewModel)
         }
     }
 }

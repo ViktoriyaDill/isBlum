@@ -268,7 +268,19 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    func updateEmail(_ email: String) async {
+        isLoading = true
+        authError = nil
+        defer { isLoading = false }
+        do {
+            try await client.auth.update(user: UserAttributes(email: email))
+        } catch {
+            authError = "Не вдалось оновити email."
+        }
+    }
+    
     // MARK: - Session Management
+    
     func handleAuthCallback(url: URL) async {
         do {
             try await client.auth.session(from: url)
@@ -278,12 +290,61 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    // Check verification status (from your DB or Supabase Auth metadata)
+    var isPhoneUnverified: Bool {
+        // Example logic: if you don't have this in UserProfile, check metadata
+        // For now, let's assume it's true if phone is empty or explicitly marked
+        currentUser?.phone == nil
+    }
+    
+    var isEmailUnverified: Bool {
+        // Checking if email was verified via Supabase Auth
+        // (This might require a check in auth.client.auth.currentUser)
+        currentUser?.email == nil
+    }
+    
     func signOut() async {
         do {
             try await client.auth.signOut()
         } catch {
             print("Sign out error: \(error.localizedDescription)")
             authError = error.localizedDescription
+        }
+    }
+    
+    // MARK: - Account Deletion
+    func deleteAccount() async {
+        isLoading = true
+        authError = nil
+        defer { isLoading = false }
+        
+        do {
+            if let userId = client.auth.currentUser?.id {
+                try await client
+                    .from("profiles")
+                    .delete()
+                    .eq("id", value: userId)
+                    .execute()
+            }
+            
+            try await client.rpc("delete_user").execute()
+            
+            // 3. Локальний вихід
+            try await client.auth.signOut()
+            
+            // 4. Очищаємо локальні дані
+            FilterService.shared.reset()
+            UserDefaults.standard.removeObject(forKey: "userAddress")
+            UserDefaults.standard.removeObject(forKey: "hasSelectedFilters")
+            
+            await MainActor.run {
+                self.isAuthenticated = false
+                self.currentUser = nil
+            }
+            
+        } catch {
+            print("Account deletion error: \(error.localizedDescription)")
+            authError = "Не вдалось видалити акаунт. Спробуйте ще раз."
         }
     }
 }

@@ -105,7 +105,7 @@ struct PhoneAuthView: View {
                             await auth.sendOTP(phone: fullPhone)
                             print("fullPhone \(fullPhone)")
                             if auth.authError == nil {
-                                coordinator.profilePath.append(AppRoute.otpVerification(phone: fullPhone))
+                                coordinator.showOTPVerification(phone: fullPhone, mode: .auth)
                             }
                         }
                     }) {

@@ -11,10 +11,6 @@ struct ProfileView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var auth: AuthViewModel
     
-    // Replace with real logic from your AuthManager
-    @State private var isLoggedIn: Bool = false
-    @State private var hasUnverifiedContact: Bool = true
-    
     var body: some View {
         VStack(spacing: 0) {
             // Header with cloud background
@@ -33,15 +29,15 @@ struct ProfileView: View {
                 // Content with rounded corners
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 8) {
-                        if isLoggedIn /*auth.isAuthenticated*/ {
-                            LoggedInProfileView(hasUnverifiedContact: hasUnverifiedContact)
+                        if auth.isAuthenticated {
+                            LoggedInProfileView()
                         } else {
                             LoggedOutProfileView {
                                 coordinator.showAuth()
                             }
                         }
                         
-                        SettingsGroupView(isLoggedIn: isLoggedIn)
+                        SettingsGroupView(isLoggedIn: auth.isAuthenticated)
                     }
                 }
             }
