@@ -15,7 +15,7 @@ struct VerifyCodeView: View {
     
     let phoneNumber: String
     
-    @State private var otpCode: [String] = Array(repeating: "", count: 4)
+    @State private var otpCode: [String] = Array(repeating: "", count: 6)
     @FocusState private var focusedField: Int?
     @State private var timeRemaining = 30
     @State private var verificationState: VerificationState = .idle
@@ -209,55 +209,54 @@ struct VerifyCodeView: View {
     
     // MARK: - Logic
     private func handleOTPInput(index: Int, value: String) {
-        if verificationState == .error {
+            if verificationState == .error {
+                verificationState = .idle
+            }
+            
+            if value.count > 1 {
+                otpCode[index] = String(value.last!)
+            }
+            
+            if !value.isEmpty && index < 5 {
+                focusedField = index + 1
+            }
+            
+            if value.isEmpty && index > 0 {
+                focusedField = index - 1
+            }
+            
+            let fullCode = otpCode.joined()
+            if fullCode.count == 6 {
+                focusedField = nil
+                Task { await verifyCode(fullCode) }
+            }
+        }
+        
+        private func verifyCode(_ code: String) async {
+            verificationState = .loading
+            
+            await auth.verifyOTP(phone: phoneNumber, token: code)
+            
+            if auth.authError == nil {
+                verificationState = .success
+                try? await Task.sleep(nanoseconds: 800_000_000)
+                coordinator.profilePath.append(AppRoute.successAuth)
+            } else {
+                verificationState = .error
+                otpCode = Array(repeating: "", count: 6)
+                focusedField = 0
+            }
+        }
+        
+        private func resendCode() {
+            timeRemaining = 30
             verificationState = .idle
-        }
-        
-        if value.count > 1 {
-            otpCode[index] = String(value.last!)
-        }
-        
-        if !value.isEmpty && index < 3 {
-            focusedField = index + 1
-        }
-        
-        if value.isEmpty && index > 0 {
-            focusedField = index - 1
-        }
-        
-        let fullCode = otpCode.joined()
-        if fullCode.count == 4 {
-            focusedField = nil
-            Task { await verifyCode(fullCode) }
-        }
-    }
-    
-    private func verifyCode(_ code: String) async {
-        verificationState = .loading
-        
-        await auth.verifyOTP(phone: phoneNumber, token: code)
-        
-        if auth.authError == nil {
-            verificationState = .success
-            // Невелика затримка щоб юзер побачив успіх
-            try? await Task.sleep(nanoseconds: 800_000_000)
-            coordinator.profilePath.append(AppRoute.successAuth)
-        } else {
-            verificationState = .error
-            otpCode = Array(repeating: "", count: 4)
+            otpCode = Array(repeating: "", count: 6)
             focusedField = 0
+            Task {
+                await auth.sendOTP(phone: phoneNumber)
+            }
         }
-    }
-    
-    private func resendCode() {
-        timeRemaining = 30
-        verificationState = .idle
-        otpCode = Array(repeating: "", count: 4)
-        focusedField = 0
-        Task {
-            await auth.sendOTP(phone: phoneNumber)
-        }
-    }
 }
 
 #Preview{

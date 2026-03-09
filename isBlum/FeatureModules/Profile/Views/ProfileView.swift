@@ -33,7 +33,7 @@ struct ProfileView: View {
                 // Content with rounded corners
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 8) {
-                        if isLoggedIn {
+                        if isLoggedIn /*auth.isAuthenticated*/ {
                             LoggedInProfileView(hasUnverifiedContact: hasUnverifiedContact)
                         } else {
                             LoggedOutProfileView {

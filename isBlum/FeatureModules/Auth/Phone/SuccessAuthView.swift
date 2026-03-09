@@ -38,6 +38,7 @@ struct SuccessAuthView: View {
             }
             .multilineTextAlignment(.center)
         }
+        .ignoresSafeArea()
         .navigationBarHidden(true)
         .interactiveDismissDisabled(true)
         .onAppear {

@@ -15,7 +15,9 @@
 		<string>Onest-Thin.ttf</string>
 	</array>
 	<key>GIDClientID</key>
-	<string>509640098588-alatbdc41l3a49inl9q1dl21jfarv8bd.apps.googleusercontent.com</string>
+	<string>509640098588-vi78ss497g9gals6qq3irojk9udjklt5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.509640098588-vi78ss497g9gals6qq3irojk9udjklt5</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

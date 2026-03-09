@@ -9,7 +9,7 @@ struct MainTabView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .bottom) {
             TabView(selection: $coordinator.selectedTab) {
                 NavigationStack(path: $coordinator.feedPath) {
                     Text("Feed View")
@@ -43,13 +43,16 @@ struct MainTabView: View {
                 }
                 .tag(TabItem.profile)
             }
-            
-            customTabBar
-                .opacity(isRootScreen ? 1 : 0)
-                .allowsHitTesting(isRootScreen)
-            
+            .ignoresSafeArea(.all, edges: .bottom)
+            .ignoresSafeArea(.keyboard)
+
+            if isRootScreen {
+                customTabBar
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .zIndex(1)
+            }
         }
-        .animation(.easeInOut(duration: 0.2), value: isRootScreen)
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isRootScreen)
     }
     
     private var isRootScreen: Bool {
@@ -67,7 +70,12 @@ struct MainTabView: View {
             tabButton(for: .profile, title: "Профіль", icon: .profile)
         }
         .frame(height: 70)
-        .background(Color.white.shadow(color: .black.opacity(0.05), radius: 10, y: -5))
+        .padding(.bottom, 0)
+        .background(
+            Color.white
+                .shadow(color: .black.opacity(0.05), radius: 10, y: -5)
+                .ignoresSafeArea(edges: .bottom)
+        )
     }
     
     @ViewBuilder
@@ -147,6 +155,17 @@ struct MainTabView: View {
                 .environmentObject(authViewModel)
         case .successAuth:
             SuccessAuthView()
+        case .emailAuth:
+            EmailAuthView()
+                .environmentObject(authViewModel)
+
+        case .emailOtpVerification(let email):
+            VerifyEmailView(email: email)
+                .environmentObject(authViewModel)
+
+        case .userName:
+            UserNameEntryView()
+                .environmentObject(authViewModel)
         }
     }
 }

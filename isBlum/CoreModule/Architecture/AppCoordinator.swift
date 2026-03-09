@@ -12,7 +12,10 @@ enum AppRoute: Hashable {
     case auth
     case phoneAuth
     case otpVerification(phone: String)
-    case successAuth 
+    case successAuth
+    case emailAuth
+    case emailOtpVerification(email: String)
+    case userName
 }
 
 enum TabItem {
@@ -49,6 +52,8 @@ class AppCoordinator: ObservableObject {
     func showAuth() {
         profilePath.append(AppRoute.auth)
     }
+    
+    // Phone authenfication
 
     func showPhoneAuth() {
         profilePath.append(AppRoute.phoneAuth)
@@ -56,6 +61,16 @@ class AppCoordinator: ObservableObject {
 
     func showOTPVerification(phone: String) {
         profilePath.append(AppRoute.otpVerification(phone: phone))
+    }
+    
+    // Email authenfication
+    
+    func showEmailAuth() {
+        profilePath.append(AppRoute.emailAuth)
+    }
+
+    func showEmailOTPVerification(email: String) {
+        profilePath.append(AppRoute.emailOtpVerification(email: email))
     }
 
     func popProfile() {
