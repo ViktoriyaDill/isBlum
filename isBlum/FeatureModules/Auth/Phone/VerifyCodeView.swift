@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct VerifyCodeView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var auth: AuthViewModel
@@ -22,12 +20,11 @@ struct VerifyCodeView: View {
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    enum VerificationState {
-        case idle
-        case loading    // Перевіряємо код...
-        case error      // Невірний код
-        case success    // Код введено правильно
-    }
+    // MARK: - Validation Colors
+    private let errorBorder = Color(hex: "D71616")
+    private let errorBackground = Color(hex: "FEF6F6")
+    private let successColor = Color(hex: "3AB73A")
+    private let activeBorder = Color(hex: "B5F1A0")
     
     var body: some View {
         VStack(spacing: 0) {
@@ -53,11 +50,12 @@ struct VerifyCodeView: View {
                             
                             HStack(spacing: 8) {
                                 Text(phoneNumber)
-                                    .font(.onest(.bold, size: 16))
+                                    .font(.onest(.medium, size: 16))
                                 
                                 Button(action: { coordinator.popProfile() }) {
-                                    Image(systemName: "pencil")
+                                    Image(.edit)
                                         .foregroundColor(.black)
+                                        .frame(width: 24, height: 24)
                                         .font(.system(size: 14))
                                 }
                             }
@@ -66,19 +64,18 @@ struct VerifyCodeView: View {
                     .padding(.top, 40)
                     .multilineTextAlignment(.center)
                     
-                    // OTP поля
-                    HStack(spacing: 12) {
+                    // MARK: - OTP Input Fields
+                    HStack(spacing: 8) {
                         ForEach(0..<6, id: \.self) { index in
                             TextField("", text: $otpCode[index])
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 72)
+                                .frame(width: 48, height: 48)
                                 .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(fillColor(for: index))
+                                )
+                                .overlay(
                                     RoundedRectangle(cornerRadius: 16)
                                         .stroke(borderColor(for: index), lineWidth: 2)
-                                )
-                                .background(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .fill(fillColor)
                                 )
                                 .font(.onest(.medium, size: 24))
                                 .multilineTextAlignment(.center)
@@ -90,14 +87,12 @@ struct VerifyCodeView: View {
                                 }
                         }
                     }
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 4)
                     
-                    // Статус
                     statusView
                     
                     Spacer()
                     
-                    // Таймер / кнопка повторно
                     resendView
                         .padding(.bottom, 20)
                 }
@@ -112,33 +107,31 @@ struct VerifyCodeView: View {
         }
     }
     
-    // MARK: - Border color
+    // MARK: - Helper Methods for Dynamic Styling
     private func borderColor(for index: Int) -> Color {
         switch verificationState {
-        case .error:   return .red
-        case .success: return Color(hex: "9AF19A")
-        case .loading: return Color(hex: "9AF19A").opacity(0.5)
-        default:       return focusedField == index ? Color(hex: "B5F1A0") : Color.gray.opacity(0.3)
+        case .error:   return errorBorder
+        case .success: return successColor
+        case .loading: return successColor.opacity(0.5)
+        default:       return focusedField == index ? activeBorder : Color.gray.opacity(0.2)
         }
     }
     
-    // MARK: - Fill color
-    private var fillColor: Color {
+    private func fillColor(for index: Int) -> Color {
         switch verificationState {
-        case .error:   return Color.red.opacity(0.03)
-        case .success: return Color(hex: "9AF19A").opacity(0.05)
-        default:       return Color.clear
+        case .error:   return errorBackground
+        case .success: return successColor.opacity(0.05)
+        default:       return Color.white
         }
     }
     
-    // MARK: - Status view
+    // MARK: - Status Subview
     @ViewBuilder
     private var statusView: some View {
         switch verificationState {
         case .loading:
             HStack(spacing: 8) {
-                ProgressView()
-                    .scaleEffect(0.9)
+                ProgressView().scaleEffect(0.9)
                 Text("Перевіряємо код...")
                     .font(.onest(.regular, size: 15))
                     .foregroundColor(.gray)
@@ -151,7 +144,7 @@ struct VerifyCodeView: View {
                 Text("Невірний код")
                     .font(.onest(.regular, size: 15))
             }
-            .foregroundColor(.red)
+            .foregroundColor(errorBorder)
             
         case .success:
             HStack(spacing: 6) {
@@ -160,14 +153,14 @@ struct VerifyCodeView: View {
                 Text("Код введено правильно")
                     .font(.onest(.regular, size: 15))
             }
-            .foregroundColor(Color(hex: "3AB73A"))
+            .foregroundColor(successColor)
             
         case .idle:
             EmptyView()
         }
     }
     
-    // MARK: - Resend view
+    // MARK: - Resend Logic Subview
     @ViewBuilder
     private var resendView: some View {
         if verificationState == .error {
@@ -177,10 +170,9 @@ struct VerifyCodeView: View {
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
-                    .background(Color(hex: "9AF19A"))
+                    .background(activeBorder)
                     .cornerRadius(28)
             }
-            .padding(.horizontal, 8)
         } else {
             HStack {
                 Text(timeRemaining > 0 ? "Відправити код повторно через" : "Ви можете")
@@ -203,63 +195,61 @@ struct VerifyCodeView: View {
             .frame(height: 56)
             .background(Color.gray.opacity(0.05))
             .cornerRadius(28)
-            .padding(.horizontal, 8)
         }
     }
     
-    // MARK: - Logic
+    // MARK: - Input Handling Logic
     private func handleOTPInput(index: Int, value: String) {
-            if verificationState == .error {
-                verificationState = .idle
-            }
-            
-            if value.count > 1 {
-                otpCode[index] = String(value.last!)
-            }
-            
-            if !value.isEmpty && index < 5 {
-                focusedField = index + 1
-            }
-            
-            if value.isEmpty && index > 0 {
-                focusedField = index - 1
-            }
-            
-            let fullCode = otpCode.joined()
-            if fullCode.count == 6 {
-                focusedField = nil
-                Task { await verifyCode(fullCode) }
-            }
-        }
-        
-        private func verifyCode(_ code: String) async {
-            verificationState = .loading
-            
-            await auth.verifyOTP(phone: phoneNumber, token: code)
-            
-            if auth.authError == nil {
-                verificationState = .success
-                try? await Task.sleep(nanoseconds: 800_000_000)
-                coordinator.profilePath.append(AppRoute.successAuth)
-            } else {
-                verificationState = .error
-                otpCode = Array(repeating: "", count: 6)
-                focusedField = 0
-            }
-        }
-        
-        private func resendCode() {
-            timeRemaining = 30
+        if verificationState == .error {
             verificationState = .idle
-            otpCode = Array(repeating: "", count: 6)
-            focusedField = 0
-            Task {
-                await auth.sendOTP(phone: phoneNumber)
+        }
+        
+        if value.count > 1 {
+            otpCode[index] = String(value.last!)
+        }
+        
+        if !value.isEmpty && index < 5 {
+            focusedField = index + 1
+        }
+        
+        if value.isEmpty && index > 0 {
+            focusedField = index - 1
+        }
+        
+        let fullCode = otpCode.joined()
+        if fullCode.count == 6 {
+            focusedField = nil
+            Task { await verifyCode(fullCode) }
+        }
+    }
+    
+    private func verifyCode(_ code: String) async {
+        verificationState = .loading
+        await auth.verifyOTP(phone: phoneNumber, token: code)
+        
+        if auth.authError == nil {
+            verificationState = .success
+            try? await Task.sleep(nanoseconds: 800_000_000)
+            coordinator.profilePath.append(AppRoute.successAuth)
+        } else {
+            withAnimation(.spring()) {
+                verificationState = .error
             }
         }
+    }
+    
+    private func resendCode() {
+        timeRemaining = 30
+        verificationState = .idle
+        otpCode = Array(repeating: "", count: 6)
+        focusedField = 0
+        Task {
+            await auth.sendOTP(phone: phoneNumber)
+        }
+    }
 }
 
 #Preview{
-    VerifyCodeView(phoneNumber: "+380971131050").environmentObject(AppCoordinator())
+    VerifyCodeView(phoneNumber: "viktoriyadill@gmail.com").environmentObject(AppCoordinator())
         .environmentObject(AuthViewModel())
 }

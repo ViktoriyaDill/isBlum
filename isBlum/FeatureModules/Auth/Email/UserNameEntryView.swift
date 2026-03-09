@@ -18,7 +18,7 @@ struct UserNameEntryView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Кастомний Navigation Bar (як на попередніх екранах)
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: true) {
+            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: false) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))

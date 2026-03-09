@@ -2,7 +2,7 @@
 //  VerifyEmailView.swift
 //  isBlum
 //
-//  Created by Пользователь on 04/03/2026.
+//  Created by User on 04/03/2026.
 //
 
 import Foundation
@@ -20,6 +20,13 @@ struct VerifyEmailView: View {
     @State private var verificationState: VerificationState = .idle
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    // MARK: - Validation Colors
+    private let errorBorder = Color(hex: "D71616")
+    private let errorBackground = Color(hex: "FEF6F6")
+    private let successBorder = Color(hex: "4CAF50")
+    private let successBackground = Color(hex: "4CAF50").opacity(0.05)
+    private let activeBorder = Color(hex: "B5F1A0")
     
     var body: some View {
         VStack(spacing: 0) {
@@ -45,11 +52,12 @@ struct VerifyEmailView: View {
                                     .foregroundColor(.gray)
                                 
                                 Text(email)
-                                    .font(.onest(.bold, size: 16))
+                                    .font(.onest(.medium, size: 16))
                                 
                                 Button(action: { coordinator.popProfile() }) {
-                                    Image(systemName: "pencil")
+                                    Image(.edit)
                                         .foregroundColor(.black)
+                                        .frame(width: 24, height: 24)
                                         .font(.system(size: 14))
                                 }
                             }
@@ -62,16 +70,15 @@ struct VerifyEmailView: View {
                     .padding(.top, 40)
                     .multilineTextAlignment(.center)
                     
-                    // Блок введення та повідомлення про статус
+                    // MARK: - Input Block
                     VStack(spacing: 16) {
                         HStack(spacing: 8) {
                             ForEach(0..<6, id: \.self) { index in
                                 TextField("", text: $otpCode[index])
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 64)
+                                    .frame(width: 48, height: 48)
                                     .background(
                                         RoundedRectangle(cornerRadius: 16)
-                                            .fill(verificationState.tintColor)
+                                            .fill(currentFillColor)
                                     )
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 16)
@@ -90,14 +97,12 @@ struct VerifyEmailView: View {
                             }
                         }
                         
-                        // Повідомлення під полями (Невірний код / Код введено правильно)
                         statusMessageView
                     }
                     .padding(.horizontal, 8)
                     
                     Spacer()
                     
-                    // Динамічна нижня частина (Таймер або велика кнопка)
                     bottomActionView
                         .padding(.bottom, 20)
                 }
@@ -112,22 +117,24 @@ struct VerifyEmailView: View {
         }
     }
     
-    // MARK: - В'ю-компоненти
+    // MARK: - Subviews
     
     private var statusMessageView: some View {
         Group {
             if verificationState == .error {
                 HStack(spacing: 4) {
                     Image(systemName: "xmark")
+                        .font(.system(size: 12, weight: .bold))
                     Text("Невірний код")
                 }
-                .foregroundColor(.red)
+                .foregroundColor(errorBorder)
             } else if verificationState == .success {
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark")
+                        .font(.system(size: 12, weight: .bold))
                     Text("Код введено правильно")
                 }
-                .foregroundColor(verificationState.color)
+                .foregroundColor(successBorder)
             }
         }
         .font(.onest(.regular, size: 14))
@@ -136,17 +143,15 @@ struct VerifyEmailView: View {
     @ViewBuilder
     private var bottomActionView: some View {
         if verificationState == .error {
-            // Велика кнопка повтору при помилці (як на макеті)
             Button(action: resendCode) {
                 Text("Відправити код повторно")
                     .font(.onest(.medium, size: 18))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
                     .frame(height: 60)
-                    .background(RoundedRectangle(cornerRadius: 30).fill(Color(hex: "B5F1A0")))
+                    .background(RoundedRectangle(cornerRadius: 30).fill(activeBorder))
             }
         } else {
-            // Стандартна панель з таймером
             HStack {
                 if timeRemaining > 0 {
                     Text("Відправити код повторно через")
@@ -168,17 +173,28 @@ struct VerifyEmailView: View {
         }
     }
     
-    // MARK: - Допоміжні функції
+    // MARK: - Dynamic Styling Logic
     
-    private func currentBorderColor(for index: Int) -> Color {
-        if verificationState != .idle {
-            return verificationState.color
+    private var currentFillColor: Color {
+        switch verificationState {
+        case .error:   return errorBackground
+        case .success: return successBackground
+        default:       return Color.white
         }
-        return focusedField == index ? Color(hex: "B5F1A0") : Color.gray.opacity(0.2)
     }
     
+    private func currentBorderColor(for index: Int) -> Color {
+        switch verificationState {
+        case .error:   return errorBorder
+        case .success: return successBorder
+        default:       return focusedField == index ? activeBorder : Color.gray.opacity(0.2)
+        }
+    }
+    
+    // MARK: - Action Handlers
+    
     private func handleOTPInput(index: Int, value: String) {
-        // Якщо юзер почав вводити заново після помилки — скидаємо червоний колір
+        // Reset state when user starts typing after an error
         if verificationState == .error {
             verificationState = .idle
         }
@@ -201,6 +217,7 @@ struct VerifyEmailView: View {
             verify(fullCode)
         }
     }
+    
     private func verify(_ code: String) {
         Task {
             await auth.verifyEmailOTP(email: email, token: code)
@@ -209,13 +226,16 @@ struct VerifyEmailView: View {
                 withAnimation {
                     if auth.authError == nil {
                         verificationState = .success
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            coordinator.profilePath.append(AppRoute.userName)  // ← спочатку ім'я
+                        // Show success view briefly before auto-transitioning
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            // Navigate to SuccessAuthView first
+                            coordinator.profilePath.append(AppRoute.successAuth)
                         }
                     } else {
                         verificationState = .error
-                        otpCode = Array(repeating: "", count: 6)
-                        focusedField = 0
+                        // Option to clear code on error
+                        // otpCode = Array(repeating: "", count: 6)
+                        // focusedField = 0
                     }
                 }
             }
@@ -233,24 +253,8 @@ struct VerifyEmailView: View {
     }
 }
 
-// MARK: - VerificationState Enum
-
-enum VerificationState {
-    case idle, loading, error, success
-    
-    var color: Color {
-        switch self {
-        case .error: return .red
-        case .success: return Color(hex: "4CAF50")
-        default: return Color.gray.opacity(0.2)
-        }
-    }
-    
-    var tintColor: Color {
-        switch self {
-        case .error: return .red.opacity(0.05)
-        case .success: return Color(hex: "4CAF50").opacity(0.05)
-        default: return .clear
-        }
-    }
+#Preview {
+    VerifyEmailView(email: "viktoriyadill@gmail.com")
+        .environmentObject(AppCoordinator())
+        .environmentObject(AuthViewModel())
 }
