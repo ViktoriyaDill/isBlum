@@ -18,6 +18,8 @@
 	<string>509640098588-vi78ss497g9gals6qq3irojk9udjklt5.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.509640098588-vi78ss497g9gals6qq3irojk9udjklt5</string>
+	<key>BUNDLE_ID</key>
+	<string>isBlum.com.viktoriyadill-gmail.dev</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

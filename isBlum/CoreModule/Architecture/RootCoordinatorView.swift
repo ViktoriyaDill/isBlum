@@ -12,41 +12,46 @@ struct RootCoordinatorView: View {
             case .splash:
                 SplashScreenView()
                     .onAppear { startSplashTimer() }
-                    .task { await listenToAuthState() }
-                
+                    .task { await checkExistingSession() } 
+                    
             case .onboarding:
                 OnboardingView()
-                
             case .locationEntry:
                 AddressEntryView()
-                
             case .mapSelection:
                 MapSelectionView()
-                
             case .addressDetails(let address):
                 AddressDetailsView(selectedAddress: address)
-                
             case .filterOccasion:
-                FiltersView()
-                    .environmentObject(filterVM)
-                
+                FiltersView().environmentObject(filterVM)
             case .filterBouquetType:
-                FilterBouquetTypeView()
-                    .environmentObject(filterVM)
-                
+                FilterBouquetTypeView().environmentObject(filterVM)
             case .filterFlowers:
-                FilterFlowersView()
-                    .environmentObject(filterVM)
-                
+                FilterFlowersView().environmentObject(filterVM)
             case .filterPrice:
-                FilterPriceView()
-                    .environmentObject(filterVM)
-                
+                FilterPriceView().environmentObject(filterVM)
             case .main:
                 MainTabView()
             }
         }
         .animation(.easeInOut(duration: 0.4), value: coordinator.appState)
+        .onChange(of: authViewModel.justSignedIn) { didSignIn in
+            guard didSignIn else { return }
+            authViewModel.justSignedIn = false
+            
+            if coordinator.appState != .main {
+                coordinator.appState = .main
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                coordinator.profilePath = NavigationPath()
+                coordinator.selectedTab = .profile
+            }
+        }
+        .onChange(of: authViewModel.isAuthenticated) { isAuth in
+            if !isAuth {
+                coordinator.profilePath = NavigationPath()
+            }
+        }
     }
     
     private func startSplashTimer() {
@@ -57,18 +62,15 @@ struct RootCoordinatorView: View {
         }
     }
     
-    func listenToAuthState() async {
-        _ = await SupabaseService.shared.client.auth.onAuthStateChange { event, session in
-            DispatchQueue.main.async {
-                if let session = session, !session.isExpired {
-                    authViewModel.isAuthenticated = true
-                    if coordinator.appState != .main {
-                        coordinator.appState = .main
-                    }
-                } else {
-                    authViewModel.isAuthenticated = false
-                }
+    private func checkExistingSession() async {
+        do {
+            let session = try await SupabaseService.shared.client.auth.session
+            if !session.isExpired {
+                authViewModel.isAuthenticated = true
+                await authViewModel.fetchProfile()
             }
+        } catch {
+            print("No existing session: \(error.localizedDescription)")
         }
     }
 }

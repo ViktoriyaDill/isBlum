@@ -21,17 +21,14 @@ struct EditProfileFieldView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // MARK: - Navigation Bar
             CustomNavigationBar(title: "Обліковий запис", showBackButton: true) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
             
             ZStack(alignment: .bottom) {
-                // Global background color
                 Color(hex: "E2F5C6").ignoresSafeArea()
                 
-                // Main white container
                 VStack(spacing: 0) {
                     VStack(spacing: 24) {
                         Text(fieldType.title)
@@ -50,7 +47,6 @@ struct EditProfileFieldView: View {
                                     .foregroundColor(.gray)
                                 
                                 HStack(spacing: 8) {
-                                    // Country picker button (visible only for phone)
                                     if fieldType == .phone {
                                         Button(action: { showCountryPicker = true }) {
                                             HStack(spacing: 4) {
@@ -62,7 +58,6 @@ struct EditProfileFieldView: View {
                                             }
                                             .foregroundColor(.black)
                                         }
-                                        
                                         Divider().frame(height: 20)
                                     }
                                     
@@ -72,7 +67,6 @@ struct EditProfileFieldView: View {
                                 }
                             }
                             
-                            // Clear text button
                             if !inputValue.isEmpty {
                                 Button { inputValue = "" } label: {
                                     Image(systemName: "xmark.circle.fill")
@@ -91,33 +85,33 @@ struct EditProfileFieldView: View {
                         .padding(.horizontal, 24)
                         
                         Spacer()
-                        
-                        // Save changes button
-                        Button(action: saveData) {
-                            if auth.isLoading {
-                                ProgressView().tint(.black)
-                            } else {
-                                Text("Зберегти")
-                                    .font(.onest(.medium, size: 18))
-                                    .foregroundColor(.black)
-                            }
+                    }
+                    
+                    Button(action: saveData) {
+                        if auth.isLoading {
+                            ProgressView().tint(.black)
+                        } else {
+                            Text("Зберегти")
+                                .font(.onest(.medium, size: 18))
+                                .foregroundColor(.black)
                         }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 60)
-                        .background(Color(hex: "B2F094"))
-                        .cornerRadius(30)
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 40) 
                     }
                     .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
+                    .frame(height: 60)
+                    .background(Color(hex: "B2F094"))
+                    .cornerRadius(30)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
                 }
-                // This makes the white background fill the bottom safe area
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.white)
+                .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                 .ignoresSafeArea(edges: .bottom)
             }
         }
+        .hideKeyboardOnTap()
         .navigationBarHidden(true)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .sheet(isPresented: $showCountryPicker) {
             CountryPickerView(selectedCountry: $selectedCountry)
         }
@@ -146,23 +140,39 @@ struct EditProfileFieldView: View {
         }
     }
     
+    // MARK: - Helper Methods
+
     private func saveData() {
         Task {
+            let currentName = auth.currentUser?.name
+            let currentPhone = auth.currentUser?.phone
+            
             switch fieldType {
             case .name:
-                await auth.updateProfile(name: inputValue, phone: nil)
+                await auth.updateProfile(name: inputValue, phone: currentPhone)
                 if auth.authError == nil {
                     coordinator.popProfile()
                 }
                 
             case .phone:
                 let fullPhone = "\(selectedCountry.code)\(inputValue)"
+                if fullPhone == currentPhone {
+                    coordinator.popProfile()
+                    return
+                }
+                
                 await auth.sendOTP(phone: fullPhone)
                 if auth.authError == nil {
                     coordinator.showOTPVerification(phone: fullPhone, mode: .updateProfile)
                 }
                 
             case .email:
+                let currentEmail = auth.currentUser?.email
+                if inputValue == currentEmail {
+                    coordinator.popProfile()
+                    return
+                }
+                
                 await auth.sendEmailOTP(email: inputValue)
                 if auth.authError == nil {
                     coordinator.showEmailOTPVerification(email: inputValue, mode: .updateProfile)

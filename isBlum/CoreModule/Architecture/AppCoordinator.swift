@@ -96,6 +96,11 @@ class AppCoordinator: ObservableObject {
         let hasSelectedFilters = UserDefaults.standard.bool(forKey: "hasSelectedFilters")
         
         withAnimation(.easeInOut(duration: 0.6)) {
+            if SupabaseService.shared.client.auth.currentUser != nil {
+                self.appState = .main
+                return
+            }
+            
             if !hasSeenOnboarding {
                 self.appState = .onboarding
             } else if !hasSavedLocation {
@@ -165,11 +170,11 @@ class AppCoordinator: ObservableObject {
         profilePath.append(AppRoute.deleteAccount)
     }
     
-    func showOTPVerification(phone: String, mode: VerificationMode = .auth) {
+    func showOTPVerification(phone: String, mode: VerificationMode) {
         profilePath.append(AppRoute.otpVerification(phone: phone, mode: mode))
     }
 
-    func showEmailOTPVerification(email: String, mode: VerificationMode = .auth) {
+    func showEmailOTPVerification(email: String, mode: VerificationMode) {
         profilePath.append(AppRoute.emailOtpVerification(email: email, mode: mode))
     }
     

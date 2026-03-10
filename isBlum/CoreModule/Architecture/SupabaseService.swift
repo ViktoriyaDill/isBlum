@@ -7,14 +7,17 @@
 
 import Foundation
 import Supabase
+import Auth
 
 class SupabaseService {
     static let shared = SupabaseService()
     
-    let client = SupabaseClient(
-      supabaseURL: URL(string: "https://akbftxolqkvdmxqyrmao.supabase.co")!,
-      supabaseKey: "sb_publishable_JqYh_JgtcOkPxPKQgkCcBA_-d_Ey3x5"
-    )
+    let client: SupabaseClient
     
-    private init() {}
+    private init() {
+        client = SupabaseClient(
+            supabaseURL: URL(string: "https://akbftxolqkvdmxqyrmao.supabase.co")!,
+            supabaseKey: "sb_publishable_JqYh_JgtcOkPxPKQgkCcBA_-d_Ey3x5"
+        )
+    }
 }

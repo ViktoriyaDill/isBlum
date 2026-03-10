@@ -37,6 +37,7 @@ struct MainTabView: View {
                 
                 NavigationStack(path: $coordinator.profilePath) {
                     ProfileView()
+                        .environmentObject(authViewModel) 
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }

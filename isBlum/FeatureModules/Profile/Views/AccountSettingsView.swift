@@ -12,6 +12,8 @@ struct AccountSettingsView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var auth: AuthViewModel
     
+    @State private var showDeleteModal = false
+    
     var body: some View {
         VStack(spacing: 0) {
             // MARK: - Navigation Bar
@@ -85,7 +87,7 @@ struct AccountSettingsView: View {
                         
                         // Delete Account
                         Button(action: {
-                            // Show delete confirmation alert
+                            showDeleteModal = true
                         }) {
                             Text("Видалити акаунт")
                                 .font(.onest(.medium, size: 16))
@@ -97,6 +99,11 @@ struct AccountSettingsView: View {
                     .background(Color.white)
                 }
             }
+        }
+        .sheet(isPresented: $showDeleteModal) {
+            DeleteAccountModalView()
+                .environmentObject(auth)
+                .environmentObject(coordinator)
         }
         .navigationBarHidden(true)
     }

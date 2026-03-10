@@ -36,7 +36,6 @@ struct AuthView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 88, height: 72)
-//                        .padding(.top, 40)
                     
                     Text("Букети вже чекають")
                         .font(.onest(.bold, size: 32))

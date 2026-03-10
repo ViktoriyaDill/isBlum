@@ -79,9 +79,8 @@ struct LoggedInProfileView: View {
             .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 5)
         }
         .onAppear {
-            // Refresh profile data when view appears
-            Task {
-                await auth.fetchProfile()
+            if auth.currentUser == nil {
+                Task { await auth.fetchProfile() }
             }
         }
     }
