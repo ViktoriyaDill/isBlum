@@ -33,7 +33,7 @@ struct AccountSettingsView: View {
                         AccountMenuRow(
                             icon: UIImage(systemName: "person") ?? UIImage(),
                             title: "Ім'я",
-                            subtitle: auth.currentUser?.name ?? "Гість",
+                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.name ?? "Гість"),
                             action: { coordinator.showEditProfileField(.name) }
                         )
                         
@@ -42,7 +42,7 @@ struct AccountSettingsView: View {
                         AccountMenuRow(
                             icon: UIImage(systemName: "phone") ?? UIImage(),
                             title: "Номер телефону",
-                            subtitle: auth.currentUser?.phone ?? "Номер не вказано",
+                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.phone ?? "Номер не вказано"),
                             isUnverified: auth.isPhoneUnverified,
                             action: { coordinator.showEditProfileField(.phone) }
                         )
@@ -52,7 +52,7 @@ struct AccountSettingsView: View {
                         AccountMenuRow(
                             icon: UIImage(systemName: "envelope") ?? UIImage(),
                             title: "Електронна пошта",
-                            subtitle: auth.currentUser?.email ?? "Email не вказано",
+                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.email ?? "Email не вказано"),
                             isUnverified: auth.isEmailUnverified,
                             action: { coordinator.showEditProfileField(.email)}
                         )
@@ -111,8 +111,8 @@ struct AccountSettingsView: View {
 
 struct AccountMenuRow: View {
     let icon: UIImage
-    let title: String
-    var subtitle: String
+    let title: LocalizedStringResource
+    var subtitle: LocalizedStringResource
     var showArrow: Bool = true
     var isUnverified: Bool = false
     

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct CustomNavigationBar: View {
-    let title: String
+    let title: LocalizedStringResource
     var showBackButton: Bool = true
     var backAction: (() -> Void)? = nil
     

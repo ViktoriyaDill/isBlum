@@ -18,7 +18,7 @@ enum AppRoute: Hashable {
     case userName
     case accountSettings
     case editProfileField(ProfileFieldType)
-    case deleteAccount
+    case accountDeletedSuccess
     case otpVerification(phone: String, mode: VerificationMode)
     case emailOtpVerification(email: String, mode: VerificationMode)
 }
@@ -78,12 +78,39 @@ class AppCoordinator: ObservableObject {
         profilePath.append(AppRoute.emailOtpVerification(email: email))
     }
 
+    // MARK: - Navigation Reset Logic
+    
     func popProfile() {
         guard !profilePath.isEmpty else { return }
         profilePath.removeLast()
     }
+
+    /// Clears all screens in the Profile navigation stack
+    func popToProfileRoot() {
+        profilePath = NavigationPath()
+    }
+
+    /// Use this to show the success screen and clear previous delete steps
+    func showAccountDeletedSuccess() {
+        // Clear path so user can't go back to the "Delete Reason" screen
+        profilePath = NavigationPath()
+        profilePath.append(AppRoute.accountDeletedSuccess)
+        // Depending on your setup, you might need to append a new route
+        // or change appState. Let's append the route if you add it to AppRoute:
+        // profilePath.append(AppRoute.accountDeletedSuccess)
+    }
+
+    /// Reset everything and go to Main (Feed)
+    func resetToMain() {
+        profilePath = NavigationPath()
+        feedPath = NavigationPath()
+        ordersPath = NavigationPath()
+        chatsPath = NavigationPath()
+        selectedTab = .feed
+        appState = .main
+    }
     
-    private func navigate(to state: AppState) {
+    func navigate(to state: AppState) {
         stateHistory.append(appState)
         withAnimation(.easeInOut(duration: 0.5)) {
             self.appState = state
@@ -164,10 +191,6 @@ class AppCoordinator: ObservableObject {
     
     func showEditProfileField(_ fieldType: ProfileFieldType) {
         profilePath.append(AppRoute.editProfileField(fieldType))
-    }
-
-    func showDeleteAccount() {
-        profilePath.append(AppRoute.deleteAccount)
     }
     
     func showOTPVerification(phone: String, mode: VerificationMode) {

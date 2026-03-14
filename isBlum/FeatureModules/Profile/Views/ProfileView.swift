@@ -39,6 +39,7 @@ struct ProfileView: View {
                         
                         SettingsGroupView(isLoggedIn: auth.isAuthenticated)
                     }
+                    .padding(.bottom, 120)
                 }
             }
             .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight])).ignoresSafeArea()

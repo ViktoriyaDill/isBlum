@@ -80,7 +80,7 @@ struct MainTabView: View {
     }
     
     @ViewBuilder
-    private func tabButton(for item: TabItem, title: String, icon: ImageResource) -> some View {
+    private func tabButton(for item: TabItem, title: LocalizedStringResource, icon: ImageResource) -> some View {
         Button {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 coordinator.selectedTab = item
@@ -171,10 +171,9 @@ struct MainTabView: View {
         case .emailOtpVerification(let email, let mode):
             VerifyEmailView(email: email, mode: mode)
                 .environmentObject(authViewModel)
-        case .deleteAccount:
-            EmptyView()
-//            DeleteAccountView()
-//                .environmentObject(authViewModel)
+        case .accountDeletedSuccess:
+            AccountDeletedView()
+                .navigationBarHidden(true)
         }
     }
 }

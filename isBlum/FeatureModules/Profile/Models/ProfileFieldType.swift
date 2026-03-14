@@ -11,7 +11,7 @@ import SwiftUI
 enum ProfileFieldType {
     case name, phone, email
     
-    var title: String {
+    var title: LocalizedStringResource {
         switch self {
         case .name: return "Ім'я"
         case .phone: return "Номер телефону"

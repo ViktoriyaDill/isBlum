@@ -110,7 +110,7 @@ extension DeleteAccountModalView {
                 }
             }) {
                 HStack {
-                    Text(selectedReason?.text ?? "Вкажіть причину")
+                    Text(LocalizedStringResource(stringLiteral: selectedReason?.text ?? "Вкажіть причину"))
                         .font(.onest(.medium, size: 16))
                         .foregroundColor(.black)
                     Spacer()
@@ -144,7 +144,7 @@ extension DeleteAccountModalView {
                 ForEach(reasons) { reason in
                     Button(action: { selectedReason = reason }) {
                         HStack {
-                            Text(reason.text)
+                            Text("\(LocalizedStringResource(stringLiteral: reason.text))")
                                 .font(.onest(.regular, size: 16))
                                 .foregroundColor(.black)
                             Spacer()
@@ -161,7 +161,7 @@ extension DeleteAccountModalView {
                                 }
                             }
                         }
-                        .padding(.vertical, 16)
+                        .padding(.vertical, 8)
                     }
                     if reason != reasons.last {
                         Divider()
@@ -170,11 +170,12 @@ extension DeleteAccountModalView {
             }
             
             actionButtons
+                .padding(.top, 16)
         }
     }
     
     private var actionButtons: some View {
-        VStack(spacing: 12) {
+        VStack(alignment: .center, spacing: 12) {
             Button(action: { dismiss() }) {
                 Text("Скасувати")
                     .font(.onest(.medium, size: 16))
@@ -206,8 +207,11 @@ extension DeleteAccountModalView {
             
             if auth.authError == nil {
                 dismiss()
-                coordinator.profilePath = NavigationPath()
-                coordinator.appState = .main
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    coordinator.profilePath = NavigationPath()
+                    coordinator.profilePath.append(AppRoute.accountDeletedSuccess)
+                }
             }
         }
     }

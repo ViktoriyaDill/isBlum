@@ -88,7 +88,7 @@ struct AuthView: View {
     
     @ViewBuilder
     private func authButton(
-        title: String,
+        title: LocalizedStringResource,
         icon: String,
         isSystemIcon: Bool = true,
         method: AuthMethod,

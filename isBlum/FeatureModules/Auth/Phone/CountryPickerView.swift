@@ -54,7 +54,7 @@ struct CountryPickerView: View {
                         }) {
                             HStack {
                                 Text(country.flag)
-                                Text("\(country.name) (\(country.code))")
+                                Text("\(LocalizedStringResource(stringLiteral : country.name)) (\(country.code))")
                                     .font(.onest(.regular, size: 16))
                                 Spacer()
                                 

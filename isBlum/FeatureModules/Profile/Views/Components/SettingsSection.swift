@@ -8,8 +8,25 @@
 import SwiftUI
 
 struct SettingsGroupView: View {
-    
     let isLoggedIn: Bool
+    
+    // MARK: - State & Storage
+    // AppStorage automatically updates the UI when the value changes
+    @AppStorage("app_language") private var selectedLanguage: String = "uk"
+    @AppStorage("app_currency") private var selectedCurrency: String = "UAH"
+    
+    // State to control which modal is shown
+    @State private var activeModal: SelectionType?
+    
+    // Helper to get readable title for subtitle
+    private var languageDisplay: String {
+        switch selectedLanguage {
+        case "uk": return "Українська"
+        case "en": return "English"
+        case "ru": return "Русский"
+        default: return "Українська"
+        }
+    }
     
     var body: some View {
         ProfileCard(content: {
@@ -20,46 +37,72 @@ struct SettingsGroupView: View {
                     .padding(.top, 24)
                 
                 VStack(spacing: 16) {
-                    ProfileMenuRow(icon: .globe, title: "Мова", subtitle: "Українська") {
-                        //add logic to navigate
+                    // MARK: - Language Row
+                    ProfileMenuRow(
+                        icon: .globe,
+                        title: "Мова",
+                        subtitle: languageDisplay
+                    ) {
+                        activeModal = .language
                     }
+                    
                     Divider()
                     
-                    ProfileMenuRow(icon: .banknote, title: "Валюта", subtitle: "UAH") {
-                        //add logic to navigate
+                    // MARK: - Currency Row
+                    ProfileMenuRow(
+                        icon: .banknote,
+                        title: "Валюта",
+                        subtitle: selectedCurrency
+                    ) {
+                        activeModal = .currency
                     }
+                    
                     Divider()
                     
                     if isLoggedIn {
                         ProfileMenuRow(icon: .bell, title: "Налаштування сповіщень") {
-                            //add logic to navigate
+                            // Logic for notifications
                         }
                         Divider()
                     }
+                    
                     ProfileMenuRow(icon: .help, title: "Підтримка") {
-                        //add logic to navigate
+                        // Logic for support
                     }
+                    
                     Divider()
                     
                     ProfileMenuRow(icon: .shop, title: "Розмістити свій магазин"){
-                        //add logic to navigate
+                        // Logic for shop
                     }
+                    
                     Divider()
                     
                     ProfileMenuRow(icon: .info, title: "Про додаток") {
-                        //add logic to navigate
+                        // Logic for about
                     }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
             }
         })
+        // MARK: - Modal Presentation
+        .sheet(item: $activeModal) { type in
+            SelectionModalView(type: type)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
     }
+}
+
+// Make SelectionType identifiable for the .sheet(item:) call
+extension SelectionType: Identifiable {
+    var id: Self { self }
 }
 
 struct ProfileMenuRow: View {
     let icon: UIImage
-    let title: String
+    let title: LocalizedStringResource
     var subtitle: String? = nil
     var showArrow: Bool = true
     

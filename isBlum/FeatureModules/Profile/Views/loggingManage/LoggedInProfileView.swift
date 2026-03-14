@@ -12,21 +12,21 @@ struct LoggedInProfileView: View {
     
     // MARK: - Computed Properties for User Data
     // Accessing properties from your UserProfile model
-    private var userName: String {
+    private var userName: LocalizedStringResource {
         print("name \(auth.currentUser?.name)")
-        return auth.currentUser?.name ?? "Гість"
+        return LocalizedStringResource(stringLiteral:auth.currentUser?.name ?? "Гість")
     }
     
-    private var userPhone: String {
+    private var userPhone: LocalizedStringResource {
         print("phone \(auth.currentUser?.phone)")
         // If your profile doesn't have a phone, you can take it from auth session
-        return auth.currentUser?.phone ?? "Номер не вказано"
+        return LocalizedStringResource(stringLiteral:auth.currentUser?.phone ?? "Номер не вказано")
     }
     
-    private var userEmail: String {
+    private var userEmail: LocalizedStringResource {
         print("email \(auth.currentUser?.email)")
         // Typically email is in the auth metadata or your profile table
-        return auth.currentUser?.email ?? "Email не вказано"
+        return LocalizedStringResource(stringLiteral:auth.currentUser?.email ?? "Email не вказано")
     }
     
     var body: some View {
@@ -89,7 +89,7 @@ struct LoggedInProfileView: View {
 // MARK: - Supporting Components
 
 struct ContactRow: View {
-    let text: String
+    let text: LocalizedStringResource
     let isUnverified: Bool
     
     var body: some View {
