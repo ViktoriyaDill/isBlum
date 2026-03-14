@@ -77,9 +77,6 @@
         }
       }
     },
-    "Edit Profile" : {
-
-    },
     "Email не вказано" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -114,6 +111,25 @@
       }
     },
     "Google" : {
+
+    },
+    "Isblum — свіжий букет у пару кліків.\nДаруйте радість легко" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isblum — fresh bouquet in a few clicks. Spread joy easily"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isblum — свежий букет в пару кликов. Дарите радость легко"
+          }
+        }
+      }
+    },
+    "OK" : {
 
     },
     "Order %@" : {
@@ -164,6 +180,23 @@
         }
       }
     },
+    "Push-сповіщення" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Push Notifications"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Push-уведомления"
+          }
+        }
+      }
+    },
     "Seller %lld" : {
       "localizations" : {
         "en" : {
@@ -180,8 +213,668 @@
         }
       }
     },
-    "Settings" : {
-
+    "support_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please describe what happened in as much detail as possible. We will definitely help!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, напишите как можно подробнее, что произошло. Мы обязательно поможем!"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Будь ласка, напишіть якнайдокладніше, що сталося. Ми обов'язково допоможемо!"
+          }
+        }
+      }
+    },
+    "support_error_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to send the message. Please try again."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось отправить сообщение. Попробуйте еще раз."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося відправити повідомлення. Спробуйте ще раз."
+          }
+        }
+      }
+    },
+    "support_header_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please describe in as much detail as possible what happened. We will definitely help you!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, опишите как можно подробнее, что произошло. Мы обязательно поможем!"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Будь ласка, напишіть якнайдокладніше, що сталося. Ми обов'язково допоможемо!"
+          }
+        }
+      }
+    },
+    "support_header_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support is here to help"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поддержка на связи"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підтримка на зв'язку"
+          }
+        }
+      }
+    },
+    "support_main_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support is here"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поддержка на связи"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підтримка на зв'язку"
+          }
+        }
+      }
+    },
+    "support_nav_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поддержка"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підтримка"
+          }
+        }
+      }
+    },
+    "support_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your question"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш вопрос"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваше запитання"
+          }
+        }
+      }
+    },
+    "support_send_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправить"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Надіслати"
+          }
+        }
+      }
+    },
+    "support_success_message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thank you! Your message has been sent. We will respond as soon as possible."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спасибо! Сообщение отправлено. Мы ответим в ближайшее время."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дякуємо! Повідомлення відправлено. Ми відповімо найближчим часом."
+          }
+        }
+      }
+    },
+    "tos_intro_1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This User Agreement (hereinafter referred to as the \"Agreement\") governs the relationship between the IsBlum service (hereinafter referred to as the \"Service\") and the user (hereinafter referred to as \"You\" or \"User\") who uses the mobile application.\n\nBy using the Service, you agree to the terms of this Agreement. If you do not agree with the terms, please do not use the Service."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует отношения между сервисом IsBlum (далее — «Сервис») и пользователем (далее — «Вы», «Пользователь»), использующим мобильное приложение.\n\nИспользуя Сервис, Вы соглашаетесь с условиями данного Соглашения. Если Вы не согласны с условиями, пожалуйста, не используйте Сервис."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ця Користувацька угода (далі — «Угода») регулює відносини між сервісом IsBlum (далі — «Сервіс») та користувачем (далі — «Ви», «Користувач»), який використовує мобільний додаток.\n\nВикористовуючи Сервіс, Ви погоджуєтеся з умовами цієї Угоди. Якщо Ви не згодні з умовами, не використовуйте Сервіс."
+          }
+        }
+      }
+    },
+    "tos_last_updated" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last updated: 30.08.2026"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последнее обновление: 30.08.2026"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дата останнього оновлення: 30.08.2026"
+          }
+        }
+      }
+    },
+    "tos_main_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IsBlum Terms of Service  "
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Пользовательское соглашение IsBlum"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Користувацька угода IsBlum"
+          }
+        }
+      }
+    },
+    "tos_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Service"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пользовательское соглашение"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Користувацька угода"
+          }
+        }
+      }
+    },
+    "tos_section_1_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Service provides the ability to select and order fresh bouquets through the mobile application.\n\nThe Service may provide recommendations, bouquet selections, promotions and special offers.\n\nAll materials, photos, texts and logos are the property of IsBlum or its partners."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервис предоставляет возможность выбора и заказа свежих букетов через мобильное приложение.\n\nСервис может предоставлять рекомендации, подборки букетов, акции и специальные предложения.\n\nВсе материалы, фотографии, тексты и логотипы являются собственностью IsBlum или его партнеров."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервіс надає можливість вибору та замовлення свіжих букетів через мобільний додаток.\n\nСервіс може надавати рекомендації, підбірки букетів, акції та спеціальні пропозиції.\n\nВсі матеріали, фотографії, тексти та логотипи є власністю IsBlum або його партнерів."
+          }
+        }
+      }
+    },
+    "tos_section_1_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. General Provisions"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Общие положения"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Загальні положення"
+          }
+        }
+      }
+    },
+    "tos_section_2_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To use the Service, you must register using a phone number or email.\n\nYou are required to provide accurate information during registration.\n\nThe user is responsible for maintaining the confidentiality of their account credentials."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для использования Сервиса необходимо зарегистрироваться через телефон или email.\n\nВы обязаны предоставлять достоверные данные при регистрации.\n\nПользователь несет ответственность за сохранность своих учетных данных."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для використання Сервісу необхідно зареєструватися через телефон або email.\n\nВи зобов'язані надавати достовірні дані під час реєстрації.\n\nКористувач несе відповідальність за збереження своїх облікових даних."
+          }
+        }
+      }
+    },
+    "tos_section_2_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Registration and Account"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Регистрация и учетная запись"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Реєстрація та обліковий запис"
+          }
+        }
+      }
+    },
+    "tos_section_3_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Service provides functionality for selecting, paying for, and delivering bouquets.\n\nThe user agrees to use the Service only for personal purposes and in compliance with applicable laws.\n\nAny use of the Service for fraud, violation of third-party rights, or distribution of spam is prohibited."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервис предоставляет функционал выбора, оплаты и доставки букетов.\n\nПользователь соглашается использовать Сервис только в личных целях и без нарушения законодательства.\n\nЛюбое использование Сервиса в целях мошенничества, нарушения прав третьих лиц или распространения спама запрещено."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервіс надає функціонал вибору, оплати та доставки букетів.\n\nКористувач погоджується використовувати Сервіс лише для особистих цілей, без порушення закону.\n\nБудь-яке використання Сервісу з метою шахрайства, порушення прав третіх осіб або розповсюдження спаму заборонено."
+          }
+        }
+      }
+    },
+    "tos_section_3_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Use of the Service"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Использование Сервиса"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Використання Сервісу"
+          }
+        }
+      }
+    },
+    "tos_section_4_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payments are processed through integrated payment services.\n\nThe Service is not responsible for the operation of third-party payment systems.\n\nDelivery is carried out by the Service partners. The Service strives to ensure timely delivery but cannot guarantee it in cases of force majeure (weather conditions, transport issues, etc.)."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оплата заказов осуществляется через интегрированные платежные сервисы.\n\nСервис не несет ответственности за работу сторонних платежных систем.\n\nДоставка осуществляется партнерами Сервиса. Сервис стремится обеспечить своевременную доставку, но не гарантирует ее в случае форс-мажорных обстоятельств (погода, транспортные проблемы и т.д.)."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оплата замовлень здійснюється через інтегровані платіжні сервіси.\n\nСервіс не несе відповідальності за роботу сторонніх платіжних систем.\n\nДоставка здійснюється партнерами Сервісу; Сервіс прагне забезпечити своєчасну доставку, але не гарантує її у випадку форс-мажорних обставин (погода, транспортні проблеми тощо)."
+          }
+        }
+      }
+    },
+    "tos_section_4_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Payment and Delivery"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Оплата и доставка"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4. Оплата та доставка"
+          }
+        }
+      }
+    },
+    "tos_section_5_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Service may send push notifications and emails according to your preferences.\n\nAll personal data is processed in accordance with the Privacy Policy.\n\nYou may change notification settings or delete your account at any time."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервис может отправлять push-уведомления и email в соответствии с вашим выбором.\n\nВсе персональные данные обрабатываются в соответствии с Политикой конфиденциальности.\n\nВы можете в любой момент изменить настройки уведомлений или удалить учетную запись."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервіс може надсилати push-повідомлення та email на Ваш вибір.\n\nВсі персональні дані обробляються відповідно до Політики конфіденційності.\n\nВи можете в будь-який момент змінити налаштування повідомлень або видалити обліковий запис."
+          }
+        }
+      }
+    },
+    "tos_section_5_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5. Notifications and Personal Data"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5. Уведомления и персональные данные"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5. Повідомлення та персональні дані"
+          }
+        }
+      }
+    },
+    "tos_section_6_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Service is provided \"as is\".\n\nIsBlum is not liable for any direct or indirect damages resulting from the use of the Service.\n\nThe Service does not guarantee 100% accuracy of information regarding bouquet availability and freshness, but makes every effort to keep the information up to date."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервис предоставляется «как есть».\n\nIsBlum не несет ответственности за прямые или косвенные убытки, возникшие в результате использования Сервиса.\n\nСервис не гарантирует 100% точность информации о наличии и свежести букетов, однако делает все возможное для актуализации данных."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервіс надається «як є».\n\nIsBlum не несе відповідальності за прямі або непрямі збитки, що виникли внаслідок використання Сервісу.\n\nСервіс не гарантує 100% точність інформації про наявність та свіжість букетів, але робить все можливе для актуалізації даних."
+          }
+        }
+      }
+    },
+    "tos_section_6_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6. Limitation of Liability"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6. Ограничение ответственности"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6. Обмеження відповідальності"
+          }
+        }
+      }
+    },
+    "tos_section_7_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Service reserves the right to modify this Agreement at any time.\n\nThe User agrees to review updates regularly.\n\nContinued use of the Service after changes are made constitutes acceptance of the updated Agreement."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервис оставляет за собой право изменять Соглашение в любое время.\n\nПользователь обязуется регулярно проверять обновления.\n\nПродолжение использования Сервиса после внесения изменений считается согласием с обновленным Соглашением."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервіс залишає за собою право змінювати Угоду в будь-який час.\n\nКористувач зобов'язується регулярно перевіряти оновлення.\n\nПродовження використання Сервісу після змін вважається згодою з оновленою Угодою."
+          }
+        }
+      }
+    },
+    "tos_section_7_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7. Changes to the Agreement"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7. Изменения Соглашения"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7. Зміни Угоди"
+          }
+        }
+      }
+    },
+    "tos_section_8_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All disputes shall be resolved through negotiations, and if this is not possible, in accordance with the laws of Ukraine.\n\nIf any provision of the Agreement is found to be invalid, the remaining provisions shall remain in force.\n\nThe Agreement enters into force from the moment of user registration and remains valid until the termination of Service usage."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все споры решаются путем переговоров, а при невозможности — в соответствии с законодательством Украины.\n\nЕсли какое-либо положение Соглашения будет признано недействительным, остальные положения остаются в силе.\n\nСоглашение вступает в силу с момента регистрации пользователя и действует до прекращения использования Сервиса."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усі спори вирішуються шляхом переговорів, а при неможливості — відповідно до законодавства України.\n\nЯкщо будь-яке положення Угоди буде визнано недійсним, інші положення залишаються в силі.\n\nУгода вступає в силу з моменту реєстрації користувача і діє до припинення використання Сервісу."
+          }
+        }
+      }
+    },
+    "tos_section_8_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8. Final Provisions"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8. Заключительные положения"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8. Заключні положення"
+          }
+        }
+      }
     },
     "або через:" : {
       "localizations" : {
@@ -247,6 +940,23 @@
         }
       }
     },
+    "Акції та пропозиції" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Promotions & Offers"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Акции и предложения"
+          }
+        }
+      }
+    },
     "Болгарія" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -280,6 +990,22 @@
         }
       }
     },
+    "Будь ласка, напишіть якнайдокладніше, що сталося. Ми обов'язково допоможемо!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please describe in as much detail as possible what happened. We will definitely help you!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, опишите как можно подробнее, что произошло. Мы обязательно поможем!"
+          }
+        }
+      }
+    },
     "Букети вже чекають" : {
       "localizations" : {
         "en" : {
@@ -309,6 +1035,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Валюта"
+          }
+        }
+      }
+    },
+    "Ваше запитання" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your question"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш вопрос"
           }
         }
       }
@@ -373,6 +1115,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Введите номер\nтелефона"
+          }
+        }
+      }
+    },
+    "Версія %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Версия %@"
           }
         }
       }
@@ -927,6 +1685,23 @@
         }
       }
     },
+    "Користувацька угода" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms of Service"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пользовательское соглашение"
+          }
+        }
+      }
+    },
     "Ми надіслали його в SMS на номер" : {
       "localizations" : {
         "en" : {
@@ -960,6 +1735,23 @@
         }
       }
     },
+    "Нагадування про доставку" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delivery Reminder"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Напоминание о доставке"
+          }
+        }
+      }
+    },
     "Надіслали його на" : {
       "localizations" : {
         "en" : {
@@ -972,6 +1764,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Мы отправили его на"
+          }
+        }
+      }
+    },
+    "Надіслати" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправить"
           }
         }
       }
@@ -1173,6 +1981,23 @@
         }
       }
     },
+    "Оцініть застосунок" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate App"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оцените приложение"
+          }
+        }
+      }
+    },
     "Перевірте «Вхідні» або «Спам»" : {
       "localizations" : {
         "en" : {
@@ -1234,6 +2059,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Поддержка"
+          }
+        }
+      }
+    },
+    "Підтримка на зв'язку" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support is here to help"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поддержка на связи"
           }
         }
       }
@@ -1326,6 +2167,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "About"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "О приложении"
+          }
+        }
+      }
+    },
+    "Про застосунок" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About App"
           }
         },
         "ru" : {
@@ -1463,6 +2321,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Отменить"
+          }
+        }
+      }
+    },
+    "Спосіб отримання" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification Method"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Способ получения"
+          }
+        }
+      }
+    },
+    "Статус замовлення" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Order Status"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статус заказа"
           }
         }
       }

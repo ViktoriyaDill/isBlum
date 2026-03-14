@@ -13,11 +13,9 @@ struct NotificationButton: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             Image(.notification)
-                .font(.system(size: 20))
+                .resizable()
+                .scaledToFit()
                 .frame(width: 40, height: 40)
-                .padding(10)
-                .background(Color.white)
-                .clipShape(Circle())
             
             if count > 0 {
                 Text("\(count)")

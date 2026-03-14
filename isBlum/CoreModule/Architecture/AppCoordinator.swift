@@ -1,34 +1,50 @@
 import SwiftUI
 
-// Route definitions for NavigationStacks
+// MARK: - App Route
+// Defines all possible screens within NavigationStacks (tabs)
 enum AppRoute: Hashable {
+    
+    // MARK: Marketplace
     case productDetails(id: Int)
     case sellerProfile(id: Int)
     case orderDetails(id: String)
     case chatRoom(userId: String)
-    case settings
-    case editProfile
-    case addressDetails(address: String)
-    case auth
-    case phoneAuth
-    case otpVerification(phone: String)
-    case successAuth
-    case emailAuth
-    case emailOtpVerification(email: String)
-    case userName
+    
+    // MARK: Profile
     case accountSettings
     case editProfileField(ProfileFieldType)
-    case accountDeletedSuccess
+    case notificationSettings
+    case aboutApp
+    case termsOfService
+    case support
+    
+    // MARK: Address
+    case addressDetails(address: String)
+    
+    // MARK: Authentication
+    case auth
+    case phoneAuth
+    case emailAuth
+    case userName
+    case successAuth
     case otpVerification(phone: String, mode: VerificationMode)
     case emailOtpVerification(email: String, mode: VerificationMode)
+    
+    // MARK: Account Deletion
+    case accountDeletedSuccess
 }
 
+// MARK: - Tab Item
 enum TabItem {
     case feed, orders, chats, profile
 }
 
+// MARK: - App Coordinator
+// Manages global app state and navigation between screens
 class AppCoordinator: ObservableObject {
     
+    // MARK: - App State
+    // Full-screen states outside TabBar (onboarding, splash, filters)
     enum AppState: Equatable {
         case splash
         case onboarding
@@ -42,80 +58,20 @@ class AppCoordinator: ObservableObject {
         case main
     }
     
+    // MARK: - Published State
     @Published var appState: AppState = .splash
     @Published var selectedTab: TabItem = .feed
     
+    // Separate NavigationPath for each tab
     @Published var feedPath = NavigationPath()
     @Published var ordersPath = NavigationPath()
     @Published var chatsPath = NavigationPath()
     @Published var profilePath = NavigationPath()
     
+    // History stack for navigating back between AppState screens
     private var stateHistory: [AppState] = []
     
-    // MARK: - Navigation Logic
-    
-    func showAuth() {
-        profilePath.append(AppRoute.auth)
-    }
-    
-    // Phone authenfication
-
-    func showPhoneAuth() {
-        profilePath.append(AppRoute.phoneAuth)
-    }
-
-    func showOTPVerification(phone: String) {
-        profilePath.append(AppRoute.otpVerification(phone: phone))
-    }
-    
-    // Email authenfication
-    
-    func showEmailAuth() {
-        profilePath.append(AppRoute.emailAuth)
-    }
-
-    func showEmailOTPVerification(email: String) {
-        profilePath.append(AppRoute.emailOtpVerification(email: email))
-    }
-
-    // MARK: - Navigation Reset Logic
-    
-    func popProfile() {
-        guard !profilePath.isEmpty else { return }
-        profilePath.removeLast()
-    }
-
-    /// Clears all screens in the Profile navigation stack
-    func popToProfileRoot() {
-        profilePath = NavigationPath()
-    }
-
-    /// Use this to show the success screen and clear previous delete steps
-    func showAccountDeletedSuccess() {
-        // Clear path so user can't go back to the "Delete Reason" screen
-        profilePath = NavigationPath()
-        profilePath.append(AppRoute.accountDeletedSuccess)
-        // Depending on your setup, you might need to append a new route
-        // or change appState. Let's append the route if you add it to AppRoute:
-        // profilePath.append(AppRoute.accountDeletedSuccess)
-    }
-
-    /// Reset everything and go to Main (Feed)
-    func resetToMain() {
-        profilePath = NavigationPath()
-        feedPath = NavigationPath()
-        ordersPath = NavigationPath()
-        chatsPath = NavigationPath()
-        selectedTab = .feed
-        appState = .main
-    }
-    
-    func navigate(to state: AppState) {
-        stateHistory.append(appState)
-        withAnimation(.easeInOut(duration: 0.5)) {
-            self.appState = state
-        }
-    }
+    // MARK: - Splash
     
     func finishSplash() {
         let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
@@ -123,6 +79,7 @@ class AppCoordinator: ObservableObject {
         let hasSelectedFilters = UserDefaults.standard.bool(forKey: "hasSelectedFilters")
         
         withAnimation(.easeInOut(duration: 0.6)) {
+            // Authenticated user goes directly to main screen
             if SupabaseService.shared.client.auth.currentUser != nil {
                 self.appState = .main
                 return
@@ -140,6 +97,8 @@ class AppCoordinator: ObservableObject {
         }
     }
     
+    // MARK: - Onboarding & Filters
+    
     func finishOnboarding() {
         UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         navigate(to: .locationEntry)
@@ -153,13 +112,20 @@ class AppCoordinator: ObservableObject {
         navigate(to: .addressDetails(address: address))
     }
     
+    func completeAddressSetup(details: AddressDetails) {
+        LocationService.shared.saveFullAddress(details: details)
+        stateHistory.removeAll()
+        navigate(to: .filterOccasion)
+    }
+    
+    // Chains through the onboarding filter steps
     func showNextFilter(from current: AppState) {
         switch current {
-        case .addressDetails:   navigate(to: .filterOccasion)
-        case .filterOccasion:   navigate(to: .filterBouquetType)
+        case .addressDetails:    navigate(to: .filterOccasion)
+        case .filterOccasion:    navigate(to: .filterBouquetType)
         case .filterBouquetType: navigate(to: .filterFlowers)
-        case .filterFlowers:    navigate(to: .filterPrice)
-        case .filterPrice:      finishFilters()
+        case .filterFlowers:     navigate(to: .filterPrice)
+        case .filterPrice:       finishFilters()
         default: break
         }
     }
@@ -179,11 +145,29 @@ class AppCoordinator: ObservableObject {
         }
     }
     
-    func completeAddressSetup(details: AddressDetails) {
-        LocationService.shared.saveFullAddress(details: details)
-        stateHistory.removeAll()
-        navigate(to: .filterOccasion)
+    // MARK: - Auth Navigation
+    
+    func showAuth() {
+        profilePath.append(AppRoute.auth)
     }
+    
+    func showPhoneAuth() {
+        profilePath.append(AppRoute.phoneAuth)
+    }
+    
+    func showEmailAuth() {
+        profilePath.append(AppRoute.emailAuth)
+    }
+    
+    func showOTPVerification(phone: String, mode: VerificationMode = .auth) {
+        profilePath.append(AppRoute.otpVerification(phone: phone, mode: mode))
+    }
+    
+    func showEmailOTPVerification(email: String, mode: VerificationMode = .auth) {
+        profilePath.append(AppRoute.emailOtpVerification(email: email, mode: mode))
+    }
+    
+    // MARK: - Profile Navigation
     
     func showAccountSettings() {
         profilePath.append(AppRoute.accountSettings)
@@ -193,14 +177,62 @@ class AppCoordinator: ObservableObject {
         profilePath.append(AppRoute.editProfileField(fieldType))
     }
     
-    func showOTPVerification(phone: String, mode: VerificationMode) {
-        profilePath.append(AppRoute.otpVerification(phone: phone, mode: mode))
-    }
-
-    func showEmailOTPVerification(email: String, mode: VerificationMode) {
-        profilePath.append(AppRoute.emailOtpVerification(email: email, mode: mode))
+    func showNotificationSettings() {
+        profilePath.append(AppRoute.notificationSettings)
     }
     
+    func showAboutApp() {
+        profilePath.append(AppRoute.aboutApp)
+    }
+    
+    func showTermsOfService() {
+        profilePath.append(AppRoute.termsOfService)
+    }
+    
+    func showSupport() {
+        profilePath.append(AppRoute.support)
+    }
+    
+    // MARK: - Navigation Helpers
+    
+    // Pop one screen back in profilePath
+    func popProfile() {
+        guard !profilePath.isEmpty else { return }
+        profilePath.removeLast()
+    }
+    
+    // Return to the profile root screen
+    func popToProfileRoot() {
+        profilePath = NavigationPath()
+    }
+    
+    // Show account deleted success screen and prevent going back
+    func showAccountDeletedSuccess() {
+        profilePath = NavigationPath()
+        profilePath.append(AppRoute.accountDeletedSuccess)
+    }
+    
+    // Full navigation reset to main feed
+    func resetToMain() {
+        profilePath = NavigationPath()
+        feedPath = NavigationPath()
+        ordersPath = NavigationPath()
+        chatsPath = NavigationPath()
+        selectedTab = .feed
+        appState = .main
+    }
+    
+    // MARK: - AppState Navigation
+    
+    // Transition between full-screen states with history tracking
+    func navigate(to state: AppState) {
+        stateHistory.append(appState)
+        withAnimation(.easeInOut(duration: 0.5)) {
+            self.appState = state
+        }
+    }
+    
+    // Return to the previous AppState
     func goBack() {
         guard let previous = stateHistory.popLast() else { return }
         withAnimation(.easeInOut(duration: 0.4)) {

@@ -139,10 +139,6 @@ struct MainTabView: View {
             Text("Order \(id)")
         case .chatRoom(let partnerId):
             Text("Chat with \(partnerId)")
-        case .settings:
-            Text("Settings")
-        case .editProfile:
-            Text("Edit Profile")
         case .addressDetails(let address):
             AddressDetailsView(selectedAddress: address)
         case .auth:
@@ -174,6 +170,18 @@ struct MainTabView: View {
         case .accountDeletedSuccess:
             AccountDeletedView()
                 .navigationBarHidden(true)
+        case .notificationSettings:
+            if let userId = authViewModel.currentUser?.id {
+                NotificationSettingsView(userId: userId)
+            }
+        case .aboutApp:
+            AboutAppView()
+                .environmentObject(coordinator)
+        case .termsOfService:
+            TermsOfServiceView()
+        case .support:
+            SupportView()
+                .environmentObject(coordinator)
         }
     }
 }

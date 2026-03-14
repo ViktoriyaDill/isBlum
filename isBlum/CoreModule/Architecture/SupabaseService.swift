@@ -20,4 +20,20 @@ class SupabaseService {
             supabaseKey: "sb_publishable_JqYh_JgtcOkPxPKQgkCcBA_-d_Ey3x5"
         )
     }
+    
+    func updateDeviceToken(userId: UUID, token: String) async {
+            let updateData = ["device_token": token]
+            
+            do {
+                try await client
+                    .from("profiles")
+                    .update(updateData)
+                    .eq("id", value: userId.uuidString)
+                    .execute()
+                
+                print("LOG: Device token successfully updated in Supabase for user \(userId)")
+            } catch {
+                print("ERROR: Failed to save device token: \(error.localizedDescription)")
+            }
+        }
 }

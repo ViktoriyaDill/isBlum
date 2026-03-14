@@ -10,6 +10,9 @@ import SwiftUI
 struct SettingsGroupView: View {
     let isLoggedIn: Bool
     
+    @EnvironmentObject var coordinator: AppCoordinator
+    @Environment(\.openURL) private var openURL
+    
     // MARK: - State & Storage
     // AppStorage automatically updates the UI when the value changes
     @AppStorage("app_language") private var selectedLanguage: String = "uk"
@@ -61,25 +64,27 @@ struct SettingsGroupView: View {
                     
                     if isLoggedIn {
                         ProfileMenuRow(icon: .bell, title: "Налаштування сповіщень") {
-                            // Logic for notifications
+                            coordinator.showNotificationSettings()
                         }
                         Divider()
                     }
                     
                     ProfileMenuRow(icon: .help, title: "Підтримка") {
-                        // Logic for support
+                        coordinator.showSupport()
                     }
                     
                     Divider()
                     
                     ProfileMenuRow(icon: .shop, title: "Розмістити свій магазин"){
-                        // Logic for shop
+                        if let url = URL(string: "itms-apps://apps.apple.com/app/id544007664") {
+                            openURL(url)
+                        }
                     }
                     
                     Divider()
                     
                     ProfileMenuRow(icon: .info, title: "Про додаток") {
-                        // Logic for about
+                        coordinator.showAboutApp()
                     }
                 }
                 .padding(.horizontal, 16)

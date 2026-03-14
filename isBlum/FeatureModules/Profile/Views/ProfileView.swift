@@ -38,6 +38,8 @@ struct ProfileView: View {
                         }
                         
                         SettingsGroupView(isLoggedIn: auth.isAuthenticated)
+                            .environmentObject(coordinator) 
+                        
                     }
                     .padding(.bottom, 120)
                 }
