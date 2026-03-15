@@ -17,6 +17,7 @@ enum AppRoute: Hashable {
     case aboutApp
     case termsOfService
     case support
+    case notifications
     
     // MARK: Address
     case addressDetails(address: String)
@@ -198,6 +199,10 @@ class AppCoordinator: ObservableObject {
     
     func showSupport() {
         profilePath.append(AppRoute.support)
+    }
+    
+    func showNotifications() {
+        profilePath.append(AppRoute.notifications)
     }
     
     // MARK: - Navigation Helpers

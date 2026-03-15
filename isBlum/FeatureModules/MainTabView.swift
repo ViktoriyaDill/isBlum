@@ -182,6 +182,9 @@ struct MainTabView: View {
         case .support:
             SupportView()
                 .environmentObject(coordinator)
+        case .notifications:
+            NotificationsView()
+                .environmentObject(coordinator)
         case .generalError:
             ErrorView(type: .general) {
                 coordinator.popProfile()

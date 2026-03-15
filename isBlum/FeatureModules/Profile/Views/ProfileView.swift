@@ -16,7 +16,9 @@ struct ProfileView: View {
             // Header with cloud background
             CustomNavigationBar(title: "Профіль", showBackButton: false)
                 .overlay(alignment: .trailing) {
-                    NotificationButton(count: 1)
+                    NotificationButton(count: 3) {
+                        coordinator.showNotifications()
+                    }
                         .padding(.trailing, 16)
                         .padding(.top, 8)
                 }
