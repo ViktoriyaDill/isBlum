@@ -13,20 +13,15 @@ struct LoggedInProfileView: View {
     // MARK: - Computed Properties for User Data
     // Accessing properties from your UserProfile model
     private var userName: LocalizedStringResource {
-        print("name \(auth.currentUser?.name)")
-        return LocalizedStringResource(stringLiteral:auth.currentUser?.name ?? "Гість")
+        LocalizedStringResource(stringLiteral: auth.currentUser?.name ?? "Гість")
     }
-    
+
     private var userPhone: LocalizedStringResource {
-        print("phone \(auth.currentUser?.phone)")
-        // If your profile doesn't have a phone, you can take it from auth session
-        return LocalizedStringResource(stringLiteral:auth.currentUser?.phone ?? "Номер не вказано")
+        LocalizedStringResource(stringLiteral: auth.currentUser?.phone ?? "Номер не вказано")
     }
-    
+
     private var userEmail: LocalizedStringResource {
-        print("email \(auth.currentUser?.email)")
-        // Typically email is in the auth metadata or your profile table
-        return LocalizedStringResource(stringLiteral:auth.currentUser?.email ?? "Email не вказано")
+        LocalizedStringResource(stringLiteral: auth.currentUser?.email ?? "Email не вказано")
     }
     
     var body: some View {

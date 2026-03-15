@@ -29,6 +29,7 @@ enum AppRoute: Hashable {
     case successAuth
     case otpVerification(phone: String, mode: VerificationMode)
     case emailOtpVerification(email: String, mode: VerificationMode)
+    case generalError
     
     // MARK: Account Deletion
     case accountDeletedSuccess
@@ -61,6 +62,7 @@ class AppCoordinator: ObservableObject {
     // MARK: - Published State
     @Published var appState: AppState = .splash
     @Published var selectedTab: TabItem = .feed
+    @Published var pendingRetryAction: (() -> Void)? = nil
     
     // Separate NavigationPath for each tab
     @Published var feedPath = NavigationPath()
@@ -165,6 +167,11 @@ class AppCoordinator: ObservableObject {
     
     func showEmailOTPVerification(email: String, mode: VerificationMode = .auth) {
         profilePath.append(AppRoute.emailOtpVerification(email: email, mode: mode))
+    }
+    
+    func showError(retry: @escaping () -> Void) {
+        pendingRetryAction = retry
+        profilePath.append(AppRoute.generalError)
     }
     
     // MARK: - Profile Navigation

@@ -31,6 +31,8 @@ struct PhoneAuthView: View {
     @State private var selectedCountry = countries[0]
     @State private var showCountryPicker = false
     
+    @FocusState private var isPhoneFocused: Bool
+    
     private var fullPhone: String {
         "\(selectedCountry.code)\(phoneNumber.filter { $0.isNumber })"
     }
@@ -85,6 +87,7 @@ struct PhoneAuthView: View {
                         TextField("Номер телефону", text: $phoneNumber)
                             .font(.onest(.regular, size: 16))
                             .keyboardType(.phonePad)
+                            .focused($isPhoneFocused)
                     }
                     .frame(height: 60)
                     .background(RoundedRectangle(cornerRadius: 16).stroke(Color.gray.opacity(0.3)))
@@ -142,8 +145,8 @@ struct PhoneAuthView: View {
     }
 }
 
-#Preview {
-    PhoneAuthView()
-        .environmentObject(AppCoordinator())
-        .environmentObject(AuthViewModel())
-}
+//#Preview {
+//    PhoneAuthView()
+//        .environmentObject(AppCoordinator())
+//        .environmentObject(AuthViewModel())
+//}

@@ -5,15 +5,15 @@ struct RootCoordinatorView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var filterVM: FilterViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-
+    
     var body: some View {
         ZStack {
             switch coordinator.appState {
             case .splash:
                 SplashScreenView()
                     .onAppear { startSplashTimer() }
-                    .task { await checkExistingSession() } 
-                    
+                    .task { await checkExistingSession() }
+                
             case .onboarding:
                 OnboardingView()
             case .locationEntry:
@@ -33,6 +33,9 @@ struct RootCoordinatorView: View {
             case .main:
                 MainTabView()
             }
+        }
+        .onAppear {
+            authViewModel.coordinator = coordinator
         }
         .animation(.easeInOut(duration: 0.4), value: coordinator.appState)
         .onChange(of: authViewModel.justSignedIn) { didSignIn in

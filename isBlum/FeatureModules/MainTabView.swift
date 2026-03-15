@@ -182,6 +182,13 @@ struct MainTabView: View {
         case .support:
             SupportView()
                 .environmentObject(coordinator)
+        case .generalError:
+            ErrorView(type: .general) {
+                coordinator.popProfile()
+                coordinator.pendingRetryAction?()
+                coordinator.pendingRetryAction = nil
+            }
+            .environmentObject(coordinator)
         }
     }
 }

@@ -94,6 +94,116 @@
         }
       }
     },
+    "error_general_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A short pause — we're fixing everything.\nPlease try again in a few minutes"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Небольшая пауза — мы всё исправляем.\nПопробуйте снова через несколько минут"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Невелика пауза — ми все виправляємо.\nСпробуйте ще раз через кілька хвилин"
+          }
+        }
+      }
+    },
+    "error_general_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что-то пошло не так"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Щось пішло не так"
+          }
+        }
+      }
+    },
+    "error_no_internet_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It looks like you're offline. Check your connection and try again"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Похоже, вы сейчас офлайн. Проверьте соединение и попробуйте снова"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Схоже, ви зараз офлайн. Перевірте з'єднання та спробуйте ще раз"
+          }
+        }
+      }
+    },
+    "error_no_internet_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No internet connection"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет подключения к интернету"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Немає підключення до інтернету"
+          }
+        }
+      }
+    },
+    "error_retry_connection" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry connection"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить подключение"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторити підключення"
+          }
+        }
+      }
+    },
     "Feed View" : {
       "localizations" : {
         "en" : {
@@ -990,22 +1100,6 @@
         }
       }
     },
-    "Будь ласка, напишіть якнайдокладніше, що сталося. Ми обов'язково допоможемо!" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please describe in as much detail as possible what happened. We will definitely help you!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пожалуйста, опишите как можно подробнее, что произошло. Мы обязательно поможем!"
-          }
-        }
-      }
-    },
     "Букети вже чекають" : {
       "localizations" : {
         "en" : {
@@ -1035,22 +1129,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Валюта"
-          }
-        }
-      }
-    },
-    "Ваше запитання" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your question"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваш вопрос"
           }
         }
       }
@@ -1768,22 +1846,6 @@
         }
       }
     },
-    "Надіслати" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отправить"
-          }
-        }
-      }
-    },
     "Надішлемо код для входу в акаунт" : {
       "localizations" : {
         "en" : {
@@ -2059,22 +2121,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Поддержка"
-          }
-        }
-      }
-    },
-    "Підтримка на зв'язку" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support is here to help"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Поддержка на связи"
           }
         }
       }

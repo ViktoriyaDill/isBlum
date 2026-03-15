@@ -22,6 +22,8 @@
         
         private var currentNonce: String?
         
+        weak var coordinator: AppCoordinator?
+        
         private let client = SupabaseService.shared.client
         
         init() {
@@ -111,16 +113,10 @@
                     ], onConflict: "id")
                     .execute()
                 
-                try await client.auth.update(user: UserAttributes(
-                    data: [
-                        "full_name": .string(name),
-                        "avatar_url": .string(avatarUrl ?? "")
-                    ]
-                ))
-                
                 await fetchProfile()
+                
             } catch {
-                print("Google profile sync error: \(error.localizedDescription)")
+                print("Google profile sync error:", error)
             }
         }
         
@@ -217,7 +213,9 @@
                 try await client.auth.signInWithOTP(email: email)
             } catch {
                 print("Email OTP send error: \(error.localizedDescription)")
-                authError = "Failed to send code. Please check your email."
+                handleError(error) {
+                    Task { await self.sendEmailOTP(email: email) }
+                }
             }
         }
 
@@ -246,7 +244,9 @@
                 try await client.auth.signInWithOTP(phone: phone)
             } catch {
                 print("SMS OTP send error: \(error.localizedDescription)")
-                authError = "Failed to send code. Please check your phone number."
+                handleError(error) {
+                    Task { await self.sendOTP(phone: phone) }
+                }
             }
         }
         
@@ -268,8 +268,11 @@
         
         // MARK: - Profile Management
         func fetchProfile() async {
+            
             guard let userId = client.auth.currentUser?.id else { return }
+            
             do {
+                
                 let profile: UserProfile = try await client
                     .from("profiles")
                     .select()
@@ -277,60 +280,68 @@
                     .single()
                     .execute()
                     .value
+                
                 self.currentUser = profile
+                
             } catch {
-                print("Profile fetch error: \(error)")
+                print("Profile fetch error:", error)
+                handleError(error) {
+                    Task { await self.fetchProfile() }
+                }
             }
         }
         
         func updateProfile(name: String?, phone: String?) async {
+            
             guard let userId = client.auth.currentUser?.id else { return }
+            
             isLoading = true
             defer { isLoading = false }
             
             do {
-                var dbUpdates: [String: String] = [:]
-                if let name = name { dbUpdates["name"] = name }
-                if let phone = phone { dbUpdates["phone"] = phone }
                 
-                if !dbUpdates.isEmpty {
-                    try await client
-                        .from("profiles")
-                        .update(dbUpdates)
-                        .eq("id", value: userId)
-                        .execute()
+                var updates: [String: String] = [:]
+                
+                if let name = name {
+                    updates["name"] = name
                 }
                 
-                let authData: [String: AnyJSON] = [
-                    "full_name": .string(name ?? ""),
-                    "phone": .string(phone ?? "")
-                ]
-                try await client.auth.update(user: UserAttributes(data: authData))
+                if let phone = phone {
+                    updates["phone"] = phone
+                }
+                
+                try await client
+                    .from("profiles")
+                    .update(updates)
+                    .eq("id", value: userId)
+                    .execute()
                 
                 await fetchProfile()
+                
             } catch {
-                authError = error.localizedDescription
+                print("Profile update error:", error)
+                handleError(error) {
+                    Task { await self.updateProfile(name: name, phone: phone) }
+                }
             }
         }
         
         func updateEmail(_ email: String) async {
+            
             isLoading = true
             authError = nil
             defer { isLoading = false }
             
             do {
-                try await client.auth.update(user: UserAttributes(email: email))
                 
-                if let userId = client.auth.currentUser?.id {
-                    try await client
-                        .from("profiles")
-                        .update(["email": email])
-                        .eq("id", value: userId)
-                        .execute()
-                }
-                    
+                try await client.auth.update(
+                    user: UserAttributes(email: email)
+                )
+                
                 authError = "Лист для підтвердження надіслано на нову пошту."
+                
             } catch {
+                
                 authError = "Помилка оновлення: \(error.localizedDescription)"
             }
         }
@@ -348,14 +359,11 @@
         
         // Check verification status (from your DB or Supabase Auth metadata)
         var isPhoneUnverified: Bool {
-            let authUser = client.auth.currentUser
-            return authUser?.phoneConfirmedAt == nil
+            !(currentUser?.isPhoneVerified ?? false)
         }
         
         var isEmailUnverified: Bool {
-            // Checking if email was verified via Supabase Auth
-            // (This might require a check in auth.client.auth.currentUser)
-            currentUser?.email == nil
+            !(currentUser?.isEmailVerified ?? false)
         }
         
         func signOut() async {
@@ -406,7 +414,20 @@
                 
             } catch {
                 print("Account deletion error: \(error.localizedDescription)")
-                authError = "Не вдалось видалити акаунт. Спробуйте ще раз."
+                handleError(error) {
+                    Task { await self.deleteAccount(reason: reason) }
+                }
+            }
+        }
+        
+        // Helper to handle non-network errors
+        private func handleError(_ error: Error, retry: @escaping () -> Void) {
+            let message = error.localizedDescription.lowercased()
+            let networkKeywords = ["network", "internet", "connection", "offline", "timed out"]
+            let isNetworkError = networkKeywords.contains { message.contains($0) }
+            
+            if !isNetworkError {
+                coordinator?.showError(retry: retry)
             }
         }
     }
