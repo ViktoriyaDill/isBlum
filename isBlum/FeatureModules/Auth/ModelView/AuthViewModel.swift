@@ -33,6 +33,7 @@
                     case .signedIn:
                         self.isAuthenticated = true
                         await self.fetchProfile()
+                        await self.syncLocalAddressToDatabase()
                     case .signedOut:
                         self.isAuthenticated = false
                         self.currentUser = nil
@@ -428,6 +429,44 @@
             
             if !isNetworkError {
                 coordinator?.showError(retry: retry)
+            }
+        }
+        
+        // MARK: - Address Sync
+        private func syncLocalAddressToDatabase() async {
+            guard let details = LocationService.shared.loadFullAddress(),
+                  let userId = client.auth.currentUser?.id else { return }
+            
+            do {
+                // Check if user already has addresses in DB
+                struct AddressID: Decodable { let id: UUID }
+                let existing: [AddressID] = try await client
+                    .from("addresses")
+                    .select("id")
+                    .eq("user_id", value: userId)
+                    .limit(1)
+                    .execute()
+                    .value
+
+                guard existing.isEmpty else { return }
+                
+                try await client
+                    .from("addresses")
+                    .insert([
+                        "user_id": userId.uuidString,
+                        "full_address": details.streetAddress,
+                        "apartment": details.apartment,
+                        "entrance": details.entrance,
+                        "floor": details.floor,
+                        "intercom": details.intercom,
+                        "is_default": "true"
+                    ])
+                    .execute()
+                
+                print("Local address synced to database successfully")
+                
+            } catch {
+                print("Address sync error:", error)
             }
         }
     }

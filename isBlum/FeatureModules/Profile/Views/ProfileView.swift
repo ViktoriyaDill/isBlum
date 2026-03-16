@@ -11,13 +11,19 @@ struct ProfileView: View {
     @EnvironmentObject var coordinator: AppCoordinator
     @EnvironmentObject var auth: AuthViewModel
     
+    @StateObject private var notificationVM = NotificationViewModel()
+    
     var body: some View {
         VStack(spacing: 0) {
             // Header with cloud background
             CustomNavigationBar(title: "Профіль", showBackButton: false)
                 .overlay(alignment: .trailing) {
-                    NotificationButton(count: 3) {
+                    NotificationButton(count: notificationVM.unreadCount) {
                         coordinator.showNotifications()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            sendTestLocalNotification()
+                        }
                     }
                         .padding(.trailing, 16)
                         .padding(.top, 8)
@@ -50,6 +56,19 @@ struct ProfileView: View {
             .padding(.top, 16)
         }
         .navigationBarHidden(true)
+        . task {
+            if auth.isAuthenticated {
+                Task {
+                    await notificationVM.fetchNotifications()
+                    notificationVM.subscribeToRealtime()
+                }
+            } else {
+                notificationVM.unsubscribeFromRealtime()
+            }
+        }
+        .onDisappear {
+            notificationVM.unsubscribeFromRealtime()
+        }
         
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct NotificationSettingsView: View {
     @EnvironmentObject var coordinator: AppCoordinator
-    @StateObject private var viewModel = NotificationViewModel()
+    @StateObject private var viewModel = NotificationSettingsViewModel()
     
     let userId: UUID // Pass the current user's ID
     

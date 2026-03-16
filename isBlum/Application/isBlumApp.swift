@@ -43,23 +43,43 @@ struct isBlumApp: App {
 }
 
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        // Convert token to string
-        let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        print("LOG: Registered for remote notifications with token: \(tokenString)")
+    // MARK: - App Launch
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         
-        // Save token if user is logged in
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .badge, .sound]
+        ) { granted, _ in
+            print("Push permission: \(granted)")
+        }
+        return true
+    }
+    
+    // MARK: - Show notification when app is open
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification) async
+    -> UNNotificationPresentationOptions {
+        return [.banner, .badge, .sound]
+    }
+    
+    // MARK: - Remote notifications
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        print("LOG: Device token: \(tokenString)")
+        
         Task {
-            // Get current user ID from your Auth system
             if let userId = try? await SupabaseService.shared.client.auth.session.user.id {
                 await SupabaseService.shared.updateDeviceToken(userId: userId, token: tokenString)
             }
         }
     }
 
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("ERROR: Failed to register for remote notifications: \(error.localizedDescription)")
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("ERROR: Failed to register: \(error.localizedDescription)")
     }
 }

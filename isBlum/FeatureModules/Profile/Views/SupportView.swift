@@ -102,10 +102,11 @@ struct SupportView: View {
             do {
                 
                 let session = try? await SupabaseService.shared.client.auth.session
-                
+
                 try await SupabaseService.shared.client
                     .from("support_messages")
                     .insert([
+                        "user_id": session?.user.id.uuidString ?? "",  
                         "user_email": session?.user.email ?? "anonymous",
                         "message": messageText,
                         "app_version": "\(AppInfo.version) (\(AppInfo.build))",

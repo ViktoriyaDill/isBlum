@@ -25,4 +25,9 @@ class LocationService {
             UserDefaults.standard.set(encoded, forKey: fullDetailsKey)
         }
     }
+    
+    func loadFullAddress() -> AddressDetails? {
+        guard let data = UserDefaults.standard.data(forKey: fullDetailsKey) else { return nil }
+        return try? JSONDecoder().decode(AddressDetails.self, from: data)
+    }
 }
