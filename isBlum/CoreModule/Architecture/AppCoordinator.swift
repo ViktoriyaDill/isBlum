@@ -34,6 +34,9 @@ enum AppRoute: Hashable {
     
     // MARK: Account Deletion
     case accountDeletedSuccess
+    
+    // MARK: Orders
+    case orderHistory
 }
 
 // MARK: - Tab Item
@@ -250,5 +253,15 @@ class AppCoordinator: ObservableObject {
         withAnimation(.easeInOut(duration: 0.4)) {
             self.appState = previous
         }
+    }
+    
+    // MARK: - Orders navigation
+    
+    func showOrderHistory() {
+        profilePath.append(AppRoute.orderHistory)
+    }
+
+    func showOrderHistoryFromOrders() {
+        ordersPath.append(AppRoute.orderHistory)
     }
 }

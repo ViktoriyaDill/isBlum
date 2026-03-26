@@ -20,7 +20,8 @@ struct MainTabView: View {
                 .tag(TabItem.feed)
                 
                 NavigationStack(path: $coordinator.ordersPath) {
-                    Text("Orders View")
+                    OrdersView()
+                        .environmentObject(authViewModel)
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }
@@ -37,7 +38,7 @@ struct MainTabView: View {
                 
                 NavigationStack(path: $coordinator.profilePath) {
                     ProfileView()
-                        .environmentObject(authViewModel) 
+                        .environmentObject(authViewModel)
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }
@@ -46,7 +47,7 @@ struct MainTabView: View {
             }
             .ignoresSafeArea(.all, edges: .bottom)
             .ignoresSafeArea(.keyboard)
-
+            
             if isRootScreen {
                 customTabBar
                     .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -57,10 +58,18 @@ struct MainTabView: View {
     }
     
     private var isRootScreen: Bool {
-        coordinator.feedPath.isEmpty &&
-        coordinator.ordersPath.isEmpty &&
-        coordinator.chatsPath.isEmpty &&
-        coordinator.profilePath.isEmpty
+        let result = coordinator.feedPath.isEmpty &&
+            coordinator.ordersPath.isEmpty &&
+            coordinator.chatsPath.isEmpty &&
+            coordinator.profilePath.isEmpty
+        
+        print("isRootScreen: \(result)")
+        print("feedPath: \(coordinator.feedPath)")
+        print("ordersPath: \(coordinator.ordersPath)")
+        print("chatsPath: \(coordinator.chatsPath)")
+        print("profilePath: \(coordinator.profilePath)")
+        
+        return result
     }
     
     private var customTabBar: some View {
@@ -192,6 +201,9 @@ struct MainTabView: View {
                 coordinator.pendingRetryAction = nil
             }
             .environmentObject(coordinator)
+        case .orderHistory:
+            OrdersView()
+                .environmentObject(authViewModel)
         }
     }
 }

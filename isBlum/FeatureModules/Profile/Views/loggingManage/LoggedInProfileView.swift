@@ -65,7 +65,7 @@ struct LoggedInProfileView: View {
                     title: "Історія замовлень",
                     showArrow: true
                 ) {
-                    // navigate to history
+                    coordinator.selectedTab = .orders
                 }
             }
             .padding(16)

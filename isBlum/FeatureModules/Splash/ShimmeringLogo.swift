@@ -22,7 +22,7 @@ struct ShimmeringLogo: View {
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
-                    // Розрахунок руху градієнта
+                    
                     .offset(x: -geo.size.width + (geo.size.width * 2 * phase))
                 }
                 .mask(Image(.isblum).resizable().scaledToFit())

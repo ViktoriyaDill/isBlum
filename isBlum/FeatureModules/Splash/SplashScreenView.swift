@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SplashScreenView: View {
-    // Стан для анімації появи (скейл + прозорість)
+    
     @State private var isAnimating = false
     
     var body: some View {
