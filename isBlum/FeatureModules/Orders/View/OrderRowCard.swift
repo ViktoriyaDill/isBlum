@@ -9,23 +9,23 @@ import Foundation
 import SwiftUI
 
 struct OrderRowCard: View {
-    
+
+    @EnvironmentObject var coordinator: AppCoordinator
     @State private var showingRatingSheet = false
     @State private var ratingStep: RatingStep = .stars
-    
+
     let order: Order
     
     private var detentsForStep: Set<PresentationDetent> {
             switch ratingStep {
             case .stars:   return [.height(420)]
-            case .tags:    return [.height(580)]
+            case .tags:    return [.height(670)]
             case .comment, .commentWithPhoto: return [.height(560)]
             }
         }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Верхня частина з інфо
             HStack(alignment: .top, spacing: 16) {
                 // Try product image from order item first, fallback to logo
                 AsyncImage(url: URL(string: order.items.first?.productImageUrl ?? "")) { phase in
@@ -91,7 +91,7 @@ struct OrderRowCard: View {
                 .padding(.horizontal, 16)
     
             HStack(spacing: 8) {
-                Button(action: { /* Деталі */ }) {
+                Button(action: { coordinator.showOrderDetails(order) }) {
                     Text("orders_details_button")
                         .font(.onest(.medium, size: 16))
                         .foregroundColor(.black)

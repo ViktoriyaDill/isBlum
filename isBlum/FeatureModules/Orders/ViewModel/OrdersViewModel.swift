@@ -35,9 +35,11 @@ class OrdersViewModel: ObservableObject {
                     status,
                     seller_id,
                     total,
+                    subtotal,
+                    delivery_fee,
+                    delivery_address,
                     created_at,
                     delivery_time,
-                    delivery_time_end,
                     order_items (
                         id,
                         product_id,
@@ -66,14 +68,18 @@ class OrdersViewModel: ObservableObject {
                 struct SellerProfileFetch: Decodable {
                     let id: UUID
                     let shopName: String
+                    let logoUrl: String?
+                    let isVerified: Bool?
                     enum CodingKeys: String, CodingKey {
                         case id
                         case shopName = "shop_name"
+                        case logoUrl = "logo_url"
+                        case isVerified = "is_verified"
                     }
                 }
                 let profiles: [SellerProfileFetch] = try await client
                     .from("seller_profiles")
-                    .select("id, shop_name")
+                    .select("id, shop_name, logo_url, is_verified")
                     .in("id", values: sellerIds)
                     .execute()
                     .value
@@ -81,7 +87,11 @@ class OrdersViewModel: ObservableObject {
                 var enriched = fetchedOrders
                 for i in enriched.indices {
                     if let profile = profiles.first(where: { $0.id == enriched[i].sellerId }) {
-                        enriched[i].sellerProfile = SellerProfile(shopName: profile.shopName)
+                        enriched[i].sellerProfile = SellerProfile(
+                            shopName: profile.shopName,
+                            logoUrl: profile.logoUrl,
+                            isVerified: profile.isVerified
+                        )
                     }
                 }
                 self.orders = enriched

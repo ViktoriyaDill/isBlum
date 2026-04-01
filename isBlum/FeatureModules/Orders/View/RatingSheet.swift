@@ -153,7 +153,7 @@ struct RatingSheet: View {
     }
     
     private var tagsStep: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 16) {
             Text("rating_tags_title")
                 .font(.onest(.bold, size: 24))
                 .multilineTextAlignment(.center)

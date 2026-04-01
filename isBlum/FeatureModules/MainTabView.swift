@@ -144,8 +144,8 @@ struct MainTabView: View {
             Text("Product \(id)")
         case .sellerProfile(let id):
             Text("Seller \(id)")
-        case .orderDetails(let id):
-            Text("Order \(id)")
+        case .orderDetails(let order):
+            OrderDetailsView(order: order)
         case .chatRoom(let partnerId):
             Text("Chat with \(partnerId)")
         case .addressDetails(let address):
