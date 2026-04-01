@@ -129,7 +129,7 @@ struct RatingSheet: View {
     
     private var starsStep: some View {
         VStack(spacing: 16) {
-            Text("rating_stars_title")
+            Text("rating_stars_title \(order.shopName)")
                 .font(.onest(.bold, size: 24))
                 .multilineTextAlignment(.center)
             
@@ -153,10 +153,11 @@ struct RatingSheet: View {
     }
     
     private var tagsStep: some View {
-        VStack(spacing: 16) {
-            Text("rating_stars_subtitle")
+        VStack(spacing: 0) {
+            Text("rating_tags_title")
                 .font(.onest(.bold, size: 24))
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
             
             Text("rating_tags_subtitle")
                 .font(.onest(.regular, size: 16))
@@ -165,7 +166,7 @@ struct RatingSheet: View {
             // Гнучка сітка тегів
             FlowLayout(items: tags) { tag in
                 TagView(
-                    title: String(localized: LocalizedStringResource(stringLiteral: tag)),
+                    title: LocalizedStringKey(tag),
                     isSelected: selectedTags.contains(tag)
                 ) {
                     if selectedTags.contains(tag) {
@@ -183,29 +184,26 @@ struct RatingSheet: View {
             Text("rating_comment_title")
                 .font(.onest(.bold, size: 20))
             
-            ZStack(alignment: .bottomLeading) {
-                TextEditor(text: $comment)
-                    .frame(height: 160)
-                    .padding(12)
-                    .scrollContentBackground(.hidden)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color.gray.opacity(0.2))
-                    )
-                
-                if comment.isEmpty {
-                    Text("rating_comment_placeholder")
-                        .foregroundColor(.gray)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 20)
-                        .allowsHitTesting(false)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            TextEditor(text: $comment)
+                .frame(height: 160)
+                .padding(12)
+                .scrollContentBackground(.hidden)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.gray.opacity(0.2))
+                )
+                .overlay(alignment: .topLeading) {
+                    if comment.isEmpty {
+                        Text("rating_comment_placeholder")
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 20)
+                            .allowsHitTesting(false)
+                    }
                 }
-                
-                Group {
+                .overlay(alignment: .bottomLeading) {
                     if let imageData = attachedImageData,
                        let uiImage = UIImage(data: imageData) {
-                        
                         HStack(alignment: .bottom) {
                             Image(uiImage: uiImage)
                                 .resizable()
@@ -225,14 +223,12 @@ struct RatingSheet: View {
                                     }
                                     .offset(x: 5, y: -5)
                                 }
-                            
+
                             if isUploadingPhoto {
                                 ProgressView()
-                                    .padding(.bottom, 20)
                             }
                         }
                         .padding(12)
-                        
                     } else {
                         PhotosPicker(
                             selection: $selectedPhotoItem,
@@ -252,7 +248,6 @@ struct RatingSheet: View {
                         .padding(12)
                     }
                 }
-            }
         }
         .onChange(of: selectedPhotoItem) { newItem in
             Task { await loadAndUploadPhoto(newItem) }

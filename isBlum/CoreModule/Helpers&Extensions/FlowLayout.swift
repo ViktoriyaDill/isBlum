@@ -10,60 +10,85 @@ import SwiftUI
 
 struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Hashable {
     let items: Data
-    let spacing: CGFloat = 8
+    var spacing: CGFloat = 8
+    var lineSpacing: CGFloat = 12
     let content: (Data.Element) -> Content
 
-    @State private var totalHeight = CGFloat.zero
-
     var body: some View {
-        VStack {
-            GeometryReader { geometry in
-                self.generateContent(in: geometry)
+        _FlowLayout(spacing: spacing, lineSpacing: lineSpacing) {
+            ForEach(items, id: \.self) { item in
+                content(item)
             }
         }
-        .frame(height: totalHeight)
+    }
+}
+
+private struct _FlowLayout: Layout {
+    var spacing: CGFloat
+    var lineSpacing: CGFloat
+
+    private struct Row {
+        var views: [LayoutSubview]
+        var sizes: [CGSize]
+        var height: CGFloat
     }
 
-    private func generateContent(in g: GeometryProxy) -> some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-
-        return ZStack(alignment: .top) { 
-            ForEach(self.items, id: \.self) { item in
-                self.content(item)
-                    .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(HorizontalAlignment.center, computeValue: { d in
-                        if (abs(width - d.width) > g.size.width) {
-                            width = 0
-                            height -= d.height
-                        }
-                        let result = width - g.size.width / 2 + d.width / 2
-                        if item == self.items.last! {
-                            width = 0
-                        } else {
-                            width -= d.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { d in
-                        let result = height
-                        if item == self.items.last! {
-                            height = 0
-                        }
-                        return result
-                    })
-            }
-        }
-        .background(viewHeightReader($totalHeight))
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
+        let rows = makeRows(for: subviews, in: proposal.width ?? 0)
+        let totalHeight = rows.reduce(0) { $0 + $1.height }
+            + CGFloat(max(0, rows.count - 1)) * lineSpacing
+        return CGSize(width: proposal.width ?? 0, height: totalHeight)
     }
 
-    private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {
-        return GeometryReader { geometry -> Color in
-            let rect = geometry.frame(in: .local)
-            DispatchQueue.main.async {
-                binding.wrappedValue = rect.size.height
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) {
+        let rows = makeRows(for: subviews, in: bounds.width)
+        var y = bounds.minY
+
+        for row in rows {
+            let rowWidth = row.sizes.reduce(0) { $0 + $1.width }
+                + CGFloat(max(0, row.sizes.count - 1)) * spacing
+            var x = bounds.minX + (bounds.width - rowWidth) / 2
+
+            for (view, size) in zip(row.views, row.sizes) {
+                view.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(size))
+                x += size.width + spacing
             }
-            return .clear
+
+            y += row.height + lineSpacing
         }
+    }
+
+    private func makeRows(for subviews: Subviews, in width: CGFloat) -> [Row] {
+        var rows: [Row] = []
+        var currentViews: [LayoutSubview] = []
+        var currentSizes: [CGSize] = []
+        var currentWidth: CGFloat = 0
+        var currentHeight: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            let addedWidth = currentViews.isEmpty
+                ? size.width
+                : currentWidth + spacing + size.width
+
+            if addedWidth > width && !currentViews.isEmpty {
+                rows.append(Row(views: currentViews, sizes: currentSizes, height: currentHeight))
+                currentViews = [subview]
+                currentSizes = [size]
+                currentWidth = size.width
+                currentHeight = size.height
+            } else {
+                currentViews.append(subview)
+                currentSizes.append(size)
+                currentWidth = addedWidth
+                currentHeight = max(currentHeight, size.height)
+            }
+        }
+
+        if !currentViews.isEmpty {
+            rows.append(Row(views: currentViews, sizes: currentSizes, height: currentHeight))
+        }
+
+        return rows
     }
 }

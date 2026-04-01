@@ -137,7 +137,7 @@
 				};
 			};
 			buildConfigurationList = 5246E5CB2F392F200072BFF0 /* Build configuration list for PBXProject "isBlum" */;
-			developmentRegion = en;
+			developmentRegion = uk;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,

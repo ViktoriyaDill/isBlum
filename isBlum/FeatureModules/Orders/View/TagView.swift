@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct TagView: View {
-    let title: String
+    let title: LocalizedStringKey
     let isSelected: Bool
     let action: () -> Void
     

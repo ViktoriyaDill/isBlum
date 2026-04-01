@@ -460,6 +460,140 @@
         }
       }
     },
+    "orders_details_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Детали"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Деталі"
+          }
+        }
+      }
+    },
+    "orders_empty_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a bouquet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбрать букет"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вибрати букет"
+          }
+        }
+      }
+    },
+    "orders_empty_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your orders will appear here\nafter checkout"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь появятся ваши заказы\nпосле оформления"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тут з'являться ваші замовлення\nпісля оформлення"
+          }
+        }
+      }
+    },
+    "orders_empty_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No orders yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заказов пока нет"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Замовлень поки немає"
+          }
+        }
+      }
+    },
+    "orders_nav_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your orders"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваши заказы"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваші замовлення"
+          }
+        }
+      }
+    },
+    "orders_rate_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate order"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оценить заказ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оцінити замовлення"
+          }
+        }
+      }
+    },
     "Product %lld" : {
       "localizations" : {
         "en" : {
@@ -625,17 +759,18 @@
         }
       }
     },
-    "rating_stars_title" : {
+    "rating_stars_title %@" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "How did you like the bouquet\nand delivery from %@?"
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Как вам букет и доставка\nот %@?"
           }
         },
@@ -881,19 +1016,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share your impressions of the order"
+            "value" : "Share your impressions\nof the order"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Укажите ваши впечатления от заказа"
+            "value" : "Укажите ваши впечатления\nот заказа"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Вкажіть ваші враження від замовлення"
+            "value" : "Вкажіть ваші враження\nвід замовлення"
           }
         }
       }
@@ -936,33 +1071,93 @@
         }
       }
     },
-    "success_auth_title" : {
-        "localizations" : {
-            "en" : { "stringUnit" : { "state" : "translated", "value" : "Code accepted!" } },
-            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Код принят!" } },
-            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Код прийнято!" } }
-        }
-    },
     "success_auth_subtitle" : {
-        "localizations" : {
-            "en" : { "stringUnit" : { "state" : "translated", "value" : "The code was entered correctly" } },
-            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Код введен верно" } },
-            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Код введено вірно" } }
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The code was entered correctly"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код введен верно"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код введено вірно"
+          }
         }
+      }
     },
-    "success_rating_title" : {
-        "localizations" : {
-            "en" : { "stringUnit" : { "state" : "translated", "value" : "Review sent" } },
-            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Отзыв отправлен" } },
-            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Відгук відправлено" } }
+    "success_auth_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code accepted!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код принят!"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Код прийнято!"
+          }
         }
+      }
     },
     "success_rating_subtitle" : {
-        "localizations" : {
-            "en" : { "stringUnit" : { "state" : "translated", "value" : "Thank you! Your rating has been recorded" } },
-            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Спасибо! Ваш отзыв учтен" } },
-            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Дякуємо! Ваша оцінка врахована" } }
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thank you! Your rating has been recorded"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спасибо! Ваш отзыв учтен"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дякуємо! Ваша оцінка врахована"
+          }
         }
+      }
+    },
+    "success_rating_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review sent"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отзыв отправлен"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відгук відправлено"
+          }
+        }
+      }
     },
     "support_description" : {
       "extractionState" : "manual",
@@ -3244,140 +3439,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Какой букет ищем?"
-          }
-        }
-      }
-    },
-    "orders_details_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Детали"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Деталі"
-          }
-        }
-      }
-    },
-    "orders_empty_button" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a bouquet"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Выбрать букет"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вибрати букет"
-          }
-        }
-      }
-    },
-    "orders_empty_description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your orders will appear here\nafter checkout"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Здесь появятся ваши заказы\nпосле оформления"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Тут з'являться ваші замовлення\nпісля оформлення"
-          }
-        }
-      }
-    },
-    "orders_empty_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No orders yet"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Заказов пока нет"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Замовлень поки немає"
-          }
-        }
-      }
-    },
-    "orders_nav_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your orders"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваши заказы"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваші замовлення"
-          }
-        }
-      }
-    },
-    "orders_rate_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rate order"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оценить заказ"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оцінити замовлення"
           }
         }
       }

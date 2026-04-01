@@ -18,10 +18,14 @@ class OrdersViewModel: ObservableObject {
     
     // MARK: - Fetch Orders with Items
     func fetchOrders() async {
-        guard let userId = client.auth.currentUser?.id else { return }
+        print("DEBUG fetchOrders: currentUser = \(client.auth.currentUser?.id.uuidString ?? "NIL - not logged in")")
+        guard let userId = client.auth.currentUser?.id else {
+            print("DEBUG fetchOrders: guard failed, no user")
+            return
+        }
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
             // Fetch orders with nested order_items
             let fetchedOrders: [Order] = try await client
@@ -34,9 +38,6 @@ class OrdersViewModel: ObservableObject {
                     created_at,
                     delivery_time,
                     delivery_time_end,
-                    seller_profiles (
-                        shop_name
-                    ),
                     order_items (
                         id,
                         product_id,
@@ -57,8 +58,37 @@ class OrdersViewModel: ObservableObject {
                 .execute()
                 .value
             
-            self.orders = fetchedOrders
-            
+            print("DEBUG fetchOrders: fetched \(fetchedOrders.count) orders")
+
+            // Fetch seller profiles separately (no direct FK to seller_profiles)
+            let sellerIds = Array(Set(fetchedOrders.map { $0.sellerId }))
+            if !sellerIds.isEmpty {
+                struct SellerProfileFetch: Decodable {
+                    let id: UUID
+                    let shopName: String
+                    enum CodingKeys: String, CodingKey {
+                        case id
+                        case shopName = "shop_name"
+                    }
+                }
+                let profiles: [SellerProfileFetch] = try await client
+                    .from("seller_profiles")
+                    .select("id, shop_name")
+                    .in("id", values: sellerIds)
+                    .execute()
+                    .value
+
+                var enriched = fetchedOrders
+                for i in enriched.indices {
+                    if let profile = profiles.first(where: { $0.id == enriched[i].sellerId }) {
+                        enriched[i].sellerProfile = SellerProfile(shopName: profile.shopName)
+                    }
+                }
+                self.orders = enriched
+            } else {
+                self.orders = fetchedOrders
+            }
+
         } catch {
             print("Fetch orders error:", error)
             self.error = error.localizedDescription
@@ -73,16 +103,16 @@ class OrdersViewModel: ObservableObject {
         
         realtimeTask = Task {
             let channel = client.realtimeV2.channel("orders:\(userId)")
-            
-            let changes = await channel.postgresChange(
+
+            let changes = channel.postgresChange(
                 UpdateAction.self,
                 schema: "public",
                 table: "orders",
                 filter: "client_id=eq.\(userId)"
             )
-            
+
             await channel.subscribe()
-            
+
             for await update in changes {
                 // Update order status in local list
                 if let idString = update.record["id"]?.stringValue,

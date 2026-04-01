@@ -19,7 +19,7 @@ struct Order: Identifiable, Codable {
     let deliveryTimeEnd: Date?
     var items: [OrderItem]
     var review: OrderReview?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case sellerId = "seller_id"

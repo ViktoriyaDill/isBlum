@@ -18,7 +18,7 @@ struct OrderRowCard: View {
     private var detentsForStep: Set<PresentationDetent> {
             switch ratingStep {
             case .stars:   return [.height(420)]
-            case .tags:    return [.height(560)]
+            case .tags:    return [.height(580)]
             case .comment, .commentWithPhoto: return [.height(560)]
             }
         }
