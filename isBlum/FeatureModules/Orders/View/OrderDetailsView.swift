@@ -1,0 +1,559 @@
+//
+//  OrderDetailsView.swift
+//  isBlum
+//
+//  Created by Viktoriia_Dill on 01/04/2026.
+//
+
+import Foundation
+import SwiftUI
+
+// MARK: - Scroll Offset Preference Key
+
+private struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+struct OrderDetailsView: View {
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var coordinator: AppCoordinator
+
+    @State private var isCopied: Bool = false
+    @State private var scrollOffset: CGFloat = 0
+    @State private var showCancelAlert: Bool = false
+    @State private var isCancelling: Bool = false
+
+    let order: Order
+
+    private let stickyNavThreshold: CGFloat = 120
+
+    private var isScrolledPastHero: Bool {
+        scrollOffset < -stickyNavThreshold
+    }
+
+    // MARK: - Computed nav title content
+
+    private var deliverySubtitle: String? {
+        if let window = order.formattedDeliveryWindow {
+            return "Доставка \(window)"
+        } else if order.status == "preparing" || order.status == "pending" {
+            return "~30-40 хв"
+        }
+        return nil
+    }
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            Color(hex: "#F4F4F4").ignoresSafeArea()
+
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    // Anchor для відстеження позиції скролу
+                    GeometryReader { geo in
+                        Color.clear
+                            .preference(
+                                key: ScrollOffsetKey.self,
+                                value: geo.frame(in: .named("orderDetailsScroll")).minY
+                            )
+                    }
+                    .frame(height: 0)
+
+                    heroImage
+
+                    VStack(spacing: 12) {
+
+                        // БЛОК 1: Основна інформація
+                        VStack(alignment: .leading, spacing: 0) {
+                            titleStatusSection
+                                .padding(.top, 20)
+
+                            chatButton
+                                .padding(.top, 16)
+
+                            deliveryPathSection
+                                .padding(.horizontal, 16)
+                                .padding(.top, 20)
+                                .padding(.bottom, 20)
+                        }
+                        .padding(.horizontal, 16)
+                        .background(Color.white)
+                        .cornerRadius(24)
+
+                        // БЛОК 2: Деталі замовлення (ціни, номер)
+                        VStack(alignment: .leading, spacing: 0) {
+                            orderDetailsSection
+                                .padding(.vertical, 20)
+                        }
+                        .padding(.horizontal, 16)
+                        .background(Color.white)
+                        .cornerRadius(24)
+
+                        // БЛОК 3: Підтримка та скасування
+                        VStack(alignment: .leading, spacing: 0) {
+                            supportSection
+                                .padding(.vertical, 20)
+                        }
+                        .padding(.horizontal, 16)
+                        .background(Color.white)
+                        .cornerRadius(24)
+
+                        Color.clear.frame(height: 40)
+                    }
+                    .offset(y: -24)
+                }
+            }
+            .coordinateSpace(name: "orderDetailsScroll")
+            .onPreferenceChange(ScrollOffsetKey.self) { value in
+                scrollOffset = value
+            }
+            .ignoresSafeArea(edges: .top)
+
+            stickyNavBar
+        }
+        .navigationBarHidden(true)
+        .alert("Скасувати замовлення?", isPresented: $showCancelAlert) {
+            Button("Скасувати", role: .destructive) {
+                Task { await cancelOrder() }
+            }
+            Button("Залишити", role: .cancel) {}
+        } message: {
+            Text("Замовлення буде скасовано. Цю дію не можна відмінити.")
+        }
+    }
+
+    // MARK: - Cancel Order
+
+    private func cancelOrder() async {
+        isCancelling = true
+        defer { isCancelling = false }
+        do {
+            try await SupabaseService.shared.client
+                .from("orders")
+                .update(["status": "cancelled"])
+                .eq("id", value: order.id.uuidString)
+                .execute()
+            dismiss()
+        } catch {
+            print("Cancel order error:", error)
+        }
+    }
+
+    // MARK: - Sticky Nav Bar
+
+    private var stickyNavBar: some View {
+        ZStack(alignment: .center) {
+            // Кнопка назад — завжди ліворуч
+            HStack {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.black)
+                        .font(.system(size: 16, weight: .semibold))
+                        .frame(width: 36, height: 36)
+                        .background(isScrolledPastHero ? Color(hex: "#F4F4F4") : Color.white)
+                        .clipShape(Circle())
+                }
+                Spacer()
+            }
+
+            // Назва + час доставки — відцентровані, fade-in при скролі
+            VStack(spacing: 2) {
+                Text(order.items.first?.productTitle ?? "Замовлення")
+                    .font(.onest(.bold, size: 15))
+                    .foregroundColor(.black)
+                    .lineLimit(1)
+
+                if let subtitle = deliverySubtitle {
+                    Text(subtitle)
+                        .font(.onest(.regular, size: 12))
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.horizontal, 60)
+            .opacity(isScrolledPastHero ? 1 : 0)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 56)
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity)
+        .background(
+            Color.white
+                .ignoresSafeArea(edges: .top)
+                .opacity(isScrolledPastHero ? 1 : 0)
+        )
+        .shadow(
+            color: .black.opacity(isScrolledPastHero ? 0.06 : 0),
+            radius: 8, x: 0, y: 2
+        )
+        .animation(.easeInOut(duration: 0.2), value: isScrolledPastHero)
+    }
+    
+    // MARK: - Hero Image
+    
+    private var heroImage: some View {
+        AsyncImage(url: URL(string: order.items.first?.productImageUrl ?? "")) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+            case .failure, .empty:
+                Image(.appLogo)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(40)
+                    .background(Color(hex: "#F2F2F2"))
+            @unknown default:
+                Color(hex: "#F2F2F2")
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 200)
+        .clipped()
+    }
+    
+    // MARK: - Title & Status
+    
+    private var titleStatusSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(order.items.first?.productTitle ?? "Замовлення")
+                .font(.onest(.bold, size: 24))
+                .foregroundColor(.black)
+                .lineLimit(2)
+            
+            HStack(spacing: 8) {
+                statusBadge(order.statusDisplay)
+                
+                if let window = order.formattedDeliveryWindow {
+                    Text("• Доставка \(window)")
+                        .font(.onest(.regular, size: 13))
+                        .foregroundColor(.gray)
+                } else if order.status == "preparing" || order.status == "pending" {
+                    Text("• ~30-40 хв")
+                        .font(.onest(.regular, size: 13))
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    // MARK: - Chat Button
+    
+    private var chatButton: some View {
+        Button(action: { coordinator.showChatFromOrders(sellerId: order.sellerId.uuidString) }) {
+            HStack(spacing: 8) {
+                Image(.bubble)
+                    .font(.system(size: 15))
+                Text("order_chat_with_shop")
+                    .font(.onest(.medium, size: 16))
+            }
+            .foregroundColor(.black)
+            .frame(maxWidth: .infinity)
+            .frame(height: 52)
+            .background(Color(hex: "#F4F4F4"))
+            .cornerRadius(26)
+        }
+    }
+
+    // MARK: - Shop & Delivery Combined Section
+
+    private var deliveryPathSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // 1. Секція магазину
+            HStack(alignment: .top, spacing: 12) {
+                VStack(spacing: 4) {
+                    
+                    Image(.geolocationPin)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .background(Color.white)
+                        .clipShape(Circle())
+                    
+                    VStack(spacing: 0) {
+                        Path { path in
+                            path.move(to: CGPoint(x: 1, y: 0))
+                            path.addLine(to: CGPoint(x: 1, y: 30))                         }
+                        .stroke(style: StrokeStyle(lineWidth: 2, dash: [4, 4]))
+                        .foregroundColor(Color(hex: "#F4F4F4"))
+                        .frame(width: 2, height: 30)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("order_from_shop_label")
+                        .font(.onest(.regular, size: 13))
+                        .foregroundColor(.gray)
+                    
+                    HStack(spacing: 4) {
+                        Image(.messageShopLogo)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                        
+                        Text(order.shopName)
+                            .font(.onest(.semiBold, size: 16))
+                            .foregroundColor(.black)
+                        
+                        if order.sellerProfile?.isVerified == true {
+                            Image(.verified)
+                                .foregroundColor(Color(hex: "#4CAF50"))
+                                .font(.system(size: 14))
+                        }
+                    }
+                }
+                .padding(.top, 2)
+            }
+            
+            HStack(alignment: .top, spacing: 12) {
+                Image(.deliveryLocation)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("order_delivery_address_label")
+                        .font(.onest(.regular, size: 13))
+                        .foregroundColor(.gray)
+                    
+                    Text(order.deliveryAddress ?? "—")
+                        .font(.onest(.medium, size: 15))
+                        .foregroundColor(.black)
+                }
+                .padding(.top, 2)
+            }
+        }
+    }
+    
+    // MARK: - Dashed Divider
+    
+    private var dashedDivider: some View {
+        Line()
+            .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+            .frame(height: 1)
+            .foregroundColor(Color.gray.opacity(0.25))
+    }
+    
+    // MARK: - Order Details Section
+    
+    private var orderDetailsSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("order_details_section_title")
+                .font(.onest(.bold, size: 16))
+                .foregroundColor(.black)
+                .padding(.bottom, 16)
+            
+            // Order number
+            HStack {
+                Text("order_number_label")
+                    .font(.onest(.regular, size: 16))
+                    .foregroundColor(Color(hex: "#535852"))
+                
+                Spacer()
+                
+                HStack(spacing: 6) {
+                    Text(order.shortId)
+                        .font(.onest(.medium, size: 14))
+                        .foregroundColor(.black)
+                    
+                    Button(action: {
+                        UIPasteboard.general.string = order.shortId
+                        
+                        withAnimation {
+                            isCopied = true
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation {
+                                isCopied = false
+                            }
+                        }
+                    }) {
+                        Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 14, height: 14)
+                            .foregroundColor(isCopied ? Color(hex: "#4CAF50") : .gray)
+                    }
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color(hex: "#F4F4F4"))
+                .cornerRadius(8)
+            }
+            .padding(.bottom, 12)
+            
+            // Date
+            HStack {
+                Text("order_date_label")
+                    .font(.onest(.regular, size: 16))
+                    .foregroundColor(Color(hex: "#535852"))
+                Spacer()
+                Text(order.formattedCreatedAt)
+                    .font(.onest(.medium, size: 14))
+                    .foregroundColor(.black)
+            }
+            .padding(.bottom, 12)
+            
+            // Subtotal
+            if let subtotal = order.subtotal {
+                HStack {
+                    Text("order_subtotal_label")
+                        .font(.onest(.regular, size: 16))
+                        .foregroundColor(Color(hex: "#535852"))
+                    Spacer()
+                    Text("\(Int(subtotal)) грн")
+                        .font(.onest(.medium, size: 14))
+                        .foregroundColor(.black)
+                }
+                .padding(.bottom, 12)
+            }
+            
+            // Delivery fee
+            if let fee = order.deliveryFee {
+                HStack {
+                    Text("order_delivery_fee_label")
+                        .font(.onest(.regular, size: 16))
+                        .foregroundColor(Color(hex: "#535852"))
+                    Spacer()
+                    Text(fee == 0 ? "Безкоштовно" : "\(Int(fee)) грн")
+                        .font(.onest(.medium, size: 14))
+                        .foregroundColor(fee == 0 ? Color(hex: "#4CAF50") : .black)
+                }
+                .padding(.bottom, 12)
+            }
+            
+            // Dashed divider
+            dashedDivider
+                .padding(.bottom, 16)
+            
+            // Total
+            HStack {
+                Text("order_total_label")
+                    .font(.onest(.bold, size: 16))
+                    .foregroundColor(.black)
+                Spacer()
+                Text(order.formattedTotal)
+                    .font(.onest(.medium, size: 16))
+                    .foregroundColor(.black)
+            }
+            .padding(.bottom, 12)
+            
+            // Payment method (placeholder)
+            HStack {
+                HStack(spacing: 6) {
+                    Image(.creditcard)
+                        .font(.system(size: 13))
+                        .foregroundColor(.gray)
+                    Text("order_payment_method_label")
+                        .font(.onest(.regular, size: 16))
+                        .foregroundColor(Color(hex: "#535852"))
+                }
+                Spacer()
+                Text("order_payment_card")
+                    .font(.onest(.medium, size: 14))
+                    .foregroundColor(.black)
+            }
+        }
+    }
+    
+    // MARK: - Support Section
+    
+    private var supportSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("order_trouble_title")
+                .font(.onest(.bold, size: 16))
+                .foregroundColor(.black)
+            
+            // Contact support button
+            Button(action: { coordinator.showSupportFromOrders() }) {
+                HStack(spacing: 8) {
+                    Image(.supportChat)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("order_contact_support_button")
+                        .font(.onest(.medium, size: 16))
+                        .foregroundColor(.black)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 52)
+                .background(Color(hex: "#F4F4F4"))
+                .cornerRadius(26)
+            }
+            
+            // Cancel order button
+            if order.status == "pending" || order.status == "confirmed" {
+                Button(action: { showCancelAlert = true }) {
+                    if isCancelling {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .background(Color(hex: "#FFF0F0"))
+                            .cornerRadius(26)
+                    } else {
+                        Text("order_cancel_button")
+                            .font(.onest(.medium, size: 16))
+                            .foregroundColor(Color(hex: "#E53935"))
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .background(Color(hex: "#FFF0F0"))
+                            .cornerRadius(26)
+                    }
+                }
+                .disabled(isCancelling)
+            }
+            
+            // Info note
+            HStack(spacing: 4) {
+                Image(.info)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                
+                Text("order_cancel_info_note")
+                    .font(.onest(.regular, size: 12))
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.leading)
+            }
+        }
+    }
+    
+    // MARK: - Status Badge
+    
+    private func statusBadge(_ display: (text: String, textColor: String, color: String, icon: String)) -> some View {
+        HStack(spacing: 6) {
+            Image(display.icon)
+                .font(.system(size: 11, weight: .bold))
+            Text(display.text)
+                .font(.onest(.medium, size: 12))
+        }
+        .foregroundColor(Color(hex: display.textColor))
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(Color(hex: display.color))
+        .cornerRadius(10)
+    }
+}
+
+// MARK: - Rounded Corner Shape
+
+struct RoundedCornerShape: Shape {
+    var radius: CGFloat
+    var corners: UIRectCorner
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}

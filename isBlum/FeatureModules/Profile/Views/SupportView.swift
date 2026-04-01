@@ -9,20 +9,21 @@ import Foundation
 import SwiftUI
 
 struct SupportView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var coordinator: AppCoordinator
     @State private var messageText: String = ""
     @FocusState private var isTextFieldFocused: Bool
-    
+
     @State private var showAlert = false
     @State private var alertMessage = ""
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // MARK: - Navigation Bar
             CustomNavigationBar(
                 title: "Підтримка",
                 showBackButton: true,
-                backAction: { coordinator.popProfile() }
+                backAction: { dismiss() }
             )
             
             ScrollView {
@@ -89,7 +90,7 @@ struct SupportView: View {
         }
         .alert("Підтримка", isPresented: $showAlert) {
             Button("OK") {
-                coordinator.popProfile()
+                dismiss()
             }
         } message: {
             Text(alertMessage)

@@ -7,7 +7,7 @@ enum AppRoute: Hashable {
     // MARK: Marketplace
     case productDetails(id: Int)
     case sellerProfile(id: Int)
-    case orderDetails(id: String)
+    case orderDetails(order: Order)
     case chatRoom(userId: String)
     
     // MARK: Profile
@@ -257,12 +257,24 @@ class AppCoordinator: ObservableObject {
     }
     
     // MARK: - Orders navigation
-    
+
+    func showOrderDetails(_ order: Order) {
+        ordersPath.append(AppRoute.orderDetails(order: order))
+    }
+
     func showOrderHistory() {
         profilePath.append(AppRoute.orderHistory)
     }
 
     func showOrderHistoryFromOrders() {
         ordersPath.append(AppRoute.orderHistory)
+    }
+
+    func showChatFromOrders(sellerId: String) {
+        ordersPath.append(AppRoute.chatRoom(userId: sellerId))
+    }
+
+    func showSupportFromOrders() {
+        ordersPath.append(AppRoute.support)
     }
 }
