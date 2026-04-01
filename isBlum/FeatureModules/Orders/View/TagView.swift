@@ -20,13 +20,16 @@ struct TagView: View {
                 .font(.onest(.medium, size: 16))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
-                .background(isSelected ? Color(hex: "#F1FDF0") : Color(hex: "#F4F4F4"))
+                .foregroundColor(.black)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(isSelected ? Color(hex: "#F1FDF0") : Color(hex: "#F4F4F4"))
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(isSelected ? Color(hex: "#9AF19A") : Color.clear, lineWidth: 1.5)
                 )
-                .foregroundColor(.black)
-                .cornerRadius(16)
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }

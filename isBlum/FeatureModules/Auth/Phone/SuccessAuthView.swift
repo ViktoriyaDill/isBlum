@@ -8,15 +8,44 @@
 import Foundation
 import SwiftUI
 
+// MARK: - Success Types
+
+enum SuccessType {
+    case auth
+    case rating
+    
+    var title: String {
+        switch self {
+        case .auth: return NSLocalizedString("success_auth_title", comment: "")
+        case .rating: return NSLocalizedString("success_rating_title", comment: "")
+        }
+    }
+    
+    var subtitle: String {
+        switch self {
+        case .auth: return NSLocalizedString("success_auth_subtitle", comment: "")
+        case .rating: return NSLocalizedString("success_rating_subtitle", comment: "")
+        }
+    }
+    
+    var imageName: String {
+        switch self {
+        case .auth: return "leaf_illustration"
+        case .rating: return "success_bird"
+        }
+    }
+}
+
 struct SuccessAuthView: View {
     @EnvironmentObject var coordinator: AppCoordinator
+    @Environment(\.dismiss) var dismiss
     
-    // MARK: - Animation State
+    var type: SuccessType = .auth
+    
     @State private var isVisible = false
     
     var body: some View {
         ZStack {
-            // Using the background provided in your assets
             Image("success_bg")
                 .resizable()
                 .ignoresSafeArea()
@@ -24,20 +53,19 @@ struct SuccessAuthView: View {
             VStack(spacing: 16) {
                 Spacer()
                 
-                Image("leaf_illustration")
+                Image(type.imageName)
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: 80, height: 80)
-                    // Simple spring entrance animation
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
                     .scaleEffect(isVisible ? 1.0 : 0.5)
                     .opacity(isVisible ? 1.0 : 0.0)
                 
                 VStack(spacing: 8) {
-                    Text("Код прийнято!")
+                    Text(type.title)
                         .font(.onest(.bold, size: 32))
                         .foregroundColor(.black)
                     
-                    Text("Код введено вірно")
+                    Text(type.subtitle)
                         .font(.onest(.regular, size: 16))
                         .foregroundColor(.black.opacity(0.6))
                 }
@@ -47,29 +75,40 @@ struct SuccessAuthView: View {
                 Spacer()
             }
             .multilineTextAlignment(.center)
+            .padding(.horizontal, 40)
         }
         .ignoresSafeArea()
         .navigationBarHidden(true)
-        .interactiveDismissDisabled(true)
         .onAppear {
-            // Trigger visual animations
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
-                isVisible = true
-            }
-            
-            // MARK: - Navigation Logic
-            // Wait for 4 seconds as requested, then proceed to Name Entry
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    // Navigate to UserNameEntryView using the coordinator
+            animateEntrance()
+            handleNavigation()
+        }
+    }
+    
+    private func animateEntrance() {
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+            isVisible = true
+        }
+    }
+    
+    // MARK: - Logic
+    private func handleNavigation() {
+        let delay = type == .auth ? 3.0 : 2.5
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                if type == .auth {
                     coordinator.profilePath.append(AppRoute.userName)
+                } else {
+                    dismiss()
                 }
             }
         }
     }
 }
 
+// MARK: - Preview
 #Preview {
-    SuccessAuthView()
+    SuccessAuthView(type: .rating)
         .environmentObject(AppCoordinator())
 }

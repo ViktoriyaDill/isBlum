@@ -34,8 +34,12 @@ class OrdersViewModel: ObservableObject {
                     created_at,
                     delivery_time,
                     delivery_time_end,
+                    seller_profiles (
+                        shop_name
+                    ),
                     order_items (
                         id,
+                        product_id,
                         product_title,
                         product_image_url,
                         price_at_purchase

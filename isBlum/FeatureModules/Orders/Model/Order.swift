@@ -7,14 +7,13 @@
 
 import Foundation
 
-import Foundation
-
 struct Order: Identifiable, Codable {
     let id: UUID
     var status: String
     let sellerId: UUID
     let total: Double
     let mainImageUrl: String?
+    var sellerProfile: SellerProfile?
     let createdAt: Date
     let deliveryTime: Date?
     let deliveryTimeEnd: Date?
@@ -27,6 +26,7 @@ struct Order: Identifiable, Codable {
         case status
         case total
         case mainImageUrl = "main_image_url"
+        case sellerProfile = "seller_profiles"
         case createdAt = "created_at"
         case deliveryTimeEnd = "delivery_time_end"
         case deliveryTime = "delivery_time"
@@ -63,6 +63,10 @@ struct Order: Identifiable, Codable {
         items.first?.productImageUrl
     }
     
+    var shopName: String {
+        sellerProfile?.shopName ?? "Flower Shop"
+    }
+    
     var formattedDeliveryWindow: String? {
             guard let start = deliveryTime else { return nil }
             
@@ -96,12 +100,14 @@ struct Order: Identifiable, Codable {
 
 struct OrderItem: Identifiable, Codable {
     let id: UUID
+    let productId: UUID
     let productTitle: String
     let productImageUrl: String?
     let priceAtPurchase: Double
     
     enum CodingKeys: String, CodingKey {
         case id
+        case productId = "product_id"
         case productTitle = "product_title"
         case productImageUrl = "product_image_url"
         case priceAtPurchase = "price_at_purchase"
@@ -114,4 +120,12 @@ struct OrderReview: Codable {
     let comment: String?
     let tags: [String]?
     let images: [String]? 
+}
+
+struct SellerProfile: Codable {
+    let shopName: String
+    
+    enum CodingKeys: String, CodingKey {
+        case shopName = "shop_name"
+    }
 }

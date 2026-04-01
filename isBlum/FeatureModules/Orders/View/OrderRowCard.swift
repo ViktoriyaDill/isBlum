@@ -19,7 +19,7 @@ struct OrderRowCard: View {
             switch ratingStep {
             case .stars:   return [.height(420)]
             case .tags:    return [.height(560)]
-            case .comment, .commentWithPhoto: return [.large]
+            case .comment, .commentWithPhoto: return [.height(560)]
             }
         }
     

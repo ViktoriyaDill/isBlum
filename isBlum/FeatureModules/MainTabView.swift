@@ -204,6 +204,8 @@ struct MainTabView: View {
         case .orderHistory:
             OrdersView()
                 .environmentObject(authViewModel)
+        case .successRating:
+            SuccessAuthView()
         }
     }
 }

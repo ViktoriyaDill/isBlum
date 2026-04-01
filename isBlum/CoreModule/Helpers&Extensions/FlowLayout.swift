@@ -28,16 +28,16 @@ struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.
         var width = CGFloat.zero
         var height = CGFloat.zero
 
-        return ZStack(alignment: .topLeading) {
+        return ZStack(alignment: .top) { 
             ForEach(self.items, id: \.self) { item in
                 self.content(item)
                     .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(.leading, computeValue: { d in
+                    .alignmentGuide(HorizontalAlignment.center, computeValue: { d in
                         if (abs(width - d.width) > g.size.width) {
                             width = 0
                             height -= d.height
                         }
-                        let result = width
+                        let result = width - g.size.width / 2 + d.width / 2
                         if item == self.items.last! {
                             width = 0
                         } else {
@@ -48,7 +48,7 @@ struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.
                     .alignmentGuide(.top, computeValue: { d in
                         let result = height
                         if item == self.items.last! {
-                            height = 0 
+                            height = 0
                         }
                         return result
                     })

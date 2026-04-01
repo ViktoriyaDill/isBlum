@@ -37,6 +37,7 @@ enum AppRoute: Hashable {
     
     // MARK: Orders
     case orderHistory
+    case successRating
 }
 
 // MARK: - Tab Item

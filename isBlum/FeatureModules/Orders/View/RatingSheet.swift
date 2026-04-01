@@ -10,9 +10,15 @@ import SwiftUI
 import PhotosUI
 import Storage
 
+enum RatingStatus {
+    case idle, loading, success, error
+}
+
 struct RatingSheet: View {
     
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var coordinator: AppCoordinator
+    
     let order: Order
     let imageURL: URL?
     
@@ -26,6 +32,8 @@ struct RatingSheet: View {
     @State private var attachedImageData: Data?
     @State private var attachedImageURL: String?
     @State private var isUploadingPhoto = false
+    
+    @State private var submissionState: RatingStatus = .idle
     
     private let client = SupabaseService.shared.client
     
@@ -175,67 +183,74 @@ struct RatingSheet: View {
             Text("rating_comment_title")
                 .font(.onest(.bold, size: 20))
             
-            ZStack(alignment: .topLeading) {
+            ZStack(alignment: .bottomLeading) {
                 TextEditor(text: $comment)
-                    .frame(height: 120)
+                    .frame(height: 160)
                     .padding(12)
-                    .background(RoundedRectangle(cornerRadius: 16).stroke(Color.gray.opacity(0.2)))
+                    .scrollContentBackground(.hidden)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.gray.opacity(0.2))
+                    )
                 
                 if comment.isEmpty {
                     Text("rating_comment_placeholder")
                         .foregroundColor(.gray)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 20)
+                        .allowsHitTesting(false)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 
-                if let imageData = attachedImageData,
-                   let uiImage = UIImage(data: imageData) {
-                    // Показати прикріплене фото
-                    HStack {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 60, height: 60)
-                            .cornerRadius(8)
-                            .clipped()
-                            .overlay(alignment: .topTrailing) {
-                                Button(action: {
-                                    attachedImageData = nil
-                                    attachedImageURL = nil
-                                    selectedPhotoItem = nil
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.gray)
-                                        .background(Color.white.clipShape(Circle()))
+                Group {
+                    if let imageData = attachedImageData,
+                       let uiImage = UIImage(data: imageData) {
+                        
+                        HStack(alignment: .bottom) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 60, height: 60)
+                                .cornerRadius(8)
+                                .clipped()
+                                .overlay(alignment: .topTrailing) {
+                                    Button(action: {
+                                        attachedImageData = nil
+                                        attachedImageURL = nil
+                                        selectedPhotoItem = nil
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.gray)
+                                            .background(Color.white.clipShape(Circle()))
+                                    }
+                                    .offset(x: 5, y: -5)
                                 }
-                                .offset(x: 5, y: -5)
+                            
+                            if isUploadingPhoto {
+                                ProgressView()
+                                    .padding(.bottom, 20)
                             }
-                        
-                        if isUploadingPhoto {
-                            ProgressView()
-                                .padding(.leading, 8)
                         }
+                        .padding(12)
                         
-                        Spacer()
-                    }
-                } else {
-                    // Кнопка вибору фото
-                    PhotosPicker(
-                        selection: $selectedPhotoItem,
-                        matching: .images
-                    ) {
-                        HStack {
-                            Image(systemName: "camera")
-                            Text("rating_attach_photo")
+                    } else {
+                        PhotosPicker(
+                            selection: $selectedPhotoItem,
+                            matching: .images
+                        ) {
+                            HStack {
+                                Image(systemName: "camera")
+                                Text("rating_attach_photo")
+                            }
+                            .font(.onest(.medium, size: 14))
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Color(hex: "F4F4F4"))
+                            .cornerRadius(10)
                         }
-                        .font(.onest(.medium, size: 14))
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(Color(hex: "F4F4F4"))
-                        .cornerRadius(12)
+                        .padding(12)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
@@ -268,16 +283,16 @@ struct RatingSheet: View {
     
     private func submitReview() async {
         guard let userId = client.auth.currentUser?.id,
-              let productId = order.items.first?.id,
+              let productId = order.items.first?.productId,
               rating > 0 else { return }
         
+        await MainActor.run { submissionState = .loading }
+        
         do {
-            // Локалізовані теги
             let localizedTags = selectedTags.map { key in
                 String(localized: LocalizedStringResource(stringLiteral: key))
             }
             
-            // Images array
             var images: [String] = []
             if let url = attachedImageURL {
                 images.append(url)
@@ -297,7 +312,7 @@ struct RatingSheet: View {
             let review = ReviewInsert(
                 order_id: order.id,
                 product_id: productId,
-                seller_id: order.sellerId,  
+                seller_id: order.sellerId,
                 client_id: userId,
                 rating: rating,
                 comment: comment.isEmpty ? nil : comment,
@@ -310,10 +325,22 @@ struct RatingSheet: View {
                 .insert(review)
                 .execute()
             
-            await MainActor.run { dismiss() }
+            await MainActor.run { submissionState = .success }
+            
+            try? await Task.sleep(nanoseconds: 800_000_000)
+            
+            await MainActor.run {
+                dismiss()
+                coordinator.ordersPath.append(AppRoute.successRating)
+            }
             
         } catch {
             print("Submit review error:", error)
+            await MainActor.run {
+                withAnimation(.spring()) {
+                    submissionState = .error
+                }
+            }
         }
     }
     

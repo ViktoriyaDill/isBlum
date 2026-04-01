@@ -257,304 +257,6 @@
         }
       }
     },
-    "rating_later_button" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rate later"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оценить позже"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оцінити пізніше"
-          }
-        }
-      }
-    },
-    "rating_stars_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How did you like the bouquet\nand delivery from Flower Shop?"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Как вам букет и доставка\nот Flower Shop?"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Як вам букет і доставка\nвід Flower Shop?"
-          }
-        }
-      }
-    },
-    "rating_stars_subtitle" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your feedback helps us get better"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваш отзыв помогает нам становиться лучше"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваш відгук допомагає нам ставати кращими"
-          }
-        }
-      }
-    },
-    "rating_tags_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share your impressions of the order"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Укажите ваши впечатления от заказа"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вкажіть ваші враження від замовлення"
-          }
-        }
-      }
-    },
-    "rating_tags_subtitle" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark everything that applies"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отметьте всё, что подходит"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Позначте все, що підходить"
-          }
-        }
-      }
-    },
-    "rating_comment_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share your impressions in more detail"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Поделитесь впечатлением подробнее"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Поділіться враженням детальніше"
-          }
-        }
-      }
-    },
-    "rating_comment_placeholder" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leave a few words about the order..."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оставьте несколько слов о заказе..."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Залиште кілька слів про замовлення..."
-          }
-        }
-      }
-    },
-    "rating_attach_photo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attach photo"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Прикрепить фото"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Прикріпити фото"
-          }
-        }
-      }
-    },
-    "rating_continue_button" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Продолжить"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Продовжити"
-          }
-        }
-      }
-    },
-    "rating_submit_button" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Submit review"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отправить отзыв"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Відправити відгук"
-          }
-        }
-      }
-    },
-    "rating_your_rating" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your rating"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваша оценка"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваша оцінка"
-          }
-        }
-      }
-    },
-    "rating_tag_fast_delivery" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fast delivery" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Быстрая доставка" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Швидка доставка" } }
-      }
-    },
-    "rating_tag_differs_from_photo" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Differs from photo" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Отличался от фото" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Відрізнявся від фото" } }
-      }
-    },
-    "rating_tag_as_in_photo" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "As in photo" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Как на фото" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Як на фото" } }
-      }
-    },
-    "rating_tag_neat_bouquet" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Neat bouquet" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Аккуратный букет" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Охайний букет" } }
-      }
-    },
-    "rating_tag_delivery_delay" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delivery delay" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Задержка доставки" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Затримка доставки" } }
-      }
-    },
-    "rating_tag_fresh_flowers" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Fresh flowers" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Свежие цветы" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Свіжі квіти" } }
-      }
-    },
-    "rating_tag_wilted_fast" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Wilted quickly" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Быстро завял" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Швидко зав'янув" } }
-      }
-    },
-    "rating_tag_damaged_packaging" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Damaged packaging" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Повреждённая упаковка" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Пошкоджена упаковка" } }
-      }
-    },
     "error_no_internet_title" : {
       "localizations" : {
         "en" : {
@@ -758,140 +460,6 @@
         }
       }
     },
-    "orders_details_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Детали"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Деталі"
-          }
-        }
-      }
-    },
-    "orders_empty_button" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a bouquet"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Выбрать букет"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вибрати букет"
-          }
-        }
-      }
-    },
-    "orders_empty_description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your orders will appear here\nafter checkout"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Здесь появятся ваши заказы\nпосле оформления"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Тут з'являться ваші замовлення\nпісля оформлення"
-          }
-        }
-      }
-    },
-    "orders_empty_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No orders yet"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Заказов пока нет"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Замовлень поки немає"
-          }
-        }
-      }
-    },
-    "orders_nav_title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your orders"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваши заказы"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ваші замовлення"
-          }
-        }
-      }
-    },
-    "orders_rate_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rate order"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оценить заказ"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оцінити замовлення"
-          }
-        }
-      }
-    },
     "Product %lld" : {
       "localizations" : {
         "en" : {
@@ -925,6 +493,433 @@
         }
       }
     },
+    "rating_attach_photo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attach photo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прикрепить фото"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прикріпити фото"
+          }
+        }
+      }
+    },
+    "rating_comment_placeholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave a few words about the order..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оставьте несколько слов о заказе..."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Залиште кілька слів про замовлення..."
+          }
+        }
+      }
+    },
+    "rating_comment_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share your impressions in more detail"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поделитесь впечатлением подробнее"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поділіться враженням детальніше"
+          }
+        }
+      }
+    },
+    "rating_continue_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжить"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продовжити"
+          }
+        }
+      }
+    },
+    "rating_later_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate later"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оценить позже"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оцінити пізніше"
+          }
+        }
+      }
+    },
+    "rating_stars_subtitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your feedback helps us get better"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш отзыв помогает нам становиться лучше"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш відгук допомагає нам ставати кращими"
+          }
+        }
+      }
+    },
+    "rating_stars_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How did you like the bouquet\nand delivery from %@?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Как вам букет и доставка\nот %@?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Як вам букет і доставка\nвід %@?"
+          }
+        }
+      }
+    },
+    "rating_submit_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Submit review"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправить отзыв"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відправити відгук"
+          }
+        }
+      }
+    },
+    "rating_tag_as_in_photo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As in photo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Как на фото"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Як на фото"
+          }
+        }
+      }
+    },
+    "rating_tag_damaged_packaging" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damaged packaging"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повреждённая упаковка"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пошкоджена упаковка"
+          }
+        }
+      }
+    },
+    "rating_tag_delivery_delay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delivery delay"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Задержка доставки"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Затримка доставки"
+          }
+        }
+      }
+    },
+    "rating_tag_differs_from_photo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Differs from photo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отличался от фото"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відрізнявся від фото"
+          }
+        }
+      }
+    },
+    "rating_tag_fast_delivery" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fast delivery"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Быстрая доставка"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Швидка доставка"
+          }
+        }
+      }
+    },
+    "rating_tag_fresh_flowers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fresh flowers"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Свежие цветы"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Свіжі квіти"
+          }
+        }
+      }
+    },
+    "rating_tag_neat_bouquet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neat bouquet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Аккуратный букет"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Охайний букет"
+          }
+        }
+      }
+    },
+    "rating_tag_wilted_fast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wilted quickly"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Быстро завял"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Швидко зав'янув"
+          }
+        }
+      }
+    },
+    "rating_tags_subtitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark everything that applies"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отметьте всё, что подходит"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Позначте все, що підходить"
+          }
+        }
+      }
+    },
+    "rating_tags_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share your impressions of the order"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Укажите ваши впечатления от заказа"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вкажіть ваші враження від замовлення"
+          }
+        }
+      }
+    },
+    "rating_your_rating" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your rating"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваша оценка"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваша оцінка"
+          }
+        }
+      }
+    },
     "Seller %lld" : {
       "localizations" : {
         "en" : {
@@ -940,6 +935,34 @@
           }
         }
       }
+    },
+    "success_auth_title" : {
+        "localizations" : {
+            "en" : { "stringUnit" : { "state" : "translated", "value" : "Code accepted!" } },
+            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Код принят!" } },
+            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Код прийнято!" } }
+        }
+    },
+    "success_auth_subtitle" : {
+        "localizations" : {
+            "en" : { "stringUnit" : { "state" : "translated", "value" : "The code was entered correctly" } },
+            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Код введен верно" } },
+            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Код введено вірно" } }
+        }
+    },
+    "success_rating_title" : {
+        "localizations" : {
+            "en" : { "stringUnit" : { "state" : "translated", "value" : "Review sent" } },
+            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Отзыв отправлен" } },
+            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Відгук відправлено" } }
+        }
+    },
+    "success_rating_subtitle" : {
+        "localizations" : {
+            "en" : { "stringUnit" : { "state" : "translated", "value" : "Thank you! Your rating has been recorded" } },
+            "ru" : { "stringUnit" : { "state" : "translated", "value" : "Спасибо! Ваш отзыв учтен" } },
+            "uk" : { "stringUnit" : { "state" : "translated", "value" : "Дякуємо! Ваша оцінка врахована" } }
+        }
     },
     "support_description" : {
       "extractionState" : "manual",
@@ -1751,12 +1774,6 @@
         }
       }
     },
-    "Ваш відгук допомагає нам ставати кращими" : {
-
-    },
-    "Ваша оцінка" : {
-
-    },
     "Введіть адресу\nдоставки" : {
       "localizations" : {
         "en" : {
@@ -1933,9 +1950,6 @@
         }
       }
     },
-    "Відправити відгук" : {
-
-    },
     "Відправити код повторно" : {
       "localizations" : {
         "en" : {
@@ -2015,9 +2029,6 @@
           }
         }
       }
-    },
-    "Вкажіть ваші враження від замовлення" : {
-
     },
     "Вкажіть причину" : {
       "extractionState" : "manual",
@@ -2200,9 +2211,6 @@
         }
       }
     },
-    "Залиште кілька слів про замовлення..." : {
-
-    },
     "Замовлення" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2352,6 +2360,7 @@
       }
     },
     "Код введено вірно" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2384,6 +2393,7 @@
       }
     },
     "Код прийнято!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2679,9 +2689,6 @@
         }
       }
     },
-    "Оцінити пізніше" : {
-
-    },
     "Оцініть застосунок" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2780,12 +2787,6 @@
         }
       }
     },
-    "Поділіться враженням детальніше" : {
-
-    },
-    "Позначте все, що підходить" : {
-
-    },
     "Показати букети" : {
       "localizations" : {
         "en" : {
@@ -2850,9 +2851,6 @@
           }
         }
       }
-    },
-    "Прикріпити фото" : {
-
     },
     "Про додаток" : {
       "extractionState" : "manual",
@@ -3218,9 +3216,6 @@
         }
       }
     },
-    "Як вам букет і доставка\nвід Flower Shop?" : {
-
-    },
     "Як вас звати?" : {
       "localizations" : {
         "en" : {
@@ -3249,6 +3244,140 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Какой букет ищем?"
+          }
+        }
+      }
+    },
+    "orders_details_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Детали"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Деталі"
+          }
+        }
+      }
+    },
+    "orders_empty_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a bouquet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбрать букет"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вибрати букет"
+          }
+        }
+      }
+    },
+    "orders_empty_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your orders will appear here\nafter checkout"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь появятся ваши заказы\nпосле оформления"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тут з'являться ваші замовлення\nпісля оформлення"
+          }
+        }
+      }
+    },
+    "orders_empty_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No orders yet"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заказов пока нет"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Замовлень поки немає"
+          }
+        }
+      }
+    },
+    "orders_nav_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your orders"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваши заказы"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваші замовлення"
+          }
+        }
+      }
+    },
+    "orders_rate_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate order"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оценить заказ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оцінити замовлення"
           }
         }
       }
