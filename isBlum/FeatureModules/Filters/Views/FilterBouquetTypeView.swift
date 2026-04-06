@@ -18,43 +18,42 @@ struct FilterBouquetTypeView: View {
     ]
     
     private let bouquetTypes = [
-        BouquetTypeModel(title: "Усі букети", iconName: "all_bouquets"),
-        BouquetTypeModel(title: "Монобукет", iconName: "mono_bouquet"),
-        BouquetTypeModel(title: "Преміум", iconName: "premium_bouquet"),
-        BouquetTypeModel(title: "В коробці", iconName: "box_bouquet"),
-        BouquetTypeModel(title: "Збірний", iconName: "mixed_bouquet")
+        BouquetTypeModel(filterKey: "Усі букети", title: "filter_bouquet_all", iconName: "all_bouquets"),
+        BouquetTypeModel(filterKey: "Монобукет", title: "filter_bouquet_mono", iconName: "mono_bouquet"),
+        BouquetTypeModel(filterKey: "Преміум", title: "filter_bouquet_premium", iconName: "premium_bouquet"),
+        BouquetTypeModel(filterKey: "В коробці", title: "filter_bouquet_box", iconName: "box_bouquet"),
+        BouquetTypeModel(filterKey: "Збірний", title: "filter_bouquet_mixed", iconName: "mixed_bouquet")
     ]
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Фільтри", showBackButton: true) {
+            CustomNavigationBar(title: "filter_nav_title", showBackButton: true) {
                 coordinator.goBack()
             }
             .background(Color(hex: "E2F5C6"))
-            
+
             ZStack {
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
-                
+
                 VStack(spacing: 32) {
-                    Text("Який букет шукаємо?")
+                    Text("filter_bouquet_title")
                         .font(.onest(.bold, size: 24))
                         .multilineTextAlignment(.center)
                         .padding(.top, 40)
-                    
+
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(bouquetTypes) { type in
                             OccasionCard(
                                 occasion: OccasionModel(title: type.title, iconName: type.iconName),
-                                isSelected: filterVM.isBouquetTypeSelected(type.title)
+                                isSelected: filterVM.isBouquetTypeSelected(type.filterKey)
                             ) {
-                                
-                                if type.title == "Усі букети" {
+                                if type.filterKey == "Усі букети" {
                                     filterVM.selectedBouquetTypes = ["Усі букети"]
                                 } else {
                                     filterVM.selectedBouquetTypes.remove("Усі букети")
-                                    filterVM.toggleBouquetType(type.title)
+                                    filterVM.toggleBouquetType(type.filterKey)
                                 }
                             }
                         }
@@ -68,7 +67,7 @@ struct FilterBouquetTypeView: View {
                             filterVM.save()
                             coordinator.showNextFilter(from: .filterBouquetType)
                         }) {
-                            Text("Далі")
+                            Text("filter_next_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)
@@ -78,11 +77,11 @@ struct FilterBouquetTypeView: View {
                         }
                         .disabled(filterVM.selectedBouquetTypes.isEmpty)
                         .opacity(filterVM.selectedBouquetTypes.isEmpty ? 0.6 : 1.0)
-                        
+
                         Button(action: {
                             coordinator.showNextFilter(from: .filterBouquetType)
                         }) {
-                            Text("Пропустити")
+                            Text("filter_skip_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)
@@ -102,7 +101,8 @@ struct FilterBouquetTypeView: View {
 
 struct BouquetTypeModel: Identifiable {
     let id = UUID()
-    let title: String
+    let filterKey: String
+    let title: LocalizedStringKey
     let iconName: String
 }
 

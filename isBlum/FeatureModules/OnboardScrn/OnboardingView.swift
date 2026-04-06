@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct OnboardingStep {
-    let title: String
-    let description: String
-    let buttonText: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
+    let buttonText: LocalizedStringKey
 }
 
 struct OnboardingView: View {
@@ -12,19 +12,19 @@ struct OnboardingView: View {
     
     private let steps = [
         OnboardingStep(
-            title: "Найшвидший спосіб дарувати квіти",
-            description: "Листайте букети та оформляйте\nзамовлення за лічені хвилини",
-            buttonText: "Далі"
+            title: "onboarding_step1_title",
+            description: "onboarding_step1_desc",
+            buttonText: "onboarding_next_button"
         ),
         OnboardingStep(
-            title: "Тільки свіжі букети",
-            description: "Тільки живі фото букетів від флористів. Букети оновлюються щодня",
-            buttonText: "Далі"
+            title: "onboarding_step2_title",
+            description: "onboarding_step2_desc",
+            buttonText: "onboarding_next_button"
         ),
         OnboardingStep(
-            title: "Доставка з найближчих\nмагазинів",
-            description: "Доставимо букет за 30-90 хвилин",
-            buttonText: "Обрати букет"
+            title: "onboarding_step3_title",
+            description: "onboarding_step3_desc",
+            buttonText: "onboarding_finish_button"
         )
     ]
     

@@ -18,44 +18,44 @@ struct FilterFlowersView: View {
     ]
     
     private let flowers = [
-        FlowerModel(title: "Будь-які квіти", iconName: "any_flowers"),
-        FlowerModel(title: "Рози", iconName: "roses"),
-        FlowerModel(title: "Піони", iconName: "peonies"),
-        FlowerModel(title: "Тюльпани", iconName: "tulips"),
-        FlowerModel(title: "Хризантеми", iconName: "chrysanthemums"),
-        FlowerModel(title: "Еустома", iconName: "eustoma"),
-        FlowerModel(title: "Гортензія", iconName: "hydrangea")
+        FlowerModel(filterKey: "Будь-які квіти", title: "filter_flower_any", iconName: "any_flowers"),
+        FlowerModel(filterKey: "Рози", title: "filter_flower_roses", iconName: "roses"),
+        FlowerModel(filterKey: "Піони", title: "filter_flower_peonies", iconName: "peonies"),
+        FlowerModel(filterKey: "Тюльпани", title: "filter_flower_tulips", iconName: "tulips"),
+        FlowerModel(filterKey: "Хризантеми", title: "filter_flower_chrysanthemums", iconName: "chrysanthemums"),
+        FlowerModel(filterKey: "Еустома", title: "filter_flower_eustoma", iconName: "eustoma"),
+        FlowerModel(filterKey: "Гортензія", title: "filter_flower_hydrangea", iconName: "hydrangea")
     ]
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Фільтри", showBackButton: true) {
+            CustomNavigationBar(title: "filter_nav_title", showBackButton: true) {
                 coordinator.goBack()
             }
             .background(Color(hex: "E2F5C6"))
-            
+
             ZStack {
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
-                
+
                 VStack(spacing: 32) {
-                    Text("Які квіти в букеті?")
+                    Text("filter_flowers_title")
                         .font(.onest(.bold, size: 24))
                         .multilineTextAlignment(.center)
                         .padding(.top, 40)
-                    
+
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(flowers) { flower in
                             OccasionCard(
                                 occasion: OccasionModel(title: flower.title, iconName: flower.iconName),
-                                isSelected: filterVM.isFlowerSelected(flower.title)
+                                isSelected: filterVM.isFlowerSelected(flower.filterKey)
                             ) {
-                                if flower.title == "Будь-які квіти" {
+                                if flower.filterKey == "Будь-які квіти" {
                                     filterVM.selectedFlowers = ["Будь-які квіти"]
                                 } else {
                                     filterVM.selectedFlowers.remove("Будь-які квіти")
-                                    filterVM.toggleFlower(flower.title)
+                                    filterVM.toggleFlower(flower.filterKey)
                                 }
                             }
                         }
@@ -69,7 +69,7 @@ struct FilterFlowersView: View {
                             filterVM.save()
                             coordinator.showNextFilter(from: .filterFlowers)
                         }) {
-                            Text("Далі")
+                            Text("filter_next_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)
@@ -79,11 +79,11 @@ struct FilterFlowersView: View {
                         }
                         .disabled(filterVM.selectedFlowers.isEmpty)
                         .opacity(filterVM.selectedFlowers.isEmpty ? 0.6 : 1.0)
-                        
+
                         Button(action: {
                             coordinator.showNextFilter(from: .filterFlowers)
                         }) {
-                            Text("Пропустити")
+                            Text("filter_skip_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)
@@ -103,7 +103,8 @@ struct FilterFlowersView: View {
 
 struct FlowerModel: Identifiable {
     let id = UUID()
-    let title: String
+    let filterKey: String
+    let title: LocalizedStringKey
     let iconName: String
 }
 

@@ -16,7 +16,7 @@ struct ProfileView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Header with cloud background
-            CustomNavigationBar(title: "Профіль", showBackButton: false)
+            CustomNavigationBar(title: "profile_nav_title", showBackButton: false)
                 .overlay(alignment: .trailing) {
                     NotificationButton(count: notificationVM.unreadCount) {
                         coordinator.showNotifications()

@@ -24,7 +24,7 @@ struct AddressDetailsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Адреса доставки", showBackButton: true) {
+            CustomNavigationBar(title: "address_nav_title", showBackButton: true) {
                 coordinator.goBack()
             }
             
@@ -53,7 +53,7 @@ struct AddressDetailsView: View {
                             Button(action: {
                                 coordinator.goBack()
                             }) {
-                                Text("Змінити точку")
+                                Text("address_change_point")
                                     .font(.onest(.medium, size: 16))
                                     .foregroundStyle(Color.black)
                                     .padding(.vertical, 8)
@@ -71,7 +71,7 @@ struct AddressDetailsView: View {
                                 .frame(width: 24, height: 24)
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Адреса доставки")
+                                Text("address_nav_title")
                                     .font(.onest(.medium, size: 12))
                                     .foregroundColor(Color(hex: "535852"))
                                 Text(selectedAddress)
@@ -82,10 +82,10 @@ struct AddressDetailsView: View {
                         
                         // 3. Grid of details
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                            DetailInputField(label: "Квартира", text: $apartment)
-                            DetailInputField(label: "Під'їзд", text: $entrance)
-                            DetailInputField(label: "Поверх", text: $floor)
-                            DetailInputField(label: "Домофон", text: $intercom)
+                            DetailInputField(label: String(localized: "address_apartment"), text: $apartment)
+                            DetailInputField(label: String(localized: "address_entrance"), text: $entrance)
+                            DetailInputField(label: String(localized: "address_floor"), text: $floor)
+                            DetailInputField(label: String(localized: "address_intercom"), text: $intercom)
                         }
                         
                         Spacer(minLength: 100)
@@ -110,7 +110,7 @@ struct AddressDetailsView: View {
                 )
                 coordinator.completeAddressSetup(details: details)
             }) {
-                Text("Зберегти адресу")
+                Text("address_save_button")
                     .font(.onest(.medium, size: 16))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)

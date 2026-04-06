@@ -19,7 +19,7 @@ struct NotificationSettingsView: View {
             
             // Using your CustomNavigationBar component
             CustomNavigationBar(
-                title: "Налаштування сповіщень",
+                title: "notif_settings_nav_title",
                 showBackButton: true,
                 backAction: { coordinator.popProfile() }
             )
@@ -28,21 +28,21 @@ struct NotificationSettingsView: View {
                 VStack(spacing: 24) {
                     // Toggles Section
                     VStack(spacing: 0) {
-                        ToggleRow(title: "Статус замовлення", isOn: $viewModel.orderStatusEnabled)
+                        ToggleRow(title: "notif_order_status", isOn: $viewModel.orderStatusEnabled)
                             .onChange(of: viewModel.orderStatusEnabled) { _ in
                                 viewModel.saveSettings(userId: userId)
                             }
-                        
+
                         Divider().padding(.horizontal, 16)
-                        
-                        ToggleRow(title: "Нагадування про доставку", isOn: $viewModel.deliveryReminderEnabled)
+
+                        ToggleRow(title: "notif_delivery_reminder", isOn: $viewModel.deliveryReminderEnabled)
                             .onChange(of: viewModel.deliveryReminderEnabled) { _ in
                                 viewModel.saveSettings(userId: userId)
                             }
-                        
+
                         Divider().padding(.horizontal, 16)
-                        
-                        ToggleRow(title: "Акції та пропозиції", isOn: $viewModel.promotionsEnabled)
+
+                        ToggleRow(title: "notif_promotions", isOn: $viewModel.promotionsEnabled)
                             .onChange(of: viewModel.promotionsEnabled) { _ in
                                 viewModel.saveSettings(userId: userId)
                             }
@@ -53,20 +53,20 @@ struct NotificationSettingsView: View {
                     
                     // Delivery Method Section
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Спосіб отримання")
+                        Text("notif_delivery_method")
                             .font(.onest(.bold, size: 18))
                             .padding(.horizontal, 4)
                         
                         VStack(spacing: 0) {
-                            SelectionRow(title: "Push-сповіщення", isSelected: viewModel.deliveryMethod == "push") {
+                            SelectionRow(title: "notif_push", isSelected: viewModel.deliveryMethod == "push") {
                                 viewModel.deliveryMethod = "push"
                                 viewModel.saveSettings(userId: userId)
                                 viewModel.requestPushPermission()
                             }
-                            
+
                             Divider().padding(.horizontal, 16)
-                            
-                            SelectionRow(title: "Електронна пошта", isSelected: viewModel.deliveryMethod == "email") {
+
+                            SelectionRow(title: "notif_email", isSelected: viewModel.deliveryMethod == "email") {
                                 viewModel.deliveryMethod = "email"
                                 viewModel.saveSettings(userId: userId)
                             }

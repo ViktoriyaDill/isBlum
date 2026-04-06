@@ -88,7 +88,7 @@ struct SupportView: View {
                 isTextFieldFocused = false
             }
         }
-        .alert("Підтримка", isPresented: $showAlert) {
+        .alert(Text("support_alert_title"), isPresented: $showAlert) {
             Button("OK") {
                 dismiss()
             }

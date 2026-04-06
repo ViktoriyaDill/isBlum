@@ -93,14 +93,14 @@ struct SuccessAuthView: View {
     
     // MARK: - Logic
     private func handleNavigation() {
-        let delay = type == .auth ? 3.0 : 2.5
-        
+        let delay: Double = type == .auth ? 3.0 : 3.5
+
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             withAnimation(.easeInOut(duration: 0.3)) {
                 if type == .auth {
                     coordinator.profilePath.append(AppRoute.userName)
                 } else {
-                    dismiss()
+                    coordinator.ordersPath.removeLast()
                 }
             }
         }

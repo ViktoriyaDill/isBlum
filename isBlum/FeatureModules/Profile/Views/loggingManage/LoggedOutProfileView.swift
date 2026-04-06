@@ -15,15 +15,15 @@ struct LoggedOutProfileView: View {
         ProfileCard {
             VStack(spacing: 24) {
                 VStack(spacing: 16) {
-                    Text("Увійдіть в обліковий запис, щоб керувати\nзамовленнями та відстежувати доставку")
+                    Text("profile_login_description")
                         .font(.onest(.regular, size: 16))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
-                    
+
                     Button(action: {
                         authAction()
                     }) {
-                        Text("Увійти в обліковий запис")
+                        Text("profile_login_button")
                             .font(.onest(.medium, size: 16))
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity)

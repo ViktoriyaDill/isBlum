@@ -74,10 +74,10 @@ struct MainTabView: View {
     
     private var customTabBar: some View {
         HStack(spacing: 0) {
-            tabButton(for: .feed, title: "Стрічка", icon: .bouqetsLine)
-            tabButton(for: .orders, title: "Замовлення", icon: .orders)
-            tabButton(for: .chats, title: "Чати", icon: .chat)
-            tabButton(for: .profile, title: "Профіль", icon: .profile)
+            tabButton(for: .feed, title: "tab_feed", icon: .bouqetsLine)
+            tabButton(for: .orders, title: "tab_orders", icon: .orders)
+            tabButton(for: .chats, title: "tab_chats", icon: .chat)
+            tabButton(for: .profile, title: "tab_profile", icon: .profile)
         }
         .frame(height: 70)
         .padding(.bottom, 0)
@@ -205,7 +205,7 @@ struct MainTabView: View {
             OrdersView()
                 .environmentObject(authViewModel)
         case .successRating:
-            SuccessAuthView()
+            SuccessAuthView(type: .rating)
         }
     }
 }

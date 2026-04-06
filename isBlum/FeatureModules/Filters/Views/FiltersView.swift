@@ -20,12 +20,12 @@ struct FiltersView: View {
     
     // Sample data
     private let occasions = [
-        OccasionModel(title: "Без приводу", iconName: "gift_icon"),
-        OccasionModel(title: "День народження", iconName: "cake_icon"),
-        OccasionModel(title: "Весілля", iconName: "rings_icon"),
-        OccasionModel(title: "Випускний", iconName: "grad_icon"),
-        OccasionModel(title: "Співчуття", iconName: "flower_icon"),
-        OccasionModel(title: "Інший привід", iconName: "other_icon")
+        OccasionModel(title: "filter_occasion_no_reason", iconName: "gift_icon"),
+        OccasionModel(title: "filter_occasion_birthday", iconName: "cake_icon"),
+        OccasionModel(title: "filter_occasion_wedding", iconName: "rings_icon"),
+        OccasionModel(title: "filter_occasion_graduation", iconName: "grad_icon"),
+        OccasionModel(title: "filter_occasion_sympathy", iconName: "flower_icon"),
+        OccasionModel(title: "filter_occasion_other", iconName: "other_icon")
     ]
     
     // Multiple selection state
@@ -33,7 +33,7 @@ struct FiltersView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Фільтри", showBackButton: false) {
+            CustomNavigationBar(title: "filter_nav_title", showBackButton: false) {
                 coordinator.goBack()
             }
             .background(Color(hex: "E2F5C6"))
@@ -44,7 +44,7 @@ struct FiltersView: View {
                     .ignoresSafeArea(edges: .bottom)
                 
                 VStack(spacing: 32) {
-                    Text("Для якого приводу букет?")
+                    Text("filter_occasion_title")
                         .font(.onest(.bold, size: 24))
                         .padding(.top, 40)
                     
@@ -69,7 +69,7 @@ struct FiltersView: View {
                             coordinator.showNextFilter(from: .filterOccasion)
                             print("Applying filters for IDs: \(selectedOccasions)")
                         }) {
-                            Text("Далі")
+                            Text("filter_next_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)
@@ -79,9 +79,9 @@ struct FiltersView: View {
                         }
                         .disabled(selectedOccasions.isEmpty)
                         .opacity(selectedOccasions.isEmpty ? 0.6 : 1.0)
-                        
+
                         Button(action: { coordinator.showNextFilter(from: .filterOccasion) }) {
-                            Text("Пропустити")
+                            Text("filter_skip_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)

@@ -21,7 +21,7 @@ struct EditProfileFieldView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Обліковий запис", showBackButton: true) {
+            CustomNavigationBar(title: "account_nav_title", showBackButton: true) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
@@ -91,7 +91,7 @@ struct EditProfileFieldView: View {
                         if auth.isLoading {
                             ProgressView().tint(.black)
                         } else {
-                            Text("Зберегти")
+                            Text("account_save_button")
                                 .font(.onest(.medium, size: 18))
                                 .foregroundColor(.black)
                         }

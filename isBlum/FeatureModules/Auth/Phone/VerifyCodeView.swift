@@ -34,7 +34,7 @@ struct VerifyCodeView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: true) {
+            CustomNavigationBar(title: "auth_nav_title", showBackButton: true) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
@@ -46,11 +46,11 @@ struct VerifyCodeView: View {
                 
                 VStack(spacing: 32) {
                     VStack(spacing: 12) {
-                        Text("Введіть код")
+                        Text("verify_code_title")
                             .font(.onest(.bold, size: 32))
-                        
+
                         VStack(spacing: 4) {
-                            Text("Ми надіслали його в SMS на номер")
+                            Text("verify_code_sms_sent")
                                 .font(.onest(.regular, size: 16))
                                 .foregroundColor(.gray)
                             
@@ -138,7 +138,7 @@ struct VerifyCodeView: View {
         case .loading:
             HStack(spacing: 8) {
                 ProgressView().scaleEffect(0.9)
-                Text("Перевіряємо код...")
+                Text("verify_code_checking")
                     .font(.onest(.regular, size: 15))
                     .foregroundColor(.gray)
             }
@@ -147,16 +147,16 @@ struct VerifyCodeView: View {
             HStack(spacing: 6) {
                 Image(systemName: "xmark")
                     .font(.system(size: 13, weight: .bold))
-                Text("Невірний код")
+                Text("verify_code_wrong")
                     .font(.onest(.regular, size: 15))
             }
             .foregroundColor(errorBorder)
-            
+
         case .success:
             HStack(spacing: 6) {
                 Image(systemName: "checkmark")
                     .font(.system(size: 13, weight: .bold))
-                Text("Код введено правильно")
+                Text("verify_code_correct")
                     .font(.onest(.regular, size: 15))
             }
             .foregroundColor(successColor)
@@ -171,7 +171,7 @@ struct VerifyCodeView: View {
     private var resendView: some View {
         if verificationState == .error {
             Button(action: resendCode) {
-                Text("Відправити код повторно")
+                Text("verify_code_resend")
                     .font(.onest(.medium, size: 16))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
@@ -181,15 +181,15 @@ struct VerifyCodeView: View {
             }
         } else {
             HStack {
-                Text(timeRemaining > 0 ? "Відправити код повторно через" : "Ви можете")
+                Text(timeRemaining > 0 ? "verify_code_resend_in" : "verify_code_can")
                     .foregroundColor(.gray)
-                
+
                 if timeRemaining > 0 {
                     Text(String(format: "0:%02d", timeRemaining))
                         .foregroundColor(.black)
                         .fontWeight(.semibold)
                 } else {
-                    Button("відправити код ще раз") {
+                    Button(String(localized: "verify_code_resend_now")) {
                         resendCode()
                     }
                     .foregroundColor(.black)

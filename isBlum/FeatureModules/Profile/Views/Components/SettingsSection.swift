@@ -34,56 +34,56 @@ struct SettingsGroupView: View {
     var body: some View {
         ProfileCard(content: {
             VStack(alignment: .leading, spacing: 16) {
-                Text("Налаштування")
+                Text("settings_title")
                     .font(.onest(.bold, size: 16))
                     .padding(.horizontal, 16)
                     .padding(.top, 24)
-                
+
                 VStack(spacing: 16) {
                     // MARK: - Language Row
                     ProfileMenuRow(
                         icon: .globe,
-                        title: "Мова",
+                        title: "settings_language",
                         subtitle: languageDisplay
                     ) {
                         activeModal = .language
                     }
-                    
+
                     Divider()
-                    
+
                     // MARK: - Currency Row
                     ProfileMenuRow(
                         icon: .banknote,
-                        title: "Валюта",
+                        title: "settings_currency",
                         subtitle: selectedCurrency
                     ) {
                         activeModal = .currency
                     }
-                    
+
                     Divider()
-                    
+
                     if isLoggedIn {
-                        ProfileMenuRow(icon: .bell, title: "Налаштування сповіщень") {
+                        ProfileMenuRow(icon: .bell, title: "settings_notifications") {
                             coordinator.showNotificationSettings()
                         }
                         Divider()
                     }
-                    
-                    ProfileMenuRow(icon: .help, title: "Підтримка") {
+
+                    ProfileMenuRow(icon: .help, title: "settings_support") {
                         coordinator.showSupport()
                     }
-                    
+
                     Divider()
-                    
-                    ProfileMenuRow(icon: .shop, title: "Розмістити свій магазин"){
+
+                    ProfileMenuRow(icon: .shop, title: "settings_place_shop") {
                         if let url = URL(string: "itms-apps://apps.apple.com/app/id544007664") {
                             openURL(url)
                         }
                     }
-                    
+
                     Divider()
-                    
-                    ProfileMenuRow(icon: .info, title: "Про додаток") {
+
+                    ProfileMenuRow(icon: .info, title: "settings_about") {
                         coordinator.showAboutApp()
                     }
                 }

@@ -19,7 +19,7 @@ struct AboutAppView: View {
         VStack(spacing: 0) {
             // MARK: - Navigation Bar
             CustomNavigationBar(
-                title: "Про застосунок",
+                title: "about_nav_title",
                 showBackButton: true,
                 backAction: { coordinator.popProfile() }
             )
@@ -38,12 +38,12 @@ struct AboutAppView: View {
                         
                         // Description text
                         VStack(spacing: 8) {
-                            Text("Isblum — свіжий букет у пару кліків.\nДаруйте радість легко")
+                            Text("about_description")
                                 .font(.onest(.medium, size: 16))
                                 .multilineTextAlignment(.center)
                                 .lineSpacing(4)
-                            
-                            Text("Версія \(appVersion)")
+
+                            (Text("about_version_prefix") + Text(appVersion))
                                 .font(.onest(.medium, size: 12))
                                 .foregroundColor(Color(hex: "#535852"))
                         }
@@ -56,7 +56,7 @@ struct AboutAppView: View {
                         // Rate App Row
                         ProfileMenuRow(
                             icon: UIImage(resource: .star),
-                            title: "Оцініть застосунок"
+                            title: "about_rate_app"
                         ) {
                             print("LOG: User tapped Rate App")
                             ReviewHandler.requestReview()
@@ -67,7 +67,7 @@ struct AboutAppView: View {
                         // Terms of Service Row
                         ProfileMenuRow(
                             icon: UIImage(resource: .terms),
-                            title: "Користувацька угода"
+                            title: "about_terms_of_service"
                         ) {
                             print("LOG: User tapped Terms of Service")
                             coordinator.showTermsOfService()

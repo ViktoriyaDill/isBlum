@@ -31,12 +31,11 @@ struct AccountDeletedView: View {
                         .frame(width: 100, height: 100)
                     
                     // Main Title
-                    Text("Акаунт видаляється")
+                    Text("account_deleted_title")
                         .font(.onest(.bold, size: 28))
                         .foregroundColor(.black)
-                    
-                    // Subtitle with instructions
-                    Text("Дані будуть видалені протягом 24 годин")
+
+                    Text("account_deleted_subtitle")
                         .font(.onest(.regular, size: 16))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
@@ -51,7 +50,7 @@ struct AccountDeletedView: View {
                     coordinator.resetToMain()
                     // or e.g., coordinator.appState = .main
                 }) {
-                    Text("Повернутися на головну")
+                    Text("account_deleted_home_button")
                         .font(.onest(.medium, size: 16))
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)

@@ -31,7 +31,7 @@ struct VerifyEmailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: true) {
+            CustomNavigationBar(title: "auth_nav_title", showBackButton: true) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
@@ -43,12 +43,12 @@ struct VerifyEmailView: View {
                 
                 VStack(spacing: 24) {
                     VStack(spacing: 12) {
-                        Text("Введіть код")
+                        Text("verify_code_title")
                             .font(.onest(.bold, size: 32))
-                        
+
                         VStack(spacing: 4) {
                             HStack(spacing: 4) {
-                                Text("Надіслали його на")
+                                Text("verify_email_sent_to")
                                     .font(.onest(.regular, size: 16))
                                     .foregroundColor(.gray)
                                 
@@ -63,7 +63,7 @@ struct VerifyEmailView: View {
                                 }
                             }
                             
-                            Text("Перевірте «Вхідні» або «Спам»")
+                            Text("verify_email_check_spam")
                                 .font(.onest(.regular, size: 16))
                                 .foregroundColor(.gray)
                         }
@@ -126,14 +126,14 @@ struct VerifyEmailView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "xmark")
                         .font(.system(size: 12, weight: .bold))
-                    Text("Невірний код")
+                    Text("verify_code_wrong")
                 }
                 .foregroundColor(errorBorder)
             } else if verificationState == .success {
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark")
                         .font(.system(size: 12, weight: .bold))
-                    Text("Код введено правильно")
+                    Text("verify_code_correct")
                 }
                 .foregroundColor(successBorder)
             }
@@ -145,7 +145,7 @@ struct VerifyEmailView: View {
     private var bottomActionView: some View {
         if verificationState == .error {
             Button(action: resendCode) {
-                Text("Відправити код повторно")
+                Text("verify_code_resend")
                     .font(.onest(.medium, size: 18))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
@@ -155,12 +155,12 @@ struct VerifyEmailView: View {
         } else {
             HStack {
                 if timeRemaining > 0 {
-                    Text("Відправити код повторно через")
+                    Text("verify_code_resend_in")
                         .foregroundColor(.gray)
                     Text(String(format: "0:%02d", timeRemaining))
                         .fontWeight(.semibold)
                 } else {
-                    Button("Відправити код ще раз") {
+                    Button(String(localized: "verify_email_resend_once")) {
                         resendCode()
                     }
                     .fontWeight(.bold)

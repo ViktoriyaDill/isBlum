@@ -23,7 +23,7 @@ struct CountryPickerView: View {
             // Header with Close Button
             HStack {
                 Spacer()
-                Text("Оберіть код країни")
+                Text("country_picker_title")
                     .font(.onest(.bold, size: 22))
                 Spacer()
                 Button(action: { dismiss() }) {
@@ -37,7 +37,7 @@ struct CountryPickerView: View {
             // Search Bar
             HStack {
                 Image(systemName: "magnifyingglass").foregroundColor(.gray)
-                TextField("Пошук країни", text: $searchText)
+                TextField(String(localized: "country_picker_search"), text: $searchText)
                     .font(.onest(.regular, size: 16))
             }
             .padding()

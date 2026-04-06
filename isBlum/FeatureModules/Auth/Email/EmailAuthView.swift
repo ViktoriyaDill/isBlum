@@ -17,7 +17,7 @@ struct EmailAuthView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: true) {
+            CustomNavigationBar(title: "auth_nav_title", showBackButton: true) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
@@ -31,12 +31,12 @@ struct EmailAuthView: View {
                 VStack(spacing: 32) {
                     // Заголовок та підзаголовок
                     VStack(spacing: 12) {
-                        Text("Введіть адресу\nелектронної пошти")
+                        Text("email_auth_title")
                             .font(.onest(.bold, size: 32))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.black)
-                        
-                        Text("Надішлемо код для входу в акаунт")
+
+                        Text("email_auth_subtitle")
                             .font(.onest(.regular, size: 16))
                             .foregroundColor(.gray)
                     }
@@ -48,7 +48,7 @@ struct EmailAuthView: View {
                             .foregroundColor(.gray)
                             .font(.system(size: 20))
                         
-                        TextField("Адреса ел. пошти", text: $email)
+                        TextField(String(localized: "email_auth_placeholder"), text: $email)
                             .font(.onest(.regular, size: 17))
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
@@ -66,7 +66,7 @@ struct EmailAuthView: View {
                     
                     // Кнопка "Продовжити"
                     Button(action: handleContinue) {
-                        Text("Продовжити")
+                        Text("auth_continue_button")
                             .font(.onest(.medium, size: 18))
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity)

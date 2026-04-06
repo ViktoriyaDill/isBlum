@@ -50,29 +50,28 @@ struct OrderRowCard: View {
                 
                 VStack(alignment: .leading, spacing: 6) {
                     // Заголовок товару
-                    Text(order.items.first?.productTitle ?? "Замовлення")
+                    Text(order.items.first?.productTitle ?? String(localized: "order_default_title"))
                         .font(.onest(.bold, size: 16))
                         .foregroundColor(.black)
                         .lineLimit(2)
-                    
+
                     HStack(spacing: 4) {
                         Text(order.formattedTotal)
                             .font(.onest(.regular, size: 13))
                             .foregroundColor(.gray)
-                        
+
                         if let window = order.formattedDeliveryWindow {
                             Text("•")
                                 .foregroundColor(.gray)
-                            Text("Доставка \n\(window)")
+                            Text(String(localized: "order_delivery_label") + " \n" + window)
                                 .font(.onest(.regular, size: 13))
                                 .foregroundColor(.gray)
-                        }
-                        else if order.status == "preparing" || order.status == "pending" {
-                            Text("• ~30-40 хв")
-                                .font(.onest(.regular, size: 13))
-                                .foregroundColor(.gray)
+                        } else if order.status == "preparing" || order.status == "pending" {
+                            Text("• ") + Text("order_est_time")
                         }
                     }
+                    .font(.onest(.regular, size: 13))
+                    .foregroundColor(.gray)
                     
                     // Статус
                     statusBadge(order.statusDisplay)

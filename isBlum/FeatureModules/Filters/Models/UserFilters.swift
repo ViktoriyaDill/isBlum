@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct OccasionModel: Identifiable {
     let id = UUID()
-    let title: String
-    let iconName: String 
+    let title: LocalizedStringKey
+    let iconName: String
 }
 
 struct UserFilters: Codable {

@@ -15,7 +15,7 @@ struct MapSelectionButton: View {
             HStack(spacing: 12) {
                 Image(systemName: "map")
                     .font(.system(size: 18))
-                Text("Вказати на карті")
+                Text("address_show_on_map")
                     .font(.onest(.medium, size: 16))
             }
             .foregroundColor(.black)

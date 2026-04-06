@@ -95,7 +95,7 @@ struct MapSelectionView: View {
                 // Address Card
                 VStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 8){
-                        Text("Перемістіть маркер на точне місце доставки")
+                        Text("address_map_hint")
                             .font(.onest(.medium, size: 12))
                             .foregroundColor(Color(hex: "0C570C"))
                             .frame(maxWidth: .infinity)
@@ -128,7 +128,7 @@ struct MapSelectionView: View {
                     Button(action: {
                         coordinator.showAddressDetails(address: viewModel.selectedAddress)
                     }) {
-                        Text("Доставити сюди")
+                        Text("address_deliver_here")
                             .font(.onest(.medium, size: 16))
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity)

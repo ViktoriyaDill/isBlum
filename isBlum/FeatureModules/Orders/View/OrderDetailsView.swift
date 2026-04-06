@@ -23,171 +23,193 @@ struct OrderDetailsView: View {
 
     @State private var isCopied: Bool = false
     @State private var scrollOffset: CGFloat = 0
-    @State private var showCancelAlert: Bool = false
-    @State private var isCancelling: Bool = false
+    @State private var showCancelSheet: Bool = false
+    @State private var showCancelledState: Bool = false
+    @State private var showingRatingSheet = false
+    @State private var ratingStep: RatingStep = .stars
 
     let order: Order
 
-    private let stickyNavThreshold: CGFloat = 120
+    private var detentsForStep: Set<PresentationDetent> {
+        switch ratingStep {
+        case .stars:              return [.height(420)]
+        case .tags:               return [.height(670)]
+        case .comment, .commentWithPhoto: return [.height(560)]
+        }
+    }
 
-    private var isScrolledPastHero: Bool {
-        scrollOffset < -stickyNavThreshold
+    // 0→1 поки hero іде вгору (перші 80pt скролу) — для фону nav bar і кола кнопки бек
+    private var navBarProgress: CGFloat {
+        max(0, min(1, -scrollOffset / 80))
+    }
+
+    // 0→1 коли великий заголовок ховається за nav bar (100–150pt)
+    private var titleProgress: CGFloat {
+        max(0, min(1, (-scrollOffset - 100) / 50))
     }
 
     // MARK: - Computed nav title content
 
     private var deliverySubtitle: String? {
         if let window = order.formattedDeliveryWindow {
-            return "Доставка \(window)"
+            return String(localized: "order_delivery_label") + " \(window)"
         } else if order.status == "preparing" || order.status == "pending" {
-            return "~30-40 хв"
+            return String(localized: "order_est_time")
         }
         return nil
     }
 
     var body: some View {
-        ZStack(alignment: .top) {
-            Color(hex: "#F4F4F4").ignoresSafeArea()
-
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    // Anchor для відстеження позиції скролу
-                    GeometryReader { geo in
-                        Color.clear
-                            .preference(
-                                key: ScrollOffsetKey.self,
-                                value: geo.frame(in: .named("orderDetailsScroll")).minY
-                            )
-                    }
-                    .frame(height: 0)
-
-                    heroImage
-
-                    VStack(spacing: 12) {
-
-                        // БЛОК 1: Основна інформація
-                        VStack(alignment: .leading, spacing: 0) {
-                            titleStatusSection
-                                .padding(.top, 20)
-
-                            chatButton
-                                .padding(.top, 16)
-
-                            deliveryPathSection
-                                .padding(.horizontal, 16)
-                                .padding(.top, 20)
-                                .padding(.bottom, 20)
-                        }
-                        .padding(.horizontal, 16)
-                        .background(Color.white)
-                        .cornerRadius(24)
-
-                        // БЛОК 2: Деталі замовлення (ціни, номер)
-                        VStack(alignment: .leading, spacing: 0) {
-                            orderDetailsSection
-                                .padding(.vertical, 20)
-                        }
-                        .padding(.horizontal, 16)
-                        .background(Color.white)
-                        .cornerRadius(24)
-
-                        // БЛОК 3: Підтримка та скасування
-                        VStack(alignment: .leading, spacing: 0) {
-                            supportSection
-                                .padding(.vertical, 20)
-                        }
-                        .padding(.horizontal, 16)
-                        .background(Color.white)
-                        .cornerRadius(24)
-
-                        Color.clear.frame(height: 40)
-                    }
-                    .offset(y: -24)
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 0) {
+                // Anchor для відстеження позиції скролу
+                GeometryReader { geo in
+                    Color.clear
+                        .preference(
+                            key: ScrollOffsetKey.self,
+                            value: geo.frame(in: .named("orderDetailsScroll")).minY
+                        )
                 }
-            }
-            .coordinateSpace(name: "orderDetailsScroll")
-            .onPreferenceChange(ScrollOffsetKey.self) { value in
-                scrollOffset = value
-            }
-            .ignoresSafeArea(edges: .top)
+                .frame(height: 0)
 
-            stickyNavBar
-        }
-        .navigationBarHidden(true)
-        .alert("Скасувати замовлення?", isPresented: $showCancelAlert) {
-            Button("Скасувати", role: .destructive) {
-                Task { await cancelOrder() }
+                heroImage
+
+                VStack(spacing: 12) {
+
+                    // БЛОК 1: Основна інформація
+                    VStack(alignment: .leading, spacing: 0) {
+                        titleStatusSection
+                            .padding(.top, 20)
+
+                        chatButton
+                            .padding(.top, 16)
+
+                        ratingSection
+                            .padding(.top, 4)
+
+                        deliveryPathSection
+                            .padding(.horizontal, 16)
+                            .padding(.top, 20)
+                            .padding(.bottom, 20)
+                    }
+                    .padding(.horizontal, 16)
+                    .background(Color.white)
+                    .cornerRadius(24)
+
+                    // БЛОК 2: Деталі замовлення (ціни, номер)
+                    VStack(alignment: .leading, spacing: 0) {
+                        orderDetailsSection
+                            .padding(.vertical, 20)
+                    }
+                    .padding(.horizontal, 16)
+                    .background(Color.white)
+                    .cornerRadius(24)
+
+                    // БЛОК 3: Підтримка та скасування
+                    VStack(alignment: .leading, spacing: 0) {
+                        supportSection
+                            .padding(.vertical, 20)
+                    }
+                    .padding(.horizontal, 16)
+                    .background(Color.white)
+                    .cornerRadius(24)
+
+                    Color.clear.frame(height: 40)
+                }
+                .offset(y: -24)
             }
-            Button("Залишити", role: .cancel) {}
-        } message: {
-            Text("Замовлення буде скасовано. Цю дію не можна відмінити.")
+        }
+        .coordinateSpace(name: "orderDetailsScroll")
+        .onPreferenceChange(ScrollOffsetKey.self) { scrollOffset = $0 }
+        .background(Color(hex: "#F4F4F4").ignoresSafeArea())
+        .ignoresSafeArea(edges: .top)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                navBackButton
+            }
+            ToolbarItem(placement: .principal) {
+                navPrincipalTitle
+            }
+        }
+        .toolbarBackground(navBarProgress > 0.5 ? .visible : .hidden, for: .navigationBar)
+        .toolbarBackground(Color.white, for: .navigationBar)
+        .animation(.easeInOut(duration: 0.2), value: navBarProgress > 0.5)
+        .sheet(isPresented: $showingRatingSheet) {
+            RatingSheet(
+                order: order,
+                imageURL: URL(string: order.items.first?.productImageUrl ?? ""),
+                currentStep: $ratingStep
+            )
+            .presentationDetents(detentsForStep)
+            .presentationDragIndicator(.visible)
+            .onChange(of: showingRatingSheet) { isShowing in
+                if !isShowing { ratingStep = .stars }
+            }
+        }
+        // MARK: Cancel confirmation sheet
+        .sheet(isPresented: $showCancelSheet) {
+            CancelOrderSheet(
+                cancelAction: {
+                    try await SupabaseService.shared.client
+                        .from("orders")
+                        .update(["status": "cancelled"])
+                        .eq("id", value: order.id.uuidString)
+                        .execute()
+                },
+                onChat: {
+                    coordinator.showChatFromOrders(sellerId: order.sellerId.uuidString)
+                },
+                onCancelled: {
+                    showCancelledState = true
+                }
+            )
+            .presentationDetents([.height(500)])
+            .presentationDragIndicator(.visible)
+        }
+        // MARK: Cancelled success full-screen
+        .fullScreenCover(isPresented: $showCancelledState) {
+            OrderCancelledView {
+                showCancelledState = false
+                dismiss()
+            }
         }
     }
 
-    // MARK: - Cancel Order
+    // MARK: - Nav Bar Items
 
-    private func cancelOrder() async {
-        isCancelling = true
-        defer { isCancelling = false }
-        do {
-            try await SupabaseService.shared.client
-                .from("orders")
-                .update(["status": "cancelled"])
-                .eq("id", value: order.id.uuidString)
-                .execute()
-            dismiss()
-        } catch {
-            print("Cancel order error:", error)
-        }
-    }
-
-    // MARK: - Sticky Nav Bar
-
-    private var stickyNavBar: some View {
-        ZStack(alignment: .center) {
-            // Кнопка назад — завжди ліворуч
-            HStack {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.black)
-                        .font(.system(size: 16, weight: .semibold))
-                        .frame(width: 36, height: 36)
-                        .background(isScrolledPastHero ? Color(hex: "#F4F4F4") : Color.white)
-                        .clipShape(Circle())
-                }
-                Spacer()
-            }
-
-            // Назва + час доставки — відцентровані, fade-in при скролі
-            VStack(spacing: 2) {
-                Text(order.items.first?.productTitle ?? "Замовлення")
-                    .font(.onest(.bold, size: 15))
+    // Біле коло над фото → плавно зникає коли nav bar стає білим
+    private var navBackButton: some View {
+        Button(action: { dismiss() }) {
+            ZStack {
+                Circle()
+                    .fill(Color.white)
+                    .opacity(1 - navBarProgress)
+                    .frame(width: 36, height: 36)
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.black)
-                    .lineLimit(1)
-
-                if let subtitle = deliverySubtitle {
-                    Text(subtitle)
-                        .font(.onest(.regular, size: 12))
-                        .foregroundColor(.gray)
-                }
             }
-            .padding(.horizontal, 60)
-            .opacity(isScrolledPastHero ? 1 : 0)
+            .frame(width: 36, height: 36)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 56)
-        .padding(.bottom, 12)
-        .frame(maxWidth: .infinity)
-        .background(
-            Color.white
-                .ignoresSafeArea(edges: .top)
-                .opacity(isScrolledPastHero ? 1 : 0)
-        )
-        .shadow(
-            color: .black.opacity(isScrolledPastHero ? 0.06 : 0),
-            radius: 8, x: 0, y: 2
-        )
-        .animation(.easeInOut(duration: 0.2), value: isScrolledPastHero)
+        .buttonStyle(.plain)
+    }
+
+    // Назва + час доставки по центру — з'являється коли великий заголовок ховається
+    private var navPrincipalTitle: some View {
+        VStack(spacing: 1) {
+            Text(order.items.first?.productTitle ?? String(localized: "order_default_title"))
+                .font(.onest(.bold, size: 15))
+                .foregroundColor(.black)
+                .lineLimit(1)
+            if let subtitle = deliverySubtitle {
+                Text(subtitle)
+                    .font(.onest(.regular, size: 12))
+                    .foregroundColor(.gray)
+            }
+        }
+        .opacity(titleProgress)
     }
     
     // MARK: - Hero Image
@@ -227,11 +249,11 @@ struct OrderDetailsView: View {
                 statusBadge(order.statusDisplay)
                 
                 if let window = order.formattedDeliveryWindow {
-                    Text("• Доставка \(window)")
+                    Text("• " + "order_delivery_label" + " \(window)")
                         .font(.onest(.regular, size: 13))
                         .foregroundColor(.gray)
                 } else if order.status == "preparing" || order.status == "pending" {
-                    Text("• ~30-40 хв")
+                    (Text("• ") + Text("order_est_time"))
                         .font(.onest(.regular, size: 13))
                         .foregroundColor(.gray)
                 }
@@ -255,6 +277,39 @@ struct OrderDetailsView: View {
             .frame(height: 52)
             .background(Color(hex: "#F4F4F4"))
             .cornerRadius(26)
+        }
+    }
+
+    // MARK: - Rating Section
+
+    @ViewBuilder
+    private var ratingSection: some View {
+        if let review = order.review {
+            HStack(spacing: 6) {
+                Text(String(format: "%.1f", Double(review.rating)))
+                    .font(.onest(.semiBold, size: 16))
+                    .foregroundColor(.black)
+                Image(.rateOrderStar1)
+                    .foregroundColor(Color(hex: "#F5C518"))
+                    .font(.system(size: 15))
+                Text("order_your_rating_text")
+                    .font(.onest(.regular, size: 16))
+                    .foregroundColor(.black)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+        } else if order.status == "delivered" {
+            Button(action: { showingRatingSheet = true }) {
+                HStack(spacing: 8) {
+                    Image(.rateOrderStar)
+                        .font(.system(size: 15))
+                    Text("order_rate_title")
+                        .font(.onest(.medium, size: 16))
+                }
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+            }
         }
     }
 
@@ -421,7 +476,7 @@ struct OrderDetailsView: View {
                         .font(.onest(.regular, size: 16))
                         .foregroundColor(Color(hex: "#535852"))
                     Spacer()
-                    Text(fee == 0 ? "Безкоштовно" : "\(Int(fee)) грн")
+                    Text(fee == 0 ? "order_free_delivery" : "\(Int(fee)) грн")
                         .font(.onest(.medium, size: 14))
                         .foregroundColor(fee == 0 ? Color(hex: "#4CAF50") : .black)
                 }
@@ -488,26 +543,17 @@ struct OrderDetailsView: View {
                 .cornerRadius(26)
             }
             
-            // Cancel order button
+            // Cancel order button — відкриває шит підтвердження
             if order.status == "pending" || order.status == "confirmed" {
-                Button(action: { showCancelAlert = true }) {
-                    if isCancelling {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 52)
-                            .background(Color(hex: "#FFF0F0"))
-                            .cornerRadius(26)
-                    } else {
-                        Text("order_cancel_button")
-                            .font(.onest(.medium, size: 16))
-                            .foregroundColor(Color(hex: "#E53935"))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 52)
-                            .background(Color(hex: "#FFF0F0"))
-                            .cornerRadius(26)
-                    }
+                Button(action: { showCancelSheet = true }) {
+                    Text("order_cancel_button")
+                        .font(.onest(.medium, size: 16))
+                        .foregroundColor(Color(hex: "#E53935"))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(Color(hex: "#FFF0F0"))
+                        .cornerRadius(26)
                 }
-                .disabled(isCancelling)
             }
             
             // Info note

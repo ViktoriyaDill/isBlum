@@ -13,15 +13,15 @@ struct LoggedInProfileView: View {
     // MARK: - Computed Properties for User Data
     // Accessing properties from your UserProfile model
     private var userName: LocalizedStringResource {
-        LocalizedStringResource(stringLiteral: auth.currentUser?.name ?? "Гість")
+        LocalizedStringResource(stringLiteral: auth.currentUser?.name ?? "profile_guest")
     }
 
     private var userPhone: LocalizedStringResource {
-        LocalizedStringResource(stringLiteral: auth.currentUser?.phone ?? "Номер не вказано")
+        LocalizedStringResource(stringLiteral: auth.currentUser?.phone ?? "profile_phone_not_set")
     }
 
     private var userEmail: LocalizedStringResource {
-        LocalizedStringResource(stringLiteral: auth.currentUser?.email ?? "Email не вказано")
+        LocalizedStringResource(stringLiteral: auth.currentUser?.email ?? "profile_email_not_set")
     }
     
     var body: some View {
@@ -62,7 +62,7 @@ struct LoggedInProfileView: View {
                 
                 ProfileMenuRow(
                     icon: .orders,
-                    title: "Історія замовлень",
+                    title: "profile_order_history",
                     showArrow: true
                 ) {
                     coordinator.selectedTab = .orders

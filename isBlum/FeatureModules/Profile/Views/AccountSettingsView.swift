@@ -17,7 +17,7 @@ struct AccountSettingsView: View {
     var body: some View {
         VStack(spacing: 0) {
             // MARK: - Navigation Bar
-            CustomNavigationBar(title: "Обліковий запис", showBackButton: true) {
+            CustomNavigationBar(title: "account_nav_title", showBackButton: true) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
@@ -32,27 +32,27 @@ struct AccountSettingsView: View {
                         // MARK: - Profile Rows
                         AccountMenuRow(
                             icon: UIImage(systemName: "person") ?? UIImage(),
-                            title: "Ім'я",
-                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.name ?? "Гість"),
+                            title: "account_name_label",
+                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.name ?? "profile_guest"),
                             action: { coordinator.showEditProfileField(.name) }
                         )
-                        
+
                         Divider().padding(.vertical, 8)
-                        
+
                         AccountMenuRow(
                             icon: UIImage(systemName: "phone") ?? UIImage(),
-                            title: "Номер телефону",
-                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.phone ?? "Номер не вказано"),
+                            title: "account_phone_label",
+                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.phone ?? "profile_phone_not_set"),
                             isUnverified: auth.isPhoneUnverified,
                             action: { coordinator.showEditProfileField(.phone) }
                         )
-                        
+
                         Divider().padding(.vertical, 8)
-                        
+
                         AccountMenuRow(
                             icon: UIImage(systemName: "envelope") ?? UIImage(),
-                            title: "Електронна пошта",
-                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.email ?? "Email не вказано"),
+                            title: "account_email_label",
+                            subtitle: LocalizedStringResource(stringLiteral: auth.currentUser?.email ?? "profile_email_not_set"),
                             isUnverified: auth.isEmailUnverified,
                             action: { coordinator.showEditProfileField(.email)}
                         )
@@ -75,7 +75,7 @@ struct AccountSettingsView: View {
                         }) {
                             HStack(spacing: 10) {
                                 Image(systemName: "rectangle.portrait.and.arrow.right")
-                                Text("Вийти з облікового запису")
+                                Text("account_signout_button")
                             }
                             .font(.onest(.medium, size: 18))
                             .foregroundColor(Color(hex: "D71616"))
@@ -89,7 +89,7 @@ struct AccountSettingsView: View {
                         Button(action: {
                             showDeleteModal = true
                         }) {
-                            Text("Видалити акаунт")
+                            Text("account_delete_button")
                                 .font(.onest(.medium, size: 16))
                                 .foregroundColor(Color(hex: "535852"))
                         }
@@ -145,8 +145,8 @@ struct AccountMenuRow: View {
                             Image(.safety)
                                 .resizable()
                                 .frame(width: 14, height: 14)
-                            
-                            Text("Не підтверджено")
+
+                            Text("account_not_verified")
                                 .font(.onest(.regular, size: 13))
                         }
                         .foregroundColor(Color(hex: "D71616"))

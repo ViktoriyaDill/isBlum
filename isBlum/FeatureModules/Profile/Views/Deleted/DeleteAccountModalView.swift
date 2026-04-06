@@ -31,11 +31,11 @@ struct DeleteAccountModalView: View {
     
     // Predefined reasons from the screenshot
     let reasons = [
-        DeletionReason(text: "Знайшов(ла) інший сервіс"),
-        DeletionReason(text: "Незручний додаток"),
-        DeletionReason(text: "Проблеми з якістю або доставкою"),
-        DeletionReason(text: "Тимчасово не потрібно"),
-        DeletionReason(text: "Інше")
+        DeletionReason(text: "delete_reason_found_another"),
+        DeletionReason(text: "delete_reason_inconvenient"),
+        DeletionReason(text: "delete_reason_quality"),
+        DeletionReason(text: "delete_reason_temporary"),
+        DeletionReason(text: "delete_reason_other")
     ]
     
     var body: some View {
@@ -95,10 +95,10 @@ extension DeleteAccountModalView {
                 .scaledToFit()
                 .frame(width: 80, height: 80)
             
-            Text("Видалити акаунт IsBlum?")
+            Text("delete_account_title")
                 .font(.onest(.bold, size: 24))
-            
-            Text("При видаленні акаунта всі ваші дані та історія замовлень зникнуть без можливості відновлення")
+
+            Text("delete_account_description")
                 .font(.onest(.regular, size: 16))
                 .foregroundColor(Color(hex: "#535852"))
                 .multilineTextAlignment(.center)
@@ -110,7 +110,7 @@ extension DeleteAccountModalView {
                 }
             }) {
                 HStack {
-                    Text(LocalizedStringResource(stringLiteral: selectedReason?.text ?? "Вкажіть причину"))
+                    Text(LocalizedStringResource(stringLiteral: selectedReason?.text ?? "delete_account_select_reason"))
                         .font(.onest(.medium, size: 16))
                         .foregroundColor(.black)
                     Spacer()
@@ -131,11 +131,11 @@ extension DeleteAccountModalView {
     private var reasonsSelectionView: some View {
         VStack(spacing: 16) {
             VStack(spacing: 12) {
-                Text("Будь ласка, вкажіть\nпричину видалення")
+                Text("delete_account_reason_title")
                     .font(.onest(.bold, size: 24))
                     .multilineTextAlignment(.center)
-                
-                Text("Це допоможе нам покращити сервіс")
+
+                Text("delete_account_reason_subtitle")
                     .font(.onest(.regular, size: 16))
                     .foregroundColor(Color(hex: "#535852"))
             }
@@ -177,7 +177,7 @@ extension DeleteAccountModalView {
     private var actionButtons: some View {
         VStack(alignment: .center, spacing: 12) {
             Button(action: { dismiss() }) {
-                Text("Скасувати")
+                Text("delete_account_cancel")
                     .font(.onest(.medium, size: 16))
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
@@ -185,9 +185,9 @@ extension DeleteAccountModalView {
                     .background(Color(hex: "#F4F4F4"))
                     .cornerRadius(30)
             }
-            
+
             Button(action: handleDelete) {
-                Text("Видалити акаунт")
+                Text("delete_account_confirm")
                     .font(.onest(.medium, size: 16))
                     .foregroundColor(Color(hex: "D71616"))
                     .frame(maxWidth: .infinity)

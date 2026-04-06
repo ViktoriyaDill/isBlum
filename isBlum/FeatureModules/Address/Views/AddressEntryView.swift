@@ -6,7 +6,7 @@ struct AddressEntryView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Адреса доставки", showBackButton: false) {
+            CustomNavigationBar(title: "address_nav_title", showBackButton: false) {
                 coordinator.goBack()
             }
             
@@ -17,7 +17,7 @@ struct AddressEntryView: View {
                 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
-                        Text("Введіть адресу\nдоставки")
+                        Text("address_entry_title")
                             .font(.onest(.bold, size: 32))
                             .foregroundColor(.black)
                             .multilineTextAlignment(.center)
@@ -25,7 +25,7 @@ struct AddressEntryView: View {
                             .padding(.top, 40)
                         
                         VStack(alignment: .leading, spacing: 24) {
-                            AddressInputField(text: $viewModel.searchText, placeholder: "Адреса доставки") {
+                            AddressInputField(text: $viewModel.searchText, placeholder: String(localized: "address_entry_placeholder")) {
                                 viewModel.searchText = ""
                             }
                             .submitLabel(.done)
@@ -46,7 +46,7 @@ struct AddressEntryView: View {
                                     HStack(spacing: 8) {
                                         Image(.currentLocation)
                                             .font(.system(size: 14))
-                                        Text("Визначити місцезнаходження")
+                                        Text("address_detect_location")
                                             .font(.onest(.medium, size: 14))
                                     }
                                     .foregroundColor(.black)

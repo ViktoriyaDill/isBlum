@@ -21,7 +21,7 @@ struct AuthView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: true) {
+            CustomNavigationBar(title: "auth_nav_title", showBackButton: true) {
                 coordinator.profilePath.removeLast()
             }
             .background(Color(hex: "E2F5C6"))
@@ -37,11 +37,11 @@ struct AuthView: View {
                         .scaledToFit()
                         .frame(width: 88, height: 72)
                     
-                    Text("Букети вже чекають")
+                    Text("auth_title")
                         .font(.onest(.bold, size: 32))
                         .multilineTextAlignment(.center)
-                    
-                    Text("Увійдіть, щоб оформити замовлення\nта відстежувати доставку за допомогою:")
+
+                    Text("auth_subtitle")
                         .font(.onest(.regular, size: 16))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
@@ -49,17 +49,17 @@ struct AuthView: View {
                     
                     // Auth Buttons
                     VStack(spacing: 12) {
-                        authButton(title: "Номеру телефона", icon: "phone", method: .phone) {
+                        authButton(title: "auth_phone_option", icon: "phone", method: .phone) {
                             coordinator.profilePath.append(AppRoute.phoneAuth)
                         }
-                        
-                        authButton(title: "Електронної пошти", icon: "envelope", method: .email) {
+
+                        authButton(title: "auth_email_option", icon: "envelope", method: .email) {
                             coordinator.showEmailAuth()
                         }
-                        
+
                         HStack {
                             Rectangle().fill(Color.gray.opacity(0.2)).frame(height: 1)
-                            Text("або через:").font(.onest(.regular, size: 16)).foregroundColor(.gray)
+                            Text("auth_or_via").font(.onest(.regular, size: 16)).foregroundColor(.gray)
                             Rectangle().fill(Color.gray.opacity(0.2)).frame(height: 1)
                         }
                         .padding(.vertical, 8)
@@ -74,7 +74,7 @@ struct AuthView: View {
                     }
                     .padding(.horizontal, 16)
                     
-                    Text("Продовжуючи реєстрацію, ви даєте згоду\nна обробку персональних даних")
+                    Text("auth_privacy_note")
                         .font(.onest(.medium, size: 12))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)

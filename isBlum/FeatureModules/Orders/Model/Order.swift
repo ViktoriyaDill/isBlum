@@ -57,7 +57,7 @@ struct Order: Identifiable, Codable, Hashable {
         case "delivered":
             return ("Замовлення виконано", "#0F6D0F", "#F1FDF0", "accepted")
         case "cancelled":
-            return ("Скасовано", "#8B0000", "#FDF0F0", "hourglass")
+            return ("Скасовано", "#D71616", "#FDF0F0", "cancel")
         default:
             return (status, "#808080", "#FFFFFF", "hourglass")
         }

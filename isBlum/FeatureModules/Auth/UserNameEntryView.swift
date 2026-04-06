@@ -18,7 +18,7 @@ struct UserNameEntryView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: false) {
+            CustomNavigationBar(title: "auth_nav_title", showBackButton: false) {
                 coordinator.popProfile()
             }
             .background(Color(hex: "E2F5C6"))
@@ -31,12 +31,12 @@ struct UserNameEntryView: View {
                 VStack(spacing: 32) {
                     // Header Section
                     VStack(spacing: 12) {
-                        Text("Як вас звати?")
+                        Text("username_title")
                             .font(.onest(.bold, size: 32))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.black)
-                        
-                        Text("Допоможе кур'єру знайти вас\nпід час доставки")
+
+                        Text("username_subtitle")
                             .font(.onest(.regular, size: 18))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.gray)
@@ -50,7 +50,7 @@ struct UserNameEntryView: View {
                             .foregroundColor(.black.opacity(0.7))
                             .font(.system(size: 20))
                         
-                        TextField("Ім'я", text: $name)
+                        TextField(String(localized: "username_placeholder"), text: $name)
                             .font(.onest(.regular, size: 17))
                             .focused($isFocused)
                             .submitLabel(.done)
@@ -76,7 +76,7 @@ struct UserNameEntryView: View {
                                     .tint(.black)
                                     .padding(.trailing, 8)
                             }
-                            Text(isLoading ? "Зберігаємо..." : "Продовжити")
+                            Text(isLoading ? "username_saving" : "auth_continue_button")
                         }
                         .font(.onest(.medium, size: 18))
                         .foregroundColor(.black)

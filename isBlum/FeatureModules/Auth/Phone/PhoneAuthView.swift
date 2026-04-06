@@ -17,10 +17,10 @@ struct Country: Identifiable, Hashable {
 }
 
 let countries = [
-    Country(name: "Україна", code: "+380", flag: "🇺🇦"),
-    Country(name: "Польща", code: "+48", flag: "🇵🇱"),
-    Country(name: "Болгарія", code: "+359", flag: "🇧🇬"),
-    Country(name: "Німеччина", code: "+49", flag: "🇩🇪")
+    Country(name: "country_ukraine", code: "+380", flag: "🇺🇦"),
+    Country(name: "country_poland", code: "+48", flag: "🇵🇱"),
+    Country(name: "country_bulgaria", code: "+359", flag: "🇧🇬"),
+    Country(name: "country_germany", code: "+49", flag: "🇩🇪")
 ]
 
 struct PhoneAuthView: View {
@@ -43,23 +43,23 @@ struct PhoneAuthView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: "Реєстрація/Вхід", showBackButton: true) {
+            CustomNavigationBar(title: "auth_nav_title", showBackButton: true) {
                 coordinator.profilePath.removeLast()
             }
             .background(Color(hex: "E2F5C6"))
-            
+
             ZStack {
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
-                
+
                 VStack(spacing: 32) {
                     VStack(spacing: 12) {
-                        Text("Введіть номер\nтелефону")
+                        Text("phone_auth_title")
                             .font(.onest(.bold, size: 32))
                             .multilineTextAlignment(.center)
-                        
-                        Text("Відправимо SMS з кодом для входу")
+
+                        Text("phone_auth_subtitle")
                             .font(.onest(.regular, size: 16))
                             .foregroundColor(.gray)
                     }
@@ -84,7 +84,7 @@ struct PhoneAuthView: View {
                             .fill(Color.gray.opacity(0.3))
                             .frame(width: 1, height: 24)
                         
-                        TextField("Номер телефону", text: $phoneNumber)
+                        TextField(String(localized: "phone_auth_placeholder"), text: $phoneNumber)
                             .font(.onest(.regular, size: 16))
                             .keyboardType(.phonePad)
                             .focused($isPhoneFocused)
@@ -116,7 +116,7 @@ struct PhoneAuthView: View {
                             if auth.isLoading {
                                 ProgressView().tint(.black)
                             } else {
-                                Text("Продовжити")
+                                Text("auth_continue_button")
                                     .font(.onest(.medium, size: 16))
                                     .foregroundColor(.black)
                             }
