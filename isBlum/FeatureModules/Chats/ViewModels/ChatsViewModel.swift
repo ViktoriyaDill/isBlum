@@ -18,6 +18,9 @@ class ChatsViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
+            // 0. Create missing chat records for all orders that don't have one yet
+            try await ensureChatsForAllOrders(userId: userId)
+
             // 1. Fetch raw chats for this client
             struct ChatRow: Decodable {
                 let id: UUID
@@ -115,6 +118,58 @@ class ChatsViewModel: ObservableObject {
             print("ChatsViewModel fetchChats error:", error)
             self.error = error.localizedDescription
         }
+    }
+
+    // MARK: - Ensure chats exist for every order
+
+    private func ensureChatsForAllOrders(userId: UUID) async throws {
+        struct OrderRef: Decodable {
+            let id: UUID
+            let sellerId: UUID
+            enum CodingKeys: String, CodingKey {
+                case id
+                case sellerId = "seller_id"
+            }
+        }
+        let orders: [OrderRef] = try await client
+            .from("orders")
+            .select("id, seller_id")
+            .eq("client_id", value: userId)
+            .execute()
+            .value
+
+        guard !orders.isEmpty else { return }
+
+        struct ChatOrderRef: Decodable {
+            let orderId: UUID?
+            enum CodingKeys: String, CodingKey { case orderId = "order_id" }
+        }
+        let existingChats: [ChatOrderRef] = try await client
+            .from("chats")
+            .select("order_id")
+            .eq("client_id", value: userId)
+            .execute()
+            .value
+
+        let existingOrderIds = Set(existingChats.compactMap { $0.orderId })
+        let missing = orders.filter { !existingOrderIds.contains($0.id) }
+        guard !missing.isEmpty else { return }
+
+        struct NewChat: Encodable {
+            let clientId: UUID
+            let sellerId: UUID
+            let orderId: UUID
+            enum CodingKeys: String, CodingKey {
+                case clientId = "client_id"
+                case sellerId = "seller_id"
+                case orderId = "order_id"
+            }
+        }
+        let newChats = missing.map { NewChat(clientId: userId, sellerId: $0.sellerId, orderId: $0.id) }
+        try await client
+            .from("chats")
+            .insert(newChats)
+            .execute()
     }
 
     // MARK: - Delete
