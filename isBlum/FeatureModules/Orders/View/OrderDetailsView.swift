@@ -330,6 +330,23 @@ struct OrderDetailsView: View {
             // Welcome message is inserted automatically by the DB trigger
             // `on_chat_created` (security definer) — no client-side insert needed.
 
+            // Fetch seller name directly from DB
+            struct SellerInfo: Decodable {
+                let shopName: String
+                let isVerified: Bool?
+                enum CodingKeys: String, CodingKey {
+                    case shopName = "shop_name"
+                    case isVerified = "is_verified"
+                }
+            }
+            let sellerInfo = try? await client
+                .from("seller_profiles")
+                .select("shop_name, is_verified")
+                .eq("id", value: order.sellerId)
+                .single()
+                .execute()
+                .value as SellerInfo
+
             var chat = Chat(
                 id: row.id,
                 clientId: row.clientId,
@@ -339,8 +356,8 @@ struct OrderDetailsView: View {
                 lastMessageAt: row.lastMessageAt,
                 createdAt: row.createdAt
             )
-            chat.sellerName = order.sellerProfile?.shopName ?? order.shopName
-            chat.isSellerVerified = order.sellerProfile?.isVerified ?? false
+            chat.sellerName = sellerInfo?.shopName ?? order.sellerProfile?.shopName ?? order.shopName
+            chat.isSellerVerified = sellerInfo?.isVerified ?? order.sellerProfile?.isVerified ?? false
             chat.cachedOrder = order
 
             coordinator.showChatRoom(chat)
