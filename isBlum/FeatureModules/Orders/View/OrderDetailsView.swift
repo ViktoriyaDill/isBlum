@@ -304,18 +304,29 @@ struct OrderDetailsView: View {
                 }
             }
 
-            // Upsert — returns existing or newly created row
-            let rows: [ChatRow] = try await client
+            // Try to find existing chat first (avoids UPDATE which requires extra RLS policy)
+            let existing: [ChatRow] = try await client
                 .from("chats")
-                .upsert(
-                    NewChat(clientId: userId, sellerId: order.sellerId, orderId: order.id),
-                    onConflict: "client_id,seller_id,order_id"
-                )
                 .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
+                .eq("client_id", value: userId)
+                .eq("seller_id", value: order.sellerId)
+                .eq("order_id", value: order.id)
                 .execute()
                 .value
 
-            guard let row = rows.first else { return }
+            let row: ChatRow
+            if let found = existing.first {
+                row = found
+            } else {
+                let created: [ChatRow] = try await client
+                    .from("chats")
+                    .insert(NewChat(clientId: userId, sellerId: order.sellerId, orderId: order.id))
+                    .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
+                    .execute()
+                    .value
+                guard let newRow = created.first else { return }
+                row = newRow
+            }
             // Welcome message is inserted automatically by the DB trigger
             // `on_chat_created` (security definer) — no client-side insert needed.
 
