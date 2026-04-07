@@ -317,6 +317,51 @@ struct OrderDetailsView: View {
 
             guard let row = rows.first else { return }
 
+            // Check if new chat — send welcome message for confirmed orders
+            if order.status == "confirmed" {
+                struct IdOnly: Decodable { let id: UUID }
+                let existing: [IdOnly] = try await client
+                    .from("messages")
+                    .select("id")
+                    .eq("chat_id", value: row.id)
+                    .limit(1)
+                    .execute()
+                    .value
+
+                if existing.isEmpty {
+                    // Fetch user's name from profiles
+                    struct UserName: Decodable { let name: String? }
+                    let profile: UserName = try await client
+                        .from("profiles")
+                        .select("name")
+                        .eq("id", value: userId)
+                        .single()
+                        .execute()
+                        .value
+
+                    let userName = profile.name ?? String(localized: "chat_welcome_fallback_name")
+                    let greeting = String(
+                        format: String(localized: "chat_welcome_message"),
+                        userName
+                    )
+
+                    struct WelcomeMsg: Encodable {
+                        let chatId: UUID
+                        let senderId: UUID
+                        let text: String
+                        enum CodingKeys: String, CodingKey {
+                            case chatId = "chat_id"
+                            case senderId = "sender_id"
+                            case text
+                        }
+                    }
+                    try await client
+                        .from("messages")
+                        .insert(WelcomeMsg(chatId: row.id, senderId: order.sellerId, text: greeting))
+                        .execute()
+                }
+            }
+
             var chat = Chat(
                 id: row.id,
                 clientId: row.clientId,
@@ -328,6 +373,7 @@ struct OrderDetailsView: View {
             )
             chat.sellerName = order.sellerProfile?.shopName ?? order.shopName
             chat.isSellerVerified = order.sellerProfile?.isVerified ?? false
+            chat.cachedOrder = order
 
             coordinator.showChatRoom(chat)
         } catch {

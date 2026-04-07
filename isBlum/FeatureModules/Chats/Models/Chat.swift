@@ -13,6 +13,8 @@ struct Chat: Identifiable, Decodable, Hashable {
     var sellerName: String = "Магазин"
     var isSellerVerified: Bool = false
     var unreadCount: Int = 0
+    /// Passed when navigating from OrderDetailsView — not decoded from DB
+    var cachedOrder: Order? = nil
 
     enum CodingKeys: String, CodingKey {
         case id
