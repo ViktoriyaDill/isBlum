@@ -59,18 +59,12 @@ struct MainTabView: View {
     }
     
     private var isRootScreen: Bool {
-        let result = coordinator.feedPath.isEmpty &&
-            coordinator.ordersPath.isEmpty &&
-            coordinator.chatsPath.isEmpty &&
-            coordinator.profilePath.isEmpty
-        
-        print("isRootScreen: \(result)")
-        print("feedPath: \(coordinator.feedPath)")
-        print("ordersPath: \(coordinator.ordersPath)")
-        print("chatsPath: \(coordinator.chatsPath)")
-        print("profilePath: \(coordinator.profilePath)")
-        
-        return result
+        switch coordinator.selectedTab {
+        case .feed:    return coordinator.feedPath.isEmpty
+        case .orders:  return coordinator.ordersPath.isEmpty
+        case .chats:   return coordinator.chatsPath.isEmpty
+        case .profile: return coordinator.profilePath.isEmpty
+        }
     }
     
     private var customTabBar: some View {
