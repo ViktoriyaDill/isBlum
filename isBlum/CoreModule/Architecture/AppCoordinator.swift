@@ -8,7 +8,7 @@ enum AppRoute: Hashable {
     case productDetails(id: Int)
     case sellerProfile(id: Int)
     case orderDetails(order: Order)
-    case chatRoom(userId: String)
+    case chatRoom(chat: Chat)
     
     // MARK: Profile
     case accountSettings
@@ -270,8 +270,9 @@ class AppCoordinator: ObservableObject {
         ordersPath.append(AppRoute.orderHistory)
     }
 
-    func showChatFromOrders(sellerId: String) {
-        ordersPath.append(AppRoute.chatRoom(userId: sellerId))
+    func showChatRoom(_ chat: Chat) {
+        chatsPath.append(AppRoute.chatRoom(chat: chat))
+        selectedTab = .chats
     }
 
     func showSupportFromOrders() {

@@ -27,6 +27,7 @@ struct OrderDetailsView: View {
     @State private var showCancelledState: Bool = false
     @State private var showingRatingSheet = false
     @State private var ratingStep: RatingStep = .stars
+    @State private var isFetchingChat = false
 
     let order: Order
 
@@ -159,7 +160,7 @@ struct OrderDetailsView: View {
                         .execute()
                 },
                 onChat: {
-                    coordinator.showChatFromOrders(sellerId: order.sellerId.uuidString)
+                    Task { await navigateToChat() }
                 },
                 onCancelled: {
                     showCancelledState = true
@@ -262,10 +263,82 @@ struct OrderDetailsView: View {
         }
     }
     
+    // MARK: - Chat Navigation
+
+    private func navigateToChat() async {
+        guard !isFetchingChat,
+              let userId = SupabaseService.shared.client.auth.currentUser?.id else { return }
+        isFetchingChat = true
+        defer { isFetchingChat = false }
+
+        do {
+            let client = SupabaseService.shared.client
+
+            struct ChatRow: Decodable {
+                let id: UUID
+                let clientId: UUID
+                let sellerId: UUID
+                let orderId: UUID?
+                let lastMessage: String?
+                let lastMessageAt: Date?
+                let createdAt: Date
+                enum CodingKeys: String, CodingKey {
+                    case id
+                    case clientId = "client_id"
+                    case sellerId = "seller_id"
+                    case orderId = "order_id"
+                    case lastMessage = "last_message"
+                    case lastMessageAt = "last_message_at"
+                    case createdAt = "created_at"
+                }
+            }
+
+            struct NewChat: Encodable {
+                let clientId: UUID
+                let sellerId: UUID
+                let orderId: UUID
+                enum CodingKeys: String, CodingKey {
+                    case clientId = "client_id"
+                    case sellerId = "seller_id"
+                    case orderId = "order_id"
+                }
+            }
+
+            // Upsert — returns existing or newly created row
+            let rows: [ChatRow] = try await client
+                .from("chats")
+                .upsert(
+                    NewChat(clientId: userId, sellerId: order.sellerId, orderId: order.id),
+                    onConflict: "client_id,seller_id,order_id"
+                )
+                .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
+                .execute()
+                .value
+
+            guard let row = rows.first else { return }
+
+            var chat = Chat(
+                id: row.id,
+                clientId: row.clientId,
+                sellerId: row.sellerId,
+                orderId: row.orderId,
+                lastMessage: row.lastMessage,
+                lastMessageAt: row.lastMessageAt,
+                createdAt: row.createdAt
+            )
+            chat.sellerName = order.sellerProfile?.shopName ?? order.shopName
+            chat.isSellerVerified = order.sellerProfile?.isVerified ?? false
+
+            coordinator.showChatRoom(chat)
+        } catch {
+            print("navigateToChat error:", error)
+        }
+    }
+
     // MARK: - Chat Button
-    
+
     private var chatButton: some View {
-        Button(action: { coordinator.showChatFromOrders(sellerId: order.sellerId.uuidString) }) {
+        Button(action: { Task { await navigateToChat() } }) {
             HStack(spacing: 8) {
                 Image(.bubble)
                     .font(.system(size: 15))

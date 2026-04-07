@@ -29,7 +29,8 @@ struct MainTabView: View {
                 .tag(TabItem.orders)
                 
                 NavigationStack(path: $coordinator.chatsPath) {
-                    Text("Chats View")
+                    ChatsView()
+                        .environmentObject(authViewModel)
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }
@@ -146,8 +147,9 @@ struct MainTabView: View {
             Text("Seller \(id)")
         case .orderDetails(let order):
             OrderDetailsView(order: order)
-        case .chatRoom(let partnerId):
-            Text("Chat with \(partnerId)")
+        case .chatRoom(let chat):
+            ChatRoomView(chat: chat)
+                .environmentObject(coordinator)
         case .addressDetails(let address):
             AddressDetailsView(selectedAddress: address)
         case .auth:
