@@ -15,6 +15,8 @@ struct Chat: Identifiable, Decodable, Hashable {
     var unreadCount: Int = 0
     /// Passed when navigating from OrderDetailsView — not decoded from DB
     var cachedOrder: Order? = nil
+    /// True for orders that have no chat record in DB yet
+    var isVirtual: Bool = false
 
     enum CodingKeys: String, CodingKey {
         case id

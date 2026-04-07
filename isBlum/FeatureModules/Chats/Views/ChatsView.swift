@@ -82,7 +82,7 @@ struct ChatsView: View {
                 ForEach(viewModel.chats) { chat in
                     ChatRowView(chat: chat)
                         .onTapGesture {
-                            coordinator.chatsPath.append(AppRoute.chatRoom(chat: chat))
+                            Task { await viewModel.openChat(chat, coordinator: coordinator) }
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
