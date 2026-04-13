@@ -141,9 +141,8 @@ struct ChatRoomView: View {
                     Circle()
                         .fill(Color(hex: chat.avatarColor))
                         .frame(width: 40, height: 40)
-                    Text(chat.avatarLetter)
-                        .font(.onest(.semiBold, size: 17))
-                        .foregroundColor(.black.opacity(0.6))
+                    Image(.chatVectorIcon)
+                        .foregroundColor(Color(hex: chat.avatarIconColor))
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -221,6 +220,9 @@ struct ChatRoomView: View {
                 .foregroundColor(Color(hex: "F2F2F2")),
             alignment: .bottom
         )
+        .onTapGesture {
+            coordinator.showOrderDetailsFromChat(order)
+        }
     }
 
     // MARK: - Messages List
@@ -242,11 +244,22 @@ struct ChatRoomView: View {
                                 .id(message.id)
                         }
                     }
+
+                    ForEach(viewModel.failedMessages) { failed in
+                        FailedMessageBubble(failed: failed) {
+                            Task { await viewModel.retry(failed) }
+                        }
+                        .padding(.bottom, 4)
+                        .id(failed.id)
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
             }
             .onChange(of: viewModel.messages.count) { _ in
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: viewModel.failedMessages.count) { _ in
                 scrollToBottom(proxy: proxy)
             }
             .onAppear {
@@ -449,7 +462,11 @@ struct ChatRoomView: View {
     }
 
     private func scrollToBottom(proxy: ScrollViewProxy) {
-        if let last = viewModel.messages.last {
+        if let lastFailed = viewModel.failedMessages.last {
+            withAnimation(.easeOut(duration: 0.25)) {
+                proxy.scrollTo(lastFailed.id, anchor: .bottom)
+            }
+        } else if let last = viewModel.messages.last {
             withAnimation(.easeOut(duration: 0.25)) {
                 proxy.scrollTo(last.id, anchor: .bottom)
             }
@@ -526,6 +543,59 @@ private struct MessageBubble: View {
             }
 
             if !isMine { Spacer(minLength: 64) }
+        }
+    }
+}
+
+// MARK: - Failed Message Bubble
+
+private struct FailedMessageBubble: View {
+    let failed: FailedMessage
+    let onRetry: () -> Void
+
+    var body: some View {
+        let bubbleCorners: UIRectCorner = [.topLeft, .topRight, .bottomLeft]
+        let bubbleRadius: CGFloat = 18
+
+        VStack(alignment: .trailing, spacing: 4) {
+            HStack(alignment: .bottom, spacing: 8) {
+                Spacer(minLength: 64)
+
+                VStack(alignment: .trailing, spacing: 0) {
+                    if let image = failed.image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: 220)
+                            .frame(height: 160)
+                            .clipped()
+                    }
+
+                    if let text = failed.text, !text.isEmpty {
+                        Text(text)
+                            .font(.onest(.regular, size: 15))
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 10)
+                    }
+                }
+                .background(Color(hex: "B8EEA6"))
+                .cornerRadius(bubbleRadius, corners: bubbleCorners)
+                .overlay(
+                    ChatRoundedCorner(radius: bubbleRadius, corners: bubbleCorners)
+                        .stroke(Color.red, lineWidth: 1)
+                )
+            }
+
+            Button(action: onRetry) {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.system(size: 12, weight: .medium))
+                    Text("chat_message_failed")
+                        .font(.onest(.regular, size: 12))
+                }
+                .foregroundColor(.red)
+            }
         }
     }
 }

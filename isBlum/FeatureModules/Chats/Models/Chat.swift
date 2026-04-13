@@ -133,7 +133,7 @@ struct Chat: Identifiable, Codable, Hashable {
     ]
 
     var avatarColor: String {
-        let sum = sellerName.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
+        let sum = sellerId.uuidString.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
         return Chat.pastelPalette[abs(sum) % Chat.pastelPalette.count]
     }
 

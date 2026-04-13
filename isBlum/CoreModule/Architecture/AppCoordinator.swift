@@ -275,6 +275,10 @@ class AppCoordinator: ObservableObject {
         selectedTab = .chats
     }
 
+    func showOrderDetailsFromChat(_ order: Order) {
+        chatsPath.append(AppRoute.orderDetails(order: order))
+    }
+
     func showSupportFromOrders() {
         ordersPath.append(AppRoute.support)
     }

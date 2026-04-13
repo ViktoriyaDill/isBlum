@@ -2,6 +2,12 @@ import Foundation
 import UIKit
 import Supabase
 
+struct FailedMessage: Identifiable {
+    let id = UUID()
+    let text: String?
+    let image: UIImage?
+}
+
 @MainActor
 class ChatRoomViewModel: ObservableObject {
     @Published var messages: [Message] = []
@@ -10,6 +16,7 @@ class ChatRoomViewModel: ObservableObject {
     @Published var messageText = ""
     @Published var isSending = false
     @Published var isShowingCachedData = false
+    @Published var failedMessages: [FailedMessage] = []
 
     private let client = SupabaseService.shared.client
     private var realtimeTask: Task<Void, Never>?
@@ -134,8 +141,18 @@ class ChatRoomViewModel: ObservableObject {
                 .execute()
             await fetchMessages()
         } catch {
-            messageText = trimmed
             print("ChatRoomViewModel sendMessage error:", error)
+            failedMessages.append(FailedMessage(text: trimmed, image: nil))
+        }
+    }
+
+    func retry(_ failed: FailedMessage) async {
+        failedMessages.removeAll { $0.id == failed.id }
+        if let text = failed.text {
+            messageText = text
+            await sendMessage()
+        } else if let image = failed.image {
+            await sendImage(image)
         }
     }
 
@@ -166,6 +183,7 @@ class ChatRoomViewModel: ObservableObject {
             await fetchMessages()
         } catch {
             print("ChatRoomViewModel sendImage error:", error)
+            failedMessages.append(FailedMessage(text: nil, image: image))
         }
     }
 

@@ -1097,6 +1097,28 @@
         }
       }
     },
+    "chat_message_failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message not sent. Tap to retry."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повідомлення не відправлено"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повідомлення не відправлено"
+          }
+        }
+      }
+    },
     "offline_cached_data" : {
       "localizations" : {
         "en" : {
