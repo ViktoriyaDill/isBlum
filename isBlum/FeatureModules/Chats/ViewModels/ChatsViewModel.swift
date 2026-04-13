@@ -6,6 +6,7 @@ class ChatsViewModel: ObservableObject {
     @Published var chats: [Chat] = []
     @Published var isLoading = false
     @Published var error: String?
+    @Published var isShowingCachedData = false
 
     private let client = SupabaseService.shared.client
     private var realtimeTask: Task<Void, Never>?
@@ -46,6 +47,9 @@ class ChatsViewModel: ObservableObject {
                 let orderId: UUID?
                 let lastMessage: String?
                 let lastMessageAt: Date?
+                let lastSenderId: UUID?
+                let lastMessageIsImage: Bool
+                let clientDeletedAt: Date?
                 let createdAt: Date
                 enum CodingKeys: String, CodingKey {
                     case id
@@ -54,13 +58,17 @@ class ChatsViewModel: ObservableObject {
                     case orderId = "order_id"
                     case lastMessage = "last_message"
                     case lastMessageAt = "last_message_at"
+                    case lastSenderId = "last_sender_id"
+                    case lastMessageIsImage = "last_message_is_image"
+                    case clientDeletedAt = "client_deleted_at"
                     case createdAt = "created_at"
                 }
             }
             let chatRows: [ChatRow] = try await client
                 .from("chats")
-                .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
+                .select("id, client_id, seller_id, order_id, last_message, last_message_at, last_sender_id, last_message_is_image, client_deleted_at, created_at")
                 .eq("client_id", value: userId)
+                .eq("is_deleted_by_client", value: false)
                 .execute()
                 .value
 
@@ -129,6 +137,9 @@ class ChatsViewModel: ObservableObject {
                         orderId: chatRow.orderId,
                         lastMessage: chatRow.lastMessage,
                         lastMessageAt: chatRow.lastMessageAt,
+                        lastSenderId: chatRow.lastSenderId,
+                        lastMessageIsImage: chatRow.lastMessageIsImage,
+                        clientDeletedAt: chatRow.clientDeletedAt,
                         createdAt: chatRow.createdAt
                     )
                     chat.sellerName = seller?.shopName ?? "Магазин"
@@ -144,6 +155,9 @@ class ChatsViewModel: ObservableObject {
                         orderId: order.id,
                         lastMessage: nil,
                         lastMessageAt: nil,
+                        lastSenderId: nil,
+                        lastMessageIsImage: false,
+                        clientDeletedAt: nil,
                         createdAt: order.createdAt
                     )
                     chat.sellerName = seller?.shopName ?? "Магазин"
@@ -161,24 +175,27 @@ class ChatsViewModel: ObservableObject {
                 return lhs > rhs
             }
 
+            CacheService.save(self.chats, key: "chats_\(userId)")
+            isShowingCachedData = false
+
         } catch {
             print("ChatsViewModel fetchChats error:", error)
-            self.error = error.localizedDescription
+            guard let userId = client.auth.currentUser?.id else { return }
+            if let cached = CacheService.load([Chat].self, key: "chats_\(userId)"), !cached.isEmpty {
+                self.chats = cached
+                self.isShowingCachedData = true
+            } else {
+                self.error = error.localizedDescription
+            }
         }
     }
 
-    // MARK: - Open chat (find or create, then navigate)
+    // MARK: - Find or create chat (single source of truth for DB logic)
 
-    func openChat(_ chat: Chat, coordinator: AppCoordinator) async {
-        guard let userId = client.auth.currentUser?.id,
-              let orderId = chat.orderId else { return }
+    static func findOrCreateChat(orderId: UUID, sellerId: UUID, cachedOrder: Order? = nil) async -> Chat? {
+        guard let userId = SupabaseService.shared.client.auth.currentUser?.id else { return nil }
+        let client = SupabaseService.shared.client
 
-        if !chat.isVirtual {
-            coordinator.chatsPath.append(AppRoute.chatRoom(chat: chat))
-            return
-        }
-
-        // Virtual: find or create the real chat record
         do {
             struct ChatRow: Decodable {
                 let id: UUID
@@ -187,6 +204,8 @@ class ChatsViewModel: ObservableObject {
                 let orderId: UUID?
                 let lastMessage: String?
                 let lastMessageAt: Date?
+                let lastSenderId: UUID?
+                let lastMessageIsImage: Bool
                 let createdAt: Date
                 enum CodingKeys: String, CodingKey {
                     case id
@@ -195,15 +214,17 @@ class ChatsViewModel: ObservableObject {
                     case orderId = "order_id"
                     case lastMessage = "last_message"
                     case lastMessageAt = "last_message_at"
+                    case lastSenderId = "last_sender_id"
+                    case lastMessageIsImage = "last_message_is_image"
                     case createdAt = "created_at"
                 }
             }
 
             let existing: [ChatRow] = try await client
                 .from("chats")
-                .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
+                .select("id, client_id, seller_id, order_id, last_message, last_message_at, last_sender_id, last_message_is_image, created_at")
                 .eq("client_id", value: userId)
-                .eq("seller_id", value: chat.sellerId)
+                .eq("seller_id", value: sellerId)
                 .eq("order_id", value: orderId)
                 .execute()
                 .value
@@ -224,44 +245,72 @@ class ChatsViewModel: ObservableObject {
                 }
                 let created: [ChatRow] = try await client
                     .from("chats")
-                    .insert(NewChat(clientId: userId, sellerId: chat.sellerId, orderId: orderId))
-                    .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
+                    .insert(NewChat(clientId: userId, sellerId: sellerId, orderId: orderId))
+                    .select("id, client_id, seller_id, order_id, last_message, last_message_at, last_sender_id, last_message_is_image, created_at")
                     .execute()
                     .value
-                guard let newRow = created.first else { return }
+                guard let newRow = created.first else { return nil }
                 row = newRow
             }
 
-            var realChat = Chat(
+            struct SellerInfo: Decodable {
+                let shopName: String
+                let isVerified: Bool?
+                enum CodingKeys: String, CodingKey {
+                    case shopName = "shop_name"
+                    case isVerified = "is_verified"
+                }
+            }
+            let sellerInfo = try? await client
+                .from("seller_profiles")
+                .select("shop_name, is_verified")
+                .eq("id", value: sellerId)
+                .single()
+                .execute()
+                .value as SellerInfo
+
+            var chat = Chat(
                 id: row.id,
                 clientId: row.clientId,
                 sellerId: row.sellerId,
                 orderId: row.orderId,
                 lastMessage: row.lastMessage,
                 lastMessageAt: row.lastMessageAt,
+                lastSenderId: row.lastSenderId,
+                lastMessageIsImage: row.lastMessageIsImage,
+                clientDeletedAt: nil,
                 createdAt: row.createdAt
             )
-            realChat.sellerName = chat.sellerName
-            realChat.isSellerVerified = chat.isSellerVerified
-            realChat.cachedOrder = chat.cachedOrder
-
-            coordinator.chatsPath.append(AppRoute.chatRoom(chat: realChat))
+            chat.sellerName       = sellerInfo?.shopName    ?? cachedOrder?.sellerProfile?.shopName ?? cachedOrder?.shopName ?? "Магазин"
+            chat.isSellerVerified = sellerInfo?.isVerified  ?? cachedOrder?.sellerProfile?.isVerified ?? false
+            chat.cachedOrder      = cachedOrder
+            return chat
         } catch {
-            print("ChatsViewModel openChat error:", error)
+            print("ChatsViewModel findOrCreateChat error:", error)
+            return nil
         }
     }
 
     // MARK: - Delete
 
     func deleteChat(_ chat: Chat) async {
+        // Virtual chats have no DB record — remove only from memory
         guard !chat.isVirtual else {
             chats.removeAll { $0.id == chat.id }
             return
         }
         do {
+            struct SoftDelete: Encodable {
+                let isDeletedByClient: Bool
+                let clientDeletedAt: Date
+                enum CodingKeys: String, CodingKey {
+                    case isDeletedByClient = "is_deleted_by_client"
+                    case clientDeletedAt   = "client_deleted_at"
+                }
+            }
             try await client
                 .from("chats")
-                .delete()
+                .update(SoftDelete(isDeletedByClient: true, clientDeletedAt: Date()))
                 .eq("id", value: chat.id)
                 .execute()
             chats.removeAll { $0.id == chat.id }

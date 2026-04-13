@@ -353,48 +353,20 @@ struct RatingSheet: View {
         guard let item else { return }
         isUploadingPhoto = true
         defer { isUploadingPhoto = false }
-        
         do {
-            // 1. Отримати Data з PhotosPickerItem
-            guard let data = try await item.loadTransferable(type: Data.self) else { return }
-            
-            // Стискаємо фото щоб не перевантажувати Storage
-            guard let uiImage = UIImage(data: data),
-                  let compressedData = uiImage.jpegData(compressionQuality: 0.7) else { return }
-            
-            await MainActor.run {
-                attachedImageData = compressedData
-            }
-            
-            // 2. Генеруємо унікальне ім'я файлу
-            let fileName = "\(order.id.uuidString)/\(UUID().uuidString).jpg"
-            
-            // 3. Завантажуємо в Supabase Storage
-            try await client.storage
-                .from("review-photos")
-                .upload(
-                    fileName,
-                    data: compressedData,
-                    options: FileOptions(contentType: "image/jpeg")
-                )
-            
-            // 4. Отримуємо публічний URL
-            let publicURL = try client.storage
-                .from("review-photos")
-                .getPublicURL(path: fileName)
-            
-            await MainActor.run {
-                attachedImageURL = publicURL.absoluteString
-            }
-            
-            print("Photo uploaded: \(publicURL)")
-            
+            guard let data = try await item.loadTransferable(type: Data.self),
+                  let image = UIImage(data: data) else { return }
+
+            attachedImageData = image.jpegData(compressionQuality: 0.7)
+
+            let publicURL = try await ImageUploadService.upload(
+                image, bucket: "review-photos", folder: order.id.uuidString, quality: 0.7
+            )
+            attachedImageURL = publicURL
         } catch {
             print("Photo upload error:", error)
-            await MainActor.run {
-                attachedImageData = nil
-                selectedPhotoItem = nil
-            }
+            attachedImageData = nil
+            selectedPhotoItem = nil
         }
     }
     

@@ -265,104 +265,30 @@ struct OrderDetailsView: View {
     
     // MARK: - Chat Navigation
 
+    // MARK: - Chat Navigation
+
     private func navigateToChat() async {
-        guard !isFetchingChat,
-              let userId = SupabaseService.shared.client.auth.currentUser?.id else { return }
+        // 1. Захист від подвійних натискань
+        guard !isFetchingChat else { return }
         isFetchingChat = true
+        
+        // Гарантуємо скидання стану завантаження
         defer { isFetchingChat = false }
 
-        do {
-            let client = SupabaseService.shared.client
-
-            struct ChatRow: Decodable {
-                let id: UUID
-                let clientId: UUID
-                let sellerId: UUID
-                let orderId: UUID?
-                let lastMessage: String?
-                let lastMessageAt: Date?
-                let createdAt: Date
-                enum CodingKeys: String, CodingKey {
-                    case id
-                    case clientId = "client_id"
-                    case sellerId = "seller_id"
-                    case orderId = "order_id"
-                    case lastMessage = "last_message"
-                    case lastMessageAt = "last_message_at"
-                    case createdAt = "created_at"
-                }
+        // 2. Використовуємо статичний метод з вашої ChatsViewModel
+        // Це створить реальний запис у БД, якщо його ще немає
+        if let chat = await ChatsViewModel.findOrCreateChat(
+            orderId: order.id,
+            sellerId: order.sellerId,
+            cachedOrder: order
+        ) {
+            // 3. Переходимо в головний потік для оновлення UI/Навігації
+            await MainActor.run {
+                coordinator.showChatRoom(chat)
             }
-
-            struct NewChat: Encodable {
-                let clientId: UUID
-                let sellerId: UUID
-                let orderId: UUID
-                enum CodingKeys: String, CodingKey {
-                    case clientId = "client_id"
-                    case sellerId = "seller_id"
-                    case orderId = "order_id"
-                }
-            }
-
-            // Try to find existing chat first (avoids UPDATE which requires extra RLS policy)
-            let existing: [ChatRow] = try await client
-                .from("chats")
-                .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
-                .eq("client_id", value: userId)
-                .eq("seller_id", value: order.sellerId)
-                .eq("order_id", value: order.id)
-                .execute()
-                .value
-
-            let row: ChatRow
-            if let found = existing.first {
-                row = found
-            } else {
-                let created: [ChatRow] = try await client
-                    .from("chats")
-                    .insert(NewChat(clientId: userId, sellerId: order.sellerId, orderId: order.id))
-                    .select("id, client_id, seller_id, order_id, last_message, last_message_at, created_at")
-                    .execute()
-                    .value
-                guard let newRow = created.first else { return }
-                row = newRow
-            }
-            // Welcome message is inserted automatically by the DB trigger
-            // `on_chat_created` (security definer) — no client-side insert needed.
-
-            // Fetch seller name directly from DB
-            struct SellerInfo: Decodable {
-                let shopName: String
-                let isVerified: Bool?
-                enum CodingKeys: String, CodingKey {
-                    case shopName = "shop_name"
-                    case isVerified = "is_verified"
-                }
-            }
-            let sellerInfo = try? await client
-                .from("seller_profiles")
-                .select("shop_name, is_verified")
-                .eq("id", value: order.sellerId)
-                .single()
-                .execute()
-                .value as SellerInfo
-
-            var chat = Chat(
-                id: row.id,
-                clientId: row.clientId,
-                sellerId: row.sellerId,
-                orderId: row.orderId,
-                lastMessage: row.lastMessage,
-                lastMessageAt: row.lastMessageAt,
-                createdAt: row.createdAt
-            )
-            chat.sellerName = sellerInfo?.shopName ?? order.sellerProfile?.shopName ?? order.shopName
-            chat.isSellerVerified = sellerInfo?.isVerified ?? order.sellerProfile?.isVerified ?? false
-            chat.cachedOrder = order
-
-            coordinator.showChatRoom(chat)
-        } catch {
-            print("navigateToChat error:", error)
+        } else {
+            // Опціонально: обробка помилки (якщо не вдалося створити/знайти чат)
+            print("DEBUG: Failed to find or create chat for order \(order.id)")
         }
     }
 

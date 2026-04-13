@@ -13,7 +13,8 @@ class OrdersViewModel: ObservableObject {
     @Published var orders: [Order] = []
     @Published var isLoading = false
     @Published var error: String?
-    
+    @Published var isShowingCachedData = false
+
     private let client = SupabaseService.shared.client
     
     // MARK: - Fetch Orders with Items
@@ -98,10 +99,17 @@ class OrdersViewModel: ObservableObject {
             } else {
                 self.orders = fetchedOrders
             }
+            CacheService.save(self.orders, key: "orders_\(userId)")
+            isShowingCachedData = false
 
         } catch {
             print("Fetch orders error:", error)
-            self.error = error.localizedDescription
+            if let cached = CacheService.load([Order].self, key: "orders_\(userId)"), !cached.isEmpty {
+                self.orders = cached
+                self.isShowingCachedData = true
+            } else {
+                self.error = error.localizedDescription
+            }
         }
     }
     

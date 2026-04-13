@@ -255,7 +255,7 @@ class AppCoordinator: ObservableObject {
             self.appState = previous
         }
     }
-    
+
     // MARK: - Orders navigation
 
     func showOrderDetails(_ order: Order) {

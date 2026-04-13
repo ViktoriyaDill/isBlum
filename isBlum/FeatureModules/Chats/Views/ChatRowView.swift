@@ -3,6 +3,49 @@ import SwiftUI
 struct ChatRowView: View {
     let chat: Chat
 
+    private var currentUserId: UUID? {
+        SupabaseService.shared.client.auth.currentUser?.id
+    }
+
+    private var isLastMessageMine: Bool {
+        guard let senderId = chat.lastSenderId,
+              let userId = currentUserId else { return false }
+        return senderId == userId
+    }
+
+    /// "Ви: 📷 Фото" / "Ви: текст" / "📷 Фото" / "текст" / ""
+    private var lastMessagePreview: some View {
+        Group {
+            if chat.lastMessageIsImage {
+                HStack(spacing: 3) {
+                    if isLastMessageMine {
+                        Text("Ви:")
+                            .foregroundColor(.black.opacity(0.5))
+                    }
+                    Image(systemName: "camera")
+                        .font(.system(size: 13))
+                    Text("Фото")
+                }
+                .font(.onest(.regular, size: 14))
+                .foregroundColor(.gray)
+                .lineLimit(1)
+            } else if let text = chat.lastMessage, !text.isEmpty {
+                HStack(spacing: 3) {
+                    if isLastMessageMine {
+                        Text("Ви:")
+                            .foregroundColor(.black.opacity(0.5))
+                    }
+                    Text(text)
+                }
+                .font(.onest(.regular, size: 14))
+                .foregroundColor(.gray)
+                .lineLimit(1)
+            } else {
+                Text("").font(.onest(.regular, size: 14))
+            }
+        }
+    }
+
     var body: some View {
         HStack(spacing: 12) {
             // Avatar
@@ -11,9 +54,8 @@ struct ChatRowView: View {
                     .fill(Color(hex: chat.avatarColor))
                     .frame(width: 48, height: 48)
 
-                Text(chat.avatarLetter)
-                    .font(.onest(.semiBold, size: 20))
-                    .foregroundColor(.black.opacity(0.6))
+                Image(.chatVectorIcon)
+                    .foregroundColor(Color(hex: chat.avatarIconColor))
             }
 
             // Name + last message
@@ -31,10 +73,7 @@ struct ChatRowView: View {
                     }
                 }
 
-                Text(chat.lastMessage ?? "")
-                    .font(.onest(.regular, size: 14))
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
+                lastMessagePreview
             }
 
             Spacer()
@@ -47,12 +86,12 @@ struct ChatRowView: View {
 
                 if chat.unreadCount > 0 {
                     Text("\(chat.unreadCount)")
-                        .font(.onest(.bold, size: 12))
+                        .font(.onest(.regular, size: 12))
                         .foregroundColor(.black)
                         .frame(minWidth: 20, minHeight: 20)
                         .padding(.horizontal, 5)
                         .background(Color(hex: "9AF19A"))
-                        .clipShape(Capsule())
+                        .clipShape(Circle())
                 } else {
                     Color.clear.frame(width: 20, height: 20)
                 }

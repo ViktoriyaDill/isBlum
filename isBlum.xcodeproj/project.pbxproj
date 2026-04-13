@@ -317,6 +317,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = isBlum/Application/info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to find your delivery address faster.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Для прикріплення фото до відгуку";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -357,6 +358,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = isBlum/Application/info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need access to your location to find your delivery address faster.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Для прикріплення фото до відгуку";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

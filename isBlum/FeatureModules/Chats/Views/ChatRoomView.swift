@@ -1,4 +1,6 @@
 import SwiftUI
+import PhotosUI
+import UIKit
 
 struct ChatRoomView: View {
     let chat: Chat
@@ -8,8 +10,11 @@ struct ChatRoomView: View {
 
     @State private var showRatingSheet = false
     @State private var ratingStep: RatingStep = .stars
+    @State private var showCamera = false
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var pendingImage: UIImage?
 
-    private var order: Order? { chat.cachedOrder }
+    private var order: Order? { viewModel.order }
     private var isChatClosed: Bool {
         guard let status = order?.status else { return false }
         return status == "delivered" || status == "cancelled"
@@ -24,12 +29,30 @@ struct ChatRoomView: View {
 
     init(chat: Chat) {
         self.chat = chat
-        _viewModel = StateObject(wrappedValue: ChatRoomViewModel(chatId: chat.id))
+        _viewModel = StateObject(wrappedValue: ChatRoomViewModel(
+            chatId: chat.id,
+            orderId: chat.orderId,
+            cachedOrder: chat.cachedOrder,
+            visibleFrom: chat.clientDeletedAt
+        ))
     }
 
     var body: some View {
         VStack(spacing: 0) {
             navigationBar
+
+            if viewModel.isShowingCachedData {
+                HStack(spacing: 8) {
+                    Image(systemName: "wifi.slash")
+                        .font(.system(size: 13, weight: .medium))
+                    Text("offline_cached_data")
+                        .font(.onest(.medium, size: 13))
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color.gray.opacity(0.8))
+            }
 
             if let order = order {
                 orderInfoCard(order)
@@ -53,9 +76,25 @@ struct ChatRoomView: View {
         }
         .navigationBarHidden(true)
         .task {
+            await viewModel.fetchOrderIfNeeded()
             await viewModel.fetchMessages()
             await viewModel.markMessagesAsRead()
             viewModel.subscribeToMessages()
+        }
+        .onChange(of: selectedPhotoItem) { item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    pendingImage = image
+                }
+                selectedPhotoItem = nil
+            }
+        }
+        .sheet(isPresented: $showCamera) {
+            CameraPickerView { image in
+                pendingImage = image
+            }
         }
         .onDisappear {
             viewModel.unsubscribe()
@@ -198,7 +237,7 @@ struct ChatRoomView: View {
                             .padding(.bottom, 8)
 
                         ForEach(messages) { message in
-                            MessageBubble(message: message, isMine: isMyMessage(message))
+                            MessageBubble(message: message, isMine: isMyMessage(message), chat: chat)
                                 .padding(.bottom, 4)
                                 .id(message.id)
                         }
@@ -265,54 +304,94 @@ struct ChatRoomView: View {
 
     // MARK: - Input Bar
 
-    private var messageInputBar: some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            HStack(alignment: .bottom, spacing: 8) {
-                TextField(
-                    String(localized: "chats_message_placeholder"),
-                    text: $viewModel.messageText,
-                    axis: .vertical
-                )
-                .font(.onest(.regular, size: 16))
-                .lineLimit(1...5)
-                .padding(.leading, 16)
-                .padding(.vertical, 12)
+    private var hasContent: Bool {
+        pendingImage != nil || !viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 
-                HStack(spacing: 12) {
-                    if viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty {
-                        Button(action: {}) {
-                            Image(systemName: "camera")
-                                .font(.system(size: 20))
-                                .foregroundColor(.gray)
+    private var messageInputBar: some View {
+        VStack(spacing: 0) {
+            HStack(alignment: .bottom, spacing: 8) {
+                // Input bubble
+                VStack(alignment: .leading, spacing: 8) {
+                    // Image preview
+                    if let image = pendingImage {
+                        ZStack(alignment: .topTrailing) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 72, height: 72)
+                                .cornerRadius(12)
+                                .clipped()
+
+                            Button(action: { pendingImage = nil }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 2)
+                            }
+                            .offset(x: 6, y: -6)
                         }
-                        Button(action: {}) {
-                            Image(systemName: "photo.on.rectangle")
-                                .font(.system(size: 20))
-                                .foregroundColor(.gray)
+                        .padding(.top, 10)
+                        .padding(.leading, 12)
+                    }
+
+                    HStack(alignment: .bottom, spacing: 8) {
+                        TextField(
+                            String(localized: "chats_message_placeholder"),
+                            text: $viewModel.messageText,
+                            axis: .vertical
+                        )
+                        .font(.onest(.regular, size: 16))
+                        .lineLimit(1...5)
+                        .padding(.leading, pendingImage == nil ? 16 : 12)
+                        .padding(.vertical, 12)
+
+                        // Attach or Send
+                        if hasContent {
+                            Button(action: {
+                                Task {
+                                    if let img = pendingImage {
+                                        await viewModel.sendImage(img)
+                                        pendingImage = nil
+                                    }
+                                    if !viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty {
+                                        await viewModel.sendMessage()
+                                    }
+                                }
+                            }) {
+                                Image(.sendMessage)
+                                    .frame(width: 34, height: 34)
+                            }
+                            .disabled(viewModel.isSending)
+                            .padding(.trailing, 10)
+                            .padding(.bottom, 10)
+                            .transition(.scale.combined(with: .opacity))
+                        } else {
+                            HStack(spacing: 12) {
+                                Button(action: { showCamera = true }) {
+                                    Image(systemName: "camera")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.gray)
+                                }
+                                PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
+                                    Image(systemName: "photo.on.rectangle")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                            .padding(.trailing, 10)
+                            .padding(.bottom, 10)
+                            .transition(.scale.combined(with: .opacity))
                         }
-                    } else {
-                        Button(action: { Task { await viewModel.sendMessage() } }) {
-                            Image(systemName: "arrow.up")
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.black)
-                                .frame(width: 34, height: 34)
-                                .background(Color(hex: "9AF19A"))
-                                .clipShape(Circle())
-                        }
-                        .disabled(viewModel.isSending)
-                        .transition(.scale.combined(with: .opacity))
                     }
                 }
-                .padding(.trailing, 10)
-                .padding(.bottom, 10)
+                .background(Color(hex: "F2F2F2"))
+                .cornerRadius(24)
+                .animation(.easeInOut(duration: 0.15), value: hasContent)
             }
-            .background(Color(hex: "F2F2F2"))
-            .cornerRadius(24)
-            .animation(.easeInOut(duration: 0.15),
-                       value: viewModel.messageText.trimmingCharacters(in: .whitespaces).isEmpty)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
         .background(
             Color.white
                 .shadow(color: .black.opacity(0.06), radius: 8, y: -4)
@@ -388,10 +467,21 @@ struct ChatRoomView: View {
 private struct MessageBubble: View {
     let message: Message
     let isMine: Bool
+    let chat: Chat
 
     var body: some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            if isMine { Spacer(minLength: 64) }
+        HStack(alignment: .bottom, spacing: 8) {
+            if isMine {
+                Spacer(minLength: 64)
+            } else {
+                ZStack {
+                    Circle()
+                        .fill(Color(hex: chat.avatarColor))
+                        .frame(width: 32, height: 32)
+                    Image(.chatVectorIcon)
+                        .foregroundColor(Color(hex: chat.avatarIconColor))
+                }
+            }
 
             VStack(alignment: isMine ? .trailing : .leading, spacing: 3) {
                 // Image attachment

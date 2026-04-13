@@ -43,5 +43,11 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>We use the camera so you can take a photo of your received bouquet and send it directly to the shop in your order chat.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We access your photo library so you can attach images to your order chat with the shop or include photos when leaving a review for your order.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We save photos to your library when you download images shared in your order chat.</string>
 </dict>
 </plist>

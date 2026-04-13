@@ -20,11 +20,15 @@ struct OrdersView: View {
                 showBackButton: false
             )
             
+            if viewModel.isShowingCachedData {
+                offlineBanner
+            }
+
             ZStack {
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
                     .ignoresSafeArea(edges: .bottom)
-                
+
                 if viewModel.isLoading {
                     ProgressView()
                 } else if viewModel.orders.isEmpty {
@@ -44,6 +48,20 @@ struct OrdersView: View {
         }
     }
     
+    // MARK: - Offline Banner
+    private var offlineBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "wifi.slash")
+                .font(.system(size: 13, weight: .medium))
+            Text("offline_cached_data")
+                .font(.onest(.medium, size: 13))
+        }
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+        .background(Color.gray.opacity(0.8))
+    }
+
     // MARK: - Empty State
     private var emptyStateView: some View {
         VStack(spacing: 0) {

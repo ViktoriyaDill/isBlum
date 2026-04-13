@@ -12,6 +12,10 @@ struct ChatsView: View {
                 showBackButton: false
             )
 
+            if viewModel.isShowingCachedData {
+                offlineBanner
+            }
+
             ZStack {
                 Color.white
                     .clipShape(RoundedCorner(radius: 32, corners: [.topLeft, .topRight]))
@@ -32,9 +36,28 @@ struct ChatsView: View {
             await viewModel.fetchChats()
             viewModel.subscribeToUpdates()
         }
+        .onAppear {
+            guard authViewModel.isAuthenticated else { return }
+            Task { await viewModel.fetchChats() }
+        }
         .onDisappear {
             viewModel.unsubscribe()
         }
+    }
+
+    // MARK: - Offline Banner
+
+    private var offlineBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "wifi.slash")
+                .font(.system(size: 13, weight: .medium))
+            Text("offline_cached_data")
+                .font(.onest(.medium, size: 13))
+        }
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+        .background(Color.gray.opacity(0.8))
     }
 
     // MARK: - Empty State
@@ -77,29 +100,39 @@ struct ChatsView: View {
     // MARK: - Chats List
 
     private var chatsList: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(viewModel.chats) { chat in
-                    ChatRowView(chat: chat)
-                        .onTapGesture {
-                            Task { await viewModel.openChat(chat, coordinator: coordinator) }
-                        }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            Button(role: .destructive) {
-                                Task { await viewModel.deleteChat(chat) }
-                            } label: {
-                                Label("chats_delete", systemImage: "trash")
+        List {
+            ForEach(viewModel.chats) { chat in
+                ChatRowView(chat: chat)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparatorTint(Color(hex: "F2F2F2"))
+                    .listRowBackground(Color.white)
+                    .onTapGesture {
+                        Task {
+                            if chat.isVirtual, let orderId = chat.orderId {
+                                if let realChat = await ChatsViewModel.findOrCreateChat(
+                                    orderId: orderId,
+                                    sellerId: chat.sellerId
+                                ) {
+                                    coordinator.showChatRoom(realChat)
+                                }
+                            } else {
+                                coordinator.showChatRoom(chat)
                             }
-                            .tint(.red)
                         }
-
-                    Divider()
-                        .padding(.horizontal, 16)
-                }
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            Task { await viewModel.deleteChat(chat) }
+                        } label: {
+                            Label("chats_delete", systemImage: "trash")
+                        }
+                        .tint(.red)
+                    }
             }
-            .padding(.top, 8)
-            .padding(.bottom, 100)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .padding(.top, 8)
     }
 }
 
