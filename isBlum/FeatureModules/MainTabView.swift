@@ -12,7 +12,8 @@ struct MainTabView: View {
         ZStack(alignment: .bottom) {
             TabView(selection: $coordinator.selectedTab) {
                 NavigationStack(path: $coordinator.feedPath) {
-                    Text("Feed View")
+                    FeedView()
+                        .environmentObject(coordinator)
                         .navigationDestination(for: AppRoute.self) { route in
                             destinationFactory(for: route)
                         }

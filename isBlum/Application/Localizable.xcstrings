@@ -948,6 +948,28 @@
         }
       }
     },
+    "chat_message_failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message not sent. Tap to retry."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повідомлення не відправлено"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повідомлення не відправлено"
+          }
+        }
+      }
+    },
     "chat_rate_order" : {
       "localizations" : {
         "en" : {
@@ -1093,50 +1115,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Чаты"
-          }
-        }
-      }
-    },
-    "chat_message_failed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Message not sent. Tap to retry."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Повідомлення не відправлено"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Повідомлення не відправлено"
-          }
-        }
-      }
-    },
-    "offline_cached_data" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No internet connection. Showing cached data."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Нет подключения. Показываются сохранённые данные."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Немає з'єднання. Показуються збережені дані."
           }
         }
       }
@@ -2010,6 +1988,7 @@
       }
     },
     "Feed View" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3032,6 +3011,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сповіщення"
+          }
+        }
+      }
+    },
+    "offline_cached_data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No internet connection. Showing cached data."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет подключения. Показываются сохранённые данные."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Немає з'єднання. Показуються збережені дані."
           }
         }
       }
@@ -6103,7 +6104,6 @@
       }
     },
     "Адреса доставки" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6220,6 +6220,12 @@
           }
         }
       }
+    },
+    "Букети закінчилися" : {
+
+    },
+    "Букетів за цими фільтрами\nпоки немає" : {
+
     },
     "Валюта" : {
       "extractionState" : "manual",
@@ -6340,6 +6346,9 @@
         }
       }
     },
+    "Ви переглянули всі доступні букети.\nФлористи оновлюють добірки протягом дня" : {
+
+    },
     "Ви:" : {
 
     },
@@ -6378,7 +6387,6 @@
       }
     },
     "Визначити місцезнаходження" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6632,6 +6640,9 @@
         }
       }
     },
+    "Додати нову адресу" : {
+
+    },
     "Допоможе кур'єру знайти вас\nпід час доставки" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6665,6 +6676,9 @@
           }
         }
       }
+    },
+    "Доставка • Сьогодні" : {
+
     },
     "Електронна пошта" : {
       "localizations" : {
@@ -6783,6 +6797,9 @@
           }
         }
       }
+    },
+    "Змінити фільтри" : {
+
     },
     "Знайшов(ла) інший сервіс" : {
       "extractionState" : "manual",
@@ -7292,6 +7309,9 @@
         }
       }
     },
+    "Показано збережені дані" : {
+
+    },
     "Показати букети" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -7325,6 +7345,12 @@
           }
         }
       }
+    },
+    "Поточна адреса" : {
+
+    },
+    "Почати спочатку" : {
+
     },
     "Пошук країни" : {
       "extractionState" : "stale",
@@ -7546,6 +7572,9 @@
           }
         }
       }
+    },
+    "Спробуйте змінити фільтри" : {
+
     },
     "Статус замовлення" : {
       "extractionState" : "manual",
